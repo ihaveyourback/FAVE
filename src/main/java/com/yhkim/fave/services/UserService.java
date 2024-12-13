@@ -251,7 +251,7 @@ public class UserService {
         String mailText =this.templateEngine.process("email/register",context);
         MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-        mimeMessageHelper.setFrom("yellow077@naver.com"); //발신자
+        mimeMessageHelper.setFrom("yellow6480@gmail.com"); //발신자
         mimeMessageHelper.setTo(emailToken.getUserEmail());
         mimeMessageHelper.setSubject("[FAVE] 회원가입 인증 링크");
         mimeMessageHelper.setText(mailText, true); //html에 기반한 내용인지 확인 boolean타입
