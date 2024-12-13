@@ -55,32 +55,26 @@ public class UserService {
         if (isInvalidUserInput(user)) {
             return CommonResult.FAILURE;
         }
-
         // 사용자 이메일로 DB에서 사용자 조회
         UserEntity dbUser = this.userMapper.selectUserByEmail(user.getEmail());
         // 사용자가 없거나 삭제된 경우 실패 반환
         if (isInvalidDbUser(dbUser)) {
             return CommonResult.FAILURE;
         }
-
         // 비밀번호 검증
         if (!encoder.matches(user.getPassword(), dbUser.getPassword())) {
             return CommonResult.FAILURE;
         }
-
         // 이메일 미인증자 체크
         if (!dbUser.isVerified()) {
             return LoginResult.FAILURE_NOT_VERIFIED;
         }
-
         // 계정 정지여부 체크
         if (dbUser.isSuspended()) {
             return LoginResult.FAILURE_SUSPENDED;
         }
-
         // 사용자 정보 업데이트
         updateUserDetails(user, dbUser);
-
         // 모든 유효성 검사 통과 시 성공 반환
         return CommonResult.SUCCESS;
     }

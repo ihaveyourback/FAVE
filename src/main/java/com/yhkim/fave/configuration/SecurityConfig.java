@@ -40,7 +40,7 @@ public class SecurityConfig implements WebSecurityConfigurer {
                 )
                 .rememberMe(remember -> remember
                         .tokenValiditySeconds(14 * 24 * 60 * 60)
-                        .key("uniqueAndSecret")
+                        .key(System.getenv("SECURITY_REMEMBER_ME_KEY")) // 환경 변수로 가져오기
                         .userDetailsService(userDetailsService)
                 )
                 .csrf().disable()
@@ -69,10 +69,8 @@ public class SecurityConfig implements WebSecurityConfigurer {
                         .failureHandler((request, response, exception) -> {
                             response.setContentType("application/json");
                             response.setCharacterEncoding("UTF-8");
-
                             String failureReason = "failure";
                             int statusCode = 401;
-
                             if (exception instanceof UserNotVerifiedException) {
                                 failureReason = "failure_not_verified";
                                 statusCode = 403;
@@ -83,7 +81,6 @@ public class SecurityConfig implements WebSecurityConfigurer {
                                 failureReason = "failure";
                                 statusCode = 401;
                             }
-
                             response.setStatus(statusCode);
                             response.getWriter().write("{\"result\": \"" + failureReason + "\"}");
                         })

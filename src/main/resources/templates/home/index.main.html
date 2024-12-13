@@ -46,9 +46,11 @@
                 </button>
             </form>
         </li>
-        <!-- 관리자 페이지 링크 -->
-        <li id="adminLinkWrapper" th:if="${user != null}">
-            <a class="--obj-button -color-primary" href="">마이 페이지</a>
+        <li id="UserLinkWrapper" th:if="${user != null && !isAdmin}">
+            <a class="--obj-button -color-primary" th:href="@{/user/profile}">마이 페이지</a>
+        </li>
+        <li id="adminLinkWrapper" th:if="${isAdmin}">
+            <a class="--obj-button -color-primary" th:href="@{/admin/user}">관리자 페이지</a>
         </li>
         <li id="loginBtnWrapper" sec:authorize="!isAuthenticated()"> <!-- 비로그인 사용자 -->
             <button id="loginBtn" class="--obj-button -color-primary" type="button">로그인</button>

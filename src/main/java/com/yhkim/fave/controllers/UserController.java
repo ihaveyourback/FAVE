@@ -47,7 +47,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/login")
+    @PostMapping("/")
     @ResponseBody
     public String loginUser(@RequestParam String email, @RequestParam String password) {
         // 이메일과 비밀번호로 UserEntity 생성

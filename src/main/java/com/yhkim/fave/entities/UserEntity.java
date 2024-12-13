@@ -3,10 +3,12 @@ package com.yhkim.fave.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,7 @@ public class UserEntity implements UserDetails, OAuth2User {
     @Column(name = "warning", length = 10)
     private int warning;
 
+
     @PrePersist
     protected void onCreate() {
         this.createAt = LocalDateTime.now();
@@ -64,7 +67,6 @@ public class UserEntity implements UserDetails, OAuth2User {
     protected void onUpdate() {
         this.updateAt = LocalDateTime.now();
     }
-
 
 
     @Override
@@ -79,7 +81,15 @@ public class UserEntity implements UserDetails, OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (isAdmin) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+        if (isSuspended) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_SUSPENDED"));
+        }
+        // 추가적인 권한이 있다면 여기에 추가
+        return authorities;
     }
 
     @Override
@@ -102,6 +112,11 @@ public class UserEntity implements UserDetails, OAuth2User {
         return isVerified && !isSuspended;
     }
 
+//    @Column(name = "oauth2_provider")
+//    private String oauth2Provider; // 예: GOOGLE, FACEBOOK 등
+//
+//    @Column(name = "oauth2_id")
+//    private String oauth2Id;
 
     @Override
     public Map<String, Object> getAttributes() {

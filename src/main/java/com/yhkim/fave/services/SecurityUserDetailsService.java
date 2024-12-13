@@ -1,10 +1,8 @@
 package com.yhkim.fave.services;
 
 import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.mappers.UserMapper;
 import com.yhkim.fave.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
