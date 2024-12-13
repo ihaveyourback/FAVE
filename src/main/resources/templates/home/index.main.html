@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Fave</title>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
+
+    <script type="text/javascript" src="/assets/scripts/common.js"></script>
+    <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
+</head>
+<body>
+<header class="header">
+    <ul class="menu">
+        <!-- 로고 -->
+        <li class="item">
+            <img alt="Fave" src="/assets/images/header-logo.png">
+        </li>
+        <!-- 검색 폼 -->
+        <li class="stretch">
+            <form class="form">
+                <label class="keyword-label">
+                    <input autocomplete="off"
+                           class="input"
+                           name="keyword"
+                           placeholder="새로운 잇슈 검색!"
+                           spellcheck="false"
+                           type="search"/>
+                </label>
+                <button class="submit-button" type="submit">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.9">
+                            <path d="M15.8999 14.5L19.0862 17.7187" stroke="currentColor" stroke-width="1.8"
+                                  stroke-linecap="round" stroke-linejoin="round"></path>
+                            <circle cx="11.4302" cy="10.4819" r="5.35" stroke="currentColor"
+                                    stroke-width="1.8"></circle>
+                        </g>
+                    </svg>
+                </button>
+            </form>
+        </li>
+        <!-- 관리자 페이지 링크 -->
+        <li id="adminLinkWrapper" th:if="${user != null}">
+            <a class="--obj-button -color-primary" href="">마이 페이지</a>
+        </li>
+        <li id="loginBtnWrapper" sec:authorize="!isAuthenticated()"> <!-- 비로그인 사용자 -->
+            <button id="loginBtn" class="--obj-button -color-primary" type="button">로그인</button>
+        </li>
+        <li class="nickname" th:if="${user != null}" th:text="|안녕하세요, ${nickname} 님!|">
+        </li>
+        <li id="logoutBtnWrapper" sec:authorize="isAuthenticated()"> <!-- 로그인한 사용자 -->
+            <a id="logoutBtn" class="--obj-button -color-primary" th:href="@{/logout}">로그아웃</a>
+        </li>
+    </ul>
+
+
+</header>
+<!-- Cover Screen -->
+<div class="cover" id="cover"></div>
+<!-- 로그인 폼 (숨김) -->
+<main id="main">
+
+
+    <div class="content">
+        <form novalidate class="login-form" id="loginForm" th:action="@{/api/login}" method="post">
+            <h2 class="title">
+                로그인</h2>
+            <label class="--obj-label" data-id="email">
+                <span class="_text">이메일</span>
+                <input autocomplete="email" class="_field --obj-field -light" maxlength="50" minlength="8"
+                       name="email" spellcheck="false" type="email">
+                <span class="_warning">올바른 이메일을 입력해 주세요</span>
+            </label>
+            <label class="--obj-label" data-id="password">
+                <span class="_text">비밀번호</span>
+                <input autocomplete="current-password" class="_field --obj-field -light" maxlength="50" minlength="6"
+                       name="password" spellcheck="false" type="password">
+                <span class="_warning">올바른 비밀번호를 입력해 주세요</span>
+            </label>
+            <label class="--obj-check-label">
+                <input class="_input" name="rememberEmail" type="checkbox">
+                <span class="_box"></span>
+                <span class="_text">이메일을 기억합니다.</span>
+            </label>
+            <input type="hidden" name="_csrf" th:value="${_csrf?.token}"/>
+            <button class="--obj-button -color-primary">로그인</button>
+
+            <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver
+                Login</a><br>
+            <a href="/oauth2/authorization/kakao" class="btn btn-third active" role="button">Kakao Login</a>
+
+            <button class="--obj-button -color-light-gray" name="cancel" type="button">취소</button>
+            <ul class="menu">
+                <li class="item">
+                    <span class="text">아직 계정이 없으신가요?</span>
+                    <a href="#register" class="link" rel="register">회원가입하기</a>
+                </li>
+                <li class="item">
+                    <span class="text">계정 정보를 잊으셨나요?</span>
+                    <a href="#recover" class="link" rel="recover">계정 찾기</a>
+                </li>
+            </ul>
+        </form>
+
+
+        <form novalidate class="register-form" id="registerForm">
+            <h2 class="title">회원가입</h2>
+            <label class="--obj-label" data-id="email">
+                <span class="_text">이메일</span>
+                <input autofocus autocomplete="email" class="_field --obj-field -light" maxlength="50" minlength="8"
+                       name="email" spellcheck="false" type="email">
+                <span class="_warning">올바른 이메일을 입력해 주세요.</span>
+            </label>
+            <label class="--obj-label" data-id="password">
+                <span class="_text">비밀번호</span>
+                <input autofocus autocomplete="password" class="_field --obj-field -light" maxlength="50" minlength="6"
+                       name="password" spellcheck="false" type="password">
+                <input autocomplete="password" class="_field --obj-field -light" maxlength="50" minlength="6"
+                       name="passwordCheck" placeholder="비밀번호 재입력" spellcheck="false" type="password">
+                <span class="_warning">올바른 비밀번호를 입력해 주세요.</span>
+            </label>
+            <label class="--obj-label" data-id="nickname">
+                <span class="_text" data-id="nickname">닉네임</span>
+                <input autocomplete="off" class="_field --obj-field -light" maxlength="10" minlength="2" name="nickname"
+                       spellcheck="false" type="text">
+                <span class="_warning">올바른 닉네임을 입력해 주세요.</span>
+            </label>
+            <label class="--obj-label" data-id="contact">
+                <span class="_text">연락처</span>
+                <input autocomplete="off" class="_field --obj-field -light" maxlength="12" minlength="10" name="contact"
+                       placeholder="'-'없이 입력" spellcheck="false" type="tel">
+                <span class="_warning">올바른 연락처를 입력해 주세요.</span>
+            </label>
+            <label class="--obj-check-label">
+                <input class="_input" name="agree" type="checkbox">
+                <span class="_box"></span>
+                <span class="_text">
+                <a href="#">서비스 이용약관</a> <a href="#">개인정보 처리방침</a>을 읽어보았으며 이해하였고 동의합니다.
+            </span>
+            </label>
+            <button class="--obj-button -color-primary" type="submit">회원가입</button>
+            <button class="--obj-button -color-light-gray" name="cancel" type="button">취소</button>
+        </form>
+
+
+        <form class="recover-form" id="recoverForm">
+            <h2 class="title">계정 찾기</h2>
+            <div class="mode-container">
+                <label class="label">
+                    <input class="input" name="mode" type="radio" value="email">
+                    <span class="title">이메일 찾기</span>
+                    <span class="text">회원가입시 입력한 연락처로 이메일을 찾습니다.</span>
+                </label>
+                <label class="label">
+                    <input class="input" name="mode" type="radio" value="password">
+                    <span class="title">비밀번호 재설정</span>
+                    <span class="text">이메일로 비밀번호를 재설정할 수 있는 링크를 전송합니다.</span>
+                </label>
+            </div>
+            <div class="content email">
+                <span class="text">이메일을 찾기 위해 아래 정보를 입력해 주세요.</span>
+                <label class="--obj-label" data-id="contact">
+                    <span class="_text">연락처</span>
+                    <input autocomplete="off" class="_field --obj-field -light" maxlength="12" minlength="10"
+                           name="contact"
+                           placeholder="'-' 없이 입력" spellcheck="false" type="tel">
+                    <span class="_warning">올바른 연락처를 입력해 주세요.</span>
+                </label>
+            </div>
+            <div class="content password">
+                <span class="text">비밀번호를 재설정하기 위해 아래 정보를 입력해 주세요.</span>
+                <label class="--obj-label" data-id="email">
+                    <span class="_text">이메일</span>
+                    <input autofocus autocomplete="email" class="_field --obj-field -light" maxlength="50" minlength="8"
+                           name="email" spellcheck="false" type="email">
+                    <span class="_warning">올바른 이메일을 입력해 주세요.</span>
+                </label>
+            </div>
+            <button class="--obj-button -color-primary" type="submit">계정 찾기</button>
+            <button class="--obj-button -color-light-gray" name="cancel" type="button">취소</button>
+        </form>
+    </div>
+</main>
+<!-- 네비게이션 메뉴 -->
+<nav class="main-nav">
+    <ul class="ul">
+        <li><a href="#">지역별</a></li>
+        <li><a href="#">2024 전국 축제</a></li>
+        <li><a href="#">게시판</a></li>
+        <li><a href="#">넣을거</a></li>
+        <li><a href="#">넣을거</a></li>
+        <li><a href="#">넣을거</a></li>
+    </ul>
+</nav>
+
+
+<a href="">
+    <section class="main-section">
+    <span class="image-slider">
+        <img src="./assets/images/section/image1.jpg" class="main-image" alt="Image 1"/>
+        <img src="./assets/images/section/image2.jpg" class="main-image" alt="Image 2"/>
+        <img src="./assets/images/section/image3.jpg" class="main-image" alt="Image 3"/>
+    </span>
+    </section>
+</a>
+
+
+<main>
+    <section class="card-grid">
+        <div class="card">
+            <img src="" alt="용과 방아 가족 축제">
+            <h3>용과 방아 가족 축제</h3>
+        </div>
+        <div class="card">
+            <img src="" alt="자연 교감 체험농장">
+            <h3>자연 교감 체험농장</h3>
+        </div>
+        <div class="card">
+            <img src="" alt="교과체험 동물농장">
+            <h3>교과체험 동물농장</h3>
+        </div>
+        <div class="card">
+            <img src="" alt="체험농장 특별 행사">
+            <h3>체험농장 특별 행사</h3>
+        </div>
+        <div class="card">
+            <img src="" alt="가족 테마여행">
+            <h3>가족 테마여행</h3>
+        </div>
+        <div class="card">
+            <img src="" alt="캠핑 자연 탐험">
+            <h3>캠핑 자연 탐험</h3>
+        </div>
+        <div class="card">
+            <img src="" alt="지역 축제 체험">
+            <h3>지역 축제 체험</h3>
+        </div>
+        <div class="card">
+            <img src="" alt="연인 테마여행">
+            <h3>연인 테마여행</h3>
+        </div>
+        <div class="card">
+            <img src="" alt="단체 체험 여행">
+            <h3>단체 체험 여행</h3>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <p>김용현 김창윤 김범수 이석민</p>
+        <p>고객센터: 123-456-7890</p>
+        <p>&copy; 2024 여기YOU. All Rights Reserved.</p>
+        <p>대구광역시 중구 동성로3가 동성로1길 15</p>
+    </div>
+</footer>
+
+
+</body>
+</html>

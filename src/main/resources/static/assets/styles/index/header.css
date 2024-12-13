@@ -1,0 +1,190 @@
+@charset "UTF-8";
+.header {
+  align-items: space-between;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4rem;
+  background-color: #c1b5a3;
+  color: #fff;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+.header > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.header .menu {
+  align-items: space-between;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+}
+.header .menu > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.header .menu .item:first-child img {
+  height: 4rem;
+  cursor: pointer;
+}
+.header .menu .item:last-child button {
+  height: 2.5rem;
+  background-color: #776969;
+  color: #fff;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+.header .menu .item:last-child button:hover {
+  background-color: #584f47;
+}
+.header .menu .stretch {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header .menu .stretch .form {
+  display: flex;
+  gap: 0.0625rem;
+  width: 100%;
+  max-width: 30rem;
+  color: #ffffff;
+}
+.header .menu .stretch .form .keyword-label {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.header .menu .stretch .form .keyword-label .input {
+  flex-grow: 1;
+  height: 2.5rem;
+  padding: 0 1rem;
+  border: 0.0625rem solid #ccc;
+  border-radius: 700px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+.header .menu .stretch .form .keyword-label .input:focus {
+  border-color: #776969;
+}
+.header .menu .stretch .form .keyword-label .submit-button {
+  background-color: #776969;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.header .menu .stretch .form .keyword-label .submit-button svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: #776969;
+}
+.header .menu .stretch .form .keyword-label .submit-button svg:hover {
+  fill: #584f47;
+}
+.hidden {
+  display: none;
+}
+
+.main-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: 300px;
+}
+.main-section .image-slider {
+  display: flex;
+  transition: transform 1s ease-in-out;
+}
+.main-section .main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+/* 네비게이션 메뉴 */
+.main-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10rem;
+  background-color: white;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+.main-nav ul a {
+  color: gray;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+}
+.main-nav ul a:hover {
+  color: #4d4d4d;
+}
+.main-nav ul a:active {
+  color: #4d4d4d;
+}
+
+/* 카드 그리드 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3열로 구성 */
+  margin: 10rem;
+  gap: 3rem;
+  background-color: #f9f9f9;
+}
+.card-grid .card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  height: 20rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.card-grid .card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.card-grid .card h3 {
+  padding: 10px;
+  font-size: 1.2rem;
+  background: #f7f7f7;
+}
+
+/* 푸터 */
+footer {
+  background: #C1B5A3;
+  text-align: center;
+  padding: 20px 0;
+}
+footer p {
+  margin: 5px;
+  color: black;
+}
+
+/*# sourceMappingURL=header.css.map */

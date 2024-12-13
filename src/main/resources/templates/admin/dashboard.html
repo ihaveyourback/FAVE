@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+<h1>Admin Dashboard</h1>
+<p>Welcome, Admin! Here's an overview of the system:</p>
+<ul>
+    <li>Total Users: <span th:text="${totalUsers}"></span></li>
+    <li>Active Sessions: <span th:text="${activeSessions}"></span></li>
+    <li>Recent Errors: <span th:text="${errors}"></span></li>
+</ul>
+</body>
+</html>

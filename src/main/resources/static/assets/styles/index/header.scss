@@ -1,0 +1,217 @@
+@charset "UTF-8";
+@import "global";
+
+.header {
+  @include flex(row, space-between, center);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4rem; // 헤더 전체 높이
+  background-color: #c1b5a3;
+  color: #fff;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  .menu {
+    @include flex(row, space-between, center);
+    align-items: center; // 아이템 모두 헤더의 중앙으로 배치
+    width: 95%;
+
+    // 로고 섹션
+    .item:first-child {
+      img {
+        height: 4rem; // 헤더 높이에 맞는 크기
+        cursor: pointer;
+      }
+    }
+
+    // 로그인 버튼 섹션
+    .item:last-child {
+      button {
+        height: 2.5rem; // 버튼 높이 헤더 높이와 조화
+        background-color: #776969;
+        color: #fff;
+        border: none;
+        border-radius: 0.25rem;
+        padding: 0 1rem;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #584f47;
+        }
+      }
+    }
+
+    // 검색 창 섹션
+    .stretch {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center; // 헤더 높이에 맞게 정렬
+
+      .form {
+        display: flex;
+        gap: 0.0625rem;
+        width: 100%;
+        max-width: 30rem;
+        color: #ffffff;
+
+        .keyword-label {
+          display: flex;
+          align-items: center; // 입력 필드와 버튼 수직 정렬
+          width: 100%;
+
+          .input {
+            flex-grow: 1;
+            height: 2.5rem; // 헤더 높이에 맞춘 입력 필드
+            padding: 0 1rem;
+            border: 0.0625rem solid #ccc;
+            border-radius: 700px;
+            outline: none;
+            transition: border-color 0.3s ease;
+
+            &:focus {
+              border-color: #776969;
+            }
+          }
+
+          .submit-button {
+            background-color: #776969;
+            display: flex;
+            align-items: center; // 버튼 내부 요소 수직 정렬
+            justify-content: center;
+            margin-left: -2rem; // 버튼과 입력 필드 연결
+            width: 2.5rem;
+            height: 2.5rem; // 헤더 높이에 맞춘 버튼 크기
+            border: none;
+            cursor: pointer;
+            padding: 0;
+
+            svg {
+              width: 1.5rem;
+              height: 1.5rem;
+              fill: #776969;
+
+              &:hover {
+                fill: #584f47;
+              }
+              &:active{
+
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+
+.main-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;  // 슬라이드 바깥의 이미지가 보이지 않게 함
+  height: 300px; // 섹션의 높이를 설정합니다.
+
+  .image-slider {
+    display: flex;
+    transition: transform 1s ease-in-out; // 애니메이션을 부드럽게 하기 위한 트랜지션 설정
+  }
+
+  .main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // 이미지 비율 유지하면서 잘라내기
+    border-radius: 1rem;
+  }
+}
+
+
+
+/* 네비게이션 메뉴 */
+.main-nav {
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    gap: 10rem;
+    background-color: white;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+
+    a {
+      $color: gray;
+      color: $color;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: bold;
+
+      &:hover {
+        color: darken($color, 20%)
+      }
+
+      &:active{
+        color: darken($color, 20%)
+      }
+    }
+  }
+}
+
+
+
+
+/* 카드 그리드 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3열로 구성 */
+  margin: 10rem;
+  gap: 3rem;
+  background-color: #f9f9f9;
+
+  .card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    height: 20rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    h3 {
+      padding: 10px;
+      font-size: 1.2rem;
+      background: #f7f7f7;
+    }
+  }
+}
+
+/* 푸터 */
+footer {
+  background: #C1B5A3;
+  text-align: center;
+  padding: 20px 0;
+
+  p {
+    margin: 5px;
+    color: black;
+  }
+}
+

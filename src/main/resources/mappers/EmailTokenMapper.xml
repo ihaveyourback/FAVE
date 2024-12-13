@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhkim.fave.mappers.EmailTokenMapper">
+    <insert id="insertEmailToken" parameterType="com.yhkim.fave.entities.EmailTokenEntity">
+        INSERT INTO `fave`.`email_tokens`(`user_email`, `key`, `create_at`, `expires_at`, `is_used`)
+        VALUES (#{userEmail}, #{key}, #{createdAt}, #{expiresAt}, #{isUsed})
+    </insert>
+    <select id="selectEmailTokenByUserEmailAndKey" resultType="com.yhkim.fave.entities.EmailTokenEntity">
+        SELECT `user_email` AS `userEmail`,
+               `key`        AS `key`,
+               `create_at`  AS `createdAt`,
+               `expires_at` AS `expiresAt`,
+               `is_used`    AS `isUsed`
+        FROM `fave`.`email_tokens`
+        WHERE `user_email` = #{userEmail}
+          AND `key` = #{key}
+        LIMIT 1
+    </select>
+
+    <update id="updateEmailToken" parameterType="com.yhkim.fave.entities.EmailTokenEntity">
+UPDATE `fave`.`email_tokens`
+        SET `create_at`  = #{createdAt},
+               `expires_at` = #{expiresAt},
+               `is_used`    = #{isUsed}
+        WHERE `user_email` = #{userEmail}
+          AND `key` = #{key}
+        LIMIT 1
+    </update>
+</mapper>

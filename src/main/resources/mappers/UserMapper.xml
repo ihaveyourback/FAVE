@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhkim.fave.mappers.UserMapper">
+    <insert id="insertUser" parameterType="com.yhkim.fave.entities.UserEntity" useGeneratedKeys="true" keyProperty="email">
+        INSERT INTO `fave`.`users` (`email`, `password`, `nickname`, `contact`, `create_at`, `update_at`,
+                                    `deleted_at`, `is_admin`, `is_suspended`, `is_verified`, `warning`)
+        VALUES (#{email}, #{password}, #{nickname}, #{contact}, #{createAt}, #{updateAt},
+                #{deletedAt}, #{isAdmin}, #{isSuspended}, #{isVerified}, #{warning})
+    </insert>
+    <select id="selectUserByEmail" resultMap="userResultMap">
+        SELECT `email`, `password`, `nickname`, `contact`,
+               `create_at` AS `createdAt`,
+               `update_at` AS `updatedAt`,
+               `deleted_at` AS `deletedAt`,
+               `is_admin` AS `isAdmin`,
+               `is_suspended` AS `isSuspended`,
+               `is_verified` AS `isVerified`,
+               `warning` AS `warning`
+        FROM `fave`.`users`
+        WHERE `email` = #{email}
+        LIMIT 1
+    </select>
+    <resultMap id="userResultMap" type="com.yhkim.fave.entities.UserEntity">
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="nickname" column="nickname"/>
+        <result property="contact" column="contact"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+        <result property="deletedAt" column="deleted_at"/>
+        <result property="admin" column="is_admin"/>
+        <result property="suspended" column="is_suspended"/>
+        <result property="verified" column="is_verified"/>
+        <result property="warning" column="warning"/>
+    </resultMap>
+
+    <select id="selectUserByContact" resultMap="userResultMap">
+        SELECT `email`        AS `email`,
+               `password`     AS `password`,
+               `nickname`     AS `nickname`,
+               `contact`      AS `contact`,
+               `create_at`    AS `createAt`,
+               `update_at`    AS `updateAt`,
+               `deleted_at`   AS `deletedAt`,
+               `is_admin`     AS `isAdmin`,
+               `is_suspended` AS `isSuspended`,
+               `is_verified`  AS `isVerified`,
+               `warning`      AS `warning`
+        FROM `fave`.`users`
+        WHERE `contact` = #{contact}
+        LIMIT 1
+    </select>
+    <select id="selectUserByNickname" resultType="com.yhkim.fave.entities.UserEntity">
+        SELECT `email`        AS `email`,
+               `password`     AS `password`,
+               `nickname`     AS `nickname`,
+               `contact`      AS `contact`,
+               `create_at`    AS `createAt`,
+               `update_at`    AS `updateAt`,
+               `deleted_at`   AS `deletedAt`,
+               `is_admin`     AS `isAdmin`,
+               `is_suspended` AS `isSuspended`,
+               `is_verified`  AS `isVerified`,
+               `warning`      AS `warning`
+        FROM `fave`.`users`
+        WHERE `nickname` = #{nickname}
+        LIMIT 1
+    </select>
+
+    <update id="updateUser" parameterType="com.yhkim.fave.entities.UserEntity">
+        UPDATE `fave`.`users`
+        <set>
+            <if test="password != null">`password` = #{password},</if>
+            <if test="nickname != null">`nickname` = #{nickname},</if>
+            <if test="createAt != null">`create_at` = #{createAt},</if>
+            <if test="updateAt != null">`update_at` = #{updateAt},</if>
+            <if test="deletedAt != null">`deleted_at` = #{deletedAt},</if>
+            <if test="isAdmin != null">`is_admin` = #{isAdmin},</if>
+            <if test="isSuspended != null">`is_suspended` = #{isSuspended},</if>
+            <if test="isVerified != null">`is_verified` = #{isVerified},</if>
+            <if test="warning != null">`warning` = #{warning},</if> <!-- warning 추가 -->
+        </set>
+        WHERE `email` = #{email}
+        LIMIT 1
+    </update>
+    <!--    약 특정 컬럼이 `NULL` 값으로 들어가면 DB 값도 `NULL`로 덮어씌워질 위험이 있습니다. **동적 SQL**을 통해 값이 실제로 설정된 컬럼만 업데이트되도록 수정하면 안전성과 효율성이 증가합니다.-->
+
+</mapper>
