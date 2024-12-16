@@ -1,16 +1,57 @@
 <!doctype html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>My Page - Profile</title>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index/profile.css">
+    <script type="text/javascript" src="/assets/scripts/common.js"></script>
+    <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
     <link rel="stylesheet" th:href="@{/assets/styles/main.css}">
     <script th:src="@{/assets/scripts/main.js}"></script>
 </head>
 <body>
-<h1>Welcome, <span th:text="${username}"></span>!</h1>
-<p>This is your profile page.</p>
+<header class="header">
+<ul class="menu">
+    <!-- 로고 -->
+    <li class="item">
+        <a th:href="@{'/'}">
+            <img alt="Fave" src="/assets/images/header-logo.png" class="logo">            </a>    </li>
+    <!-- 검색 폼 -->
+    <li class="stretch">
+        <form class="form">
+            <label class="keyword-label">
+                <input autocomplete="off"
+                       class="input"
+                       name="keyword"
+                       placeholder="새로운 잇슈 검색!"
+                       spellcheck="false"
+                       type="search"/>
+            </label>
+            <button class="submit-button" type="submit">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g opacity="0.9">
+                        <path d="M15.8999 14.5L19.0862 17.7187" stroke="currentColor" stroke-width="1.8"
+                              stroke-linecap="round" stroke-linejoin="round"></path>
+                        <circle cx="11.4302" cy="10.4819" r="5.35" stroke="currentColor"
+                                stroke-width="1.8"></circle>
+                    </g>
+                </svg>
+            </button>
+        </form>
+    </li>
+    <li class="nickname" th:text="|안녕하세요, ${username} 님!|">
+    </li>
+    <li id="logoutBtnWrapper" sec:authorize="isAuthenticated()"> <!-- 로그인한 사용자 -->
+        <a id="logoutBtn" class="--obj-button -color-primary" th:href="@{/logout}">로그아웃</a>
+    </li>
+</ul>
+</header>
 </body>
 </html>

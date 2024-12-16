@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/adminCommon.css">
+    <script src="https://kit.fontawesome.com/a3db7225ba.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header id="header" th:fragment="mainHeader">
+    <div class="header-container">
+        <div class="logo-container">
+            <a th:href="@{'/'}">
+                <img alt="Fave" src="/assets/images/header-logo.png" class="logo">            </a>
+        </div>
+        <div class="header-actions">
+            <!--            <a href="#" class="icon"><i class="fa-regular fa-user"></i> 프로필</a>-->
+            <a href="#" class="icon"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</a>
+        </div>
+    </div>
+</header>
+
+<nav id="nav" th:fragment="mainNav">
+    <ul class="nav-list">
+        <li><a th:href="@{'/user/'}">회원 관리</a></li>
+        <li><a class="list-category" th:href="@{'/board/'}">게시글 관리</a>
+            <ul class="dropdown">
+                <li><a th:href="@{'/board/'}">전체 게시글</a></li>
+                <li><a th:href="@{'/festival/'}">축제 정보 게시글</a></li>
+            </ul>
+        </li>
+        <li><a th:href="@{'/write/'}">게시글 등록</a></li>
+        <li><a href="#">문의 내역</a></li>
+        <li><a th:href="@{'/reports/'}">신고 내역</a></li>
+    </ul>
+</nav>
+
+<footer id="footer" th:fragment="mainFooter">
+    <p>&copy; 2024 축제있슈 관리자 페이지.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/styles/adminIndex.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/adminCommon.css">
+    <script src="https://kit.fontawesome.com/a3db7225ba.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<th:block th:replace="~{admin/common.html :: mainHeader}"></th:block>
+<th:block th:replace="~{admin/common.html :: mainNav}"></th:block>
+<main id="main">
+    <div class="content" rel="index">
+        <div class="grid-container">
+        <span>
+            <span>회원정보</span>
+            <span class="grid">
+                <span class="items">
+                    <span class="main">아이디</span>
+                    <span class="item">아이디</span>
+                    <span class="item">ID</span>
+                    <span class="item">ID</span>
+                    <span class="item">ID</span>
+                </span>
+                <span class="items">
+                    <span class="main">이름</span>
+                    <span class="item">김갑수</span>
+                    <span class="item">김갑수</span>
+                    <span class="item">김갑수</span>
+                    <span class="item">김갑수</span>
+                </span>
+                <span class="items">
+                    <span class="main">인증상태</span>
+                    <span class="item">완료</span>
+                    <span class="item">완료</span>
+                    <span class="item">완료</span>
+                    <span class="item">완료</span>
+                </span>
+            </span>
+        </span>
+            <span>
+            <span>게시글</span>
+            <span class="grid">
+                <span class="items">
+                    <span class="main">게시글번호</span>
+                    <span class="item">4</span>
+                    <span class="item">3</span>
+                    <span class="item">2</span>
+                    <span class="item">1</span>
+                    <span class="item">4</span>
+                    <span class="item">3</span>
+                    <span class="item">2</span>
+                    <span class="item">1</span>
+                </span>
+                <span class="items">
+                    <span class="main">제목</span>
+                    <span class="item">제목4</span>
+                    <span class="item">제목3</span>
+                    <span class="item">제목2</span>
+                    <span class="item">제목1</span>
+                    <span class="item">제목4</span>
+                    <span class="item">제목3</span>
+                    <span class="item">제목2</span>
+                    <span class="item">제목1</span>
+                </span>
+                <span class="items">
+                    <span class="main">작성자</span>
+                    <span class="item">ID</span>
+                    <span class="item">ID</span>
+                    <span class="item">ID</span>
+                    <span class="item">ID</span>
+                    <span class="item">ID</span>
+                    <span class="item">ID</span>
+                    <span class="item">ID</span>
+                    <span class="item">ID</span>
+                </span>
+            </span>
+        </span>
+            <span>
+            <span>문의내역</span>
+            <span class="grid"></span>
+        </span>
+            <span>
+            <span>신고내역</span>
+            <span class="grid"></span>
+        </span>
+        </div>
+    </div>
+</main>
+<th:block th:replace="~{admin/common.html :: mainFooter}"></th:block>
+</body>
+</html>

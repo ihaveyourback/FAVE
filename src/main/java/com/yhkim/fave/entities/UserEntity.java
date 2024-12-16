@@ -83,12 +83,8 @@ public class UserEntity implements UserDetails, OAuth2User {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (isAdmin) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("IS_ADMIN")); // ROLE_* 제거
         }
-        if (isSuspended) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_SUSPENDED"));
-        }
-        // 추가적인 권한이 있다면 여기에 추가
         return authorities;
     }
 
@@ -124,7 +120,13 @@ public class UserEntity implements UserDetails, OAuth2User {
                 "email", this.email,
                 "nickname", this.nickname,
                 "contact", this.contact,
-                "isAdmin", this.isAdmin
+                "createAt", this.createAt,
+                "updateAt", this.updateAt,
+                "deletedAt", this.deletedAt,
+                "isAdmin", this.isAdmin,
+                "is_suspended", this.isSuspended,
+                "is_verified", this.isVerified,
+                "warning", this.warning
         );
     }
 

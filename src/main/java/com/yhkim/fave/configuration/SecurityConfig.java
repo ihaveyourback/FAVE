@@ -49,7 +49,7 @@ public class SecurityConfig implements WebSecurityConfigurer {
                                 .requestMatchers("/assets/**").permitAll()
                                 .requestMatchers("/user/profile").authenticated()
                                 .requestMatchers("/user/**").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/admin/**").hasAuthority("IS_ADMIN")
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/api/login").permitAll()
                                 .anyRequest().authenticated()
