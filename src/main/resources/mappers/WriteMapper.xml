@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhkim.fave.mappers.WriteMapper">
+
+    <!--  축제 정보 등록  -->
+    <insert id="insertAdminWrite" parameterType="com.yhkim.fave.entities.WriteEntity">
+        INSERT INTO `fave`.`festival_info` (`title`, `description`, `start_date`, `end_date`, `location`,
+                                            `user_email`, `cover_data`, `cover_content_type`, `create_at`, `update_at`)
+        VALUES (#{title}, #{description}, #{startDate}, #{endDate}, #{location}, #{userEmail}, #{coverData},
+                #{coverContentType}, #{createdAt}, #{updatedAt});
+    </insert>
+</mapper>

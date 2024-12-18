@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/admin/styles/adminReports.css" type="text/css">
+    <link rel="stylesheet" href="/admin/styles/common.css" type="text/css">
+    <script defer src="/admin/scripts/adminReports.js" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/a3db7225ba.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<th:block th:replace="~{admin/common.html :: mainHeader}"></th:block>
+<th:block th:replace="~{admin/common.html :: mainNav}"></th:block>
+<main id="main">
+    <div class="content" rel="reports">
+        <table class="table">
+            <thead class="thead">
+            <tr class="header-tr">
+                <td>번호</td>
+                <td>신고자</td>
+                <td>피신고자</td>
+                <td>신고이유</td>
+                <td colspan="3">신고내용</td>
+                <td>신고유형</td>
+                <td>상태</td>
+                <td>신고날짜</td>
+                <td><!-- 버튼자리 --></td>
+            </tr>
+            </thead>
+            <tbody class="tbody">
+            <tr class="null" th:if="${reports == null || reports.length == 0}">
+                <td colspan="11">신고 내역이 없습니다.</td>
+            </tr>
+            <tr th:each="reports : ${reports}" th:if="${reports != null}" class="tbody-tr">
+                <td th:text="${reports.getIndex()}"></td>
+                <td th:text="${reports.getUserEmail()}"></td>
+                <td th:text="${reports.getReportUserEmail()}"></td>
+                <td th:text="${reports.getReason()}"></td>
+                <td th:text="${reports.getReasonDetail()}" colspan="3"></td>
+                <td th:text="${reports.getStatus()}">/td>
+                <td th:text="${reports.getCurrentStatus()}"></td>
+                <td th:text="${#temporals.format(reports.getReportedAt(), 'yyyy-MM-dd')}">2024-01-01</td>
+                <td>
+                    <input type="hidden" name="getReportUserEmail" th:value="${reports.getReportUserEmail}">
+                    <input type="hidden" name="warning" th:value="${reports.getUser().getWarning()}">
+                    <input type="hidden" name="index" th:value="${reports.getIndex()}">
+                    <button class="user-button warning-button">경고</button>
+                    <button class="user-button deleted-button">정지</button>
+                </td>
+            </tr>
+            <tr class="page-container">
+                <td colspan="11">
+                    <a th:each="page : ${#numbers.sequence(page.displayMinPage, page.displayMaxPage)}"
+                       th:text="${page}"
+                       th:href="@{'/reports/' (page=${page})}"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<th:block th:replace="~{admin/common.html :: mainFooter}"></th:block>
+</body>
+</html>
