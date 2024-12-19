@@ -16,79 +16,56 @@
 <th:block th:replace="~{admin/common.html :: mainNav}"></th:block>
 <main id="main">
     <div class="content" rel="index">
+        <div class="category">
+            <span>회원 정보</span>
+            <span>게시글 정보</span>
+            <span>문의 내역</span>
+            <span>신고 내역</span>
+        </div>
         <div class="grid-container">
-        <span>
-            <span>회원정보</span>
-            <span class="grid">
-                <span class="items">
-                    <span class="main">아이디</span>
-                    <span class="item">아이디</span>
-                    <span class="item">ID</span>
-                    <span class="item">ID</span>
-                    <span class="item">ID</span>
-                </span>
-                <span class="items">
-                    <span class="main">이름</span>
-                    <span class="item">김갑수</span>
-                    <span class="item">김갑수</span>
-                    <span class="item">김갑수</span>
-                    <span class="item">김갑수</span>
-                </span>
-                <span class="items">
-                    <span class="main">인증상태</span>
-                    <span class="item">완료</span>
-                    <span class="item">완료</span>
-                    <span class="item">완료</span>
-                    <span class="item">완료</span>
-                </span>
-            </span>
-        </span>
-            <span>
-            <span>게시글</span>
-            <span class="grid">
-                <span class="items">
-                    <span class="main">게시글번호</span>
-                    <span class="item">4</span>
-                    <span class="item">3</span>
-                    <span class="item">2</span>
-                    <span class="item">1</span>
-                    <span class="item">4</span>
-                    <span class="item">3</span>
-                    <span class="item">2</span>
-                    <span class="item">1</span>
-                </span>
-                <span class="items">
-                    <span class="main">제목</span>
-                    <span class="item">제목4</span>
-                    <span class="item">제목3</span>
-                    <span class="item">제목2</span>
-                    <span class="item">제목1</span>
-                    <span class="item">제목4</span>
-                    <span class="item">제목3</span>
-                    <span class="item">제목2</span>
-                    <span class="item">제목1</span>
-                </span>
-                <span class="items">
-                    <span class="main">작성자</span>
-                    <span class="item">ID</span>
-                    <span class="item">ID</span>
-                    <span class="item">ID</span>
-                    <span class="item">ID</span>
-                    <span class="item">ID</span>
-                    <span class="item">ID</span>
-                    <span class="item">ID</span>
-                    <span class="item">ID</span>
-                </span>
-            </span>
-        </span>
-            <span>
-            <span>문의내역</span>
-            <span class="grid"></span>
-        </span>
-            <span>
-            <span>신고내역</span>
-            <span class="grid"></span>
-        </span>
+            <div class="gird">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>이메일</th>
+                        <th>닉네임</th>
+                        <th>인증상태</th>
+                    </tr>
+                    </thead>
+                    <tbody class="tbody">
+                    <tr th:each="user : ${user}" class="user"
+                        th:attr="
+                        data-email=${user.getEmail()},
+                        data-nickname=${user.getNickName()},
+                        data-contact=${user.getContact()},
+                        data-createat=${#temporals.format(user.getCreatedAt(), 'yyyy-MM-dd HH:mm:ss')},
+                        data-isadmin=${user.isAdmin() == true ? '관리자' : '일반회원'},
+                        data-verified=${user.isVerified() == true ? '완료' : '미완료'},
+                        data-warning=${user.getWarning()}">
+                        <td th:text="${user.getEmail}">아이디</td>
+                        <td th:text="${user.getNickName}">닉네임</td>
+                        <td th:if="${user.isVerified() == true}">완료</td>
+                        <td th:if="${user.isVerified() == false}">미완료</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="gird"></div>
+            <div class="gird"></div>
+            <div class="gird"></div>
+        </div>
+        <div class="Modal-container">
+            <div class="Modal">
+                <div class="Modal-body">
+                    <span id="modalEmail"></span>
+                    <span id="modalNickname"></span>
+                    <span id="modalContact"></span>
+                    <span id="modalCreateAt"></span>
+                    <span id="modalIsAdmin"></span>
+                    <span id="modalVerified"></span>
+                    <span id="modalWarning"></span>
+                </div>
+            </div>
         </div>
     </div>
 </main>

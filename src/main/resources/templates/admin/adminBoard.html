@@ -49,7 +49,7 @@
                 <td colspan="6">
                     <a th:each="page : ${#numbers.sequence(page.displayMinPage, page.displayMaxPage)}"
                        th:text="${page}"
-                       th:href="@{'/board/' (filter=${filter}, keyword=${keyword}, page=${page})}"></a>
+                       th:href="@{'/admin/board/' (filter=${filter}, keyword=${keyword}, page=${page})}"></a>
                 </td>
             </tr>
             </tbody>
