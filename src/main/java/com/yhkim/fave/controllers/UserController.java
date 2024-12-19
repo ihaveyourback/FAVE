@@ -1,22 +1,28 @@
 package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.entities.EmailTokenEntity;
+import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
+import com.yhkim.fave.repository.ReportRepository;
 import com.yhkim.fave.results.CommonResult;
 import com.yhkim.fave.results.Result;
 import com.yhkim.fave.results.user.LoginResult;
+import com.yhkim.fave.services.ReportService;
 import com.yhkim.fave.services.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -24,14 +30,13 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
+    private ReportService reportService;
+
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    @GetMapping("/profile")
-    public String profilePage(Model model, Principal principal) {
-        model.addAttribute("username", principal.getName()); // 인증된 사용자 이름 추가
-        return "user/profile"; // Thymeleaf 템플릿 경로 반환 (예: profile.html)
-    }
+
 
     @GetMapping("/user/info")
     public String handleUserInfo(Model model, Principal principal) {
@@ -160,15 +165,19 @@ public class UserController {
     /**
      * 이메일 인증 토큰 검증 요청 처리
      *
-     * @param emailToken EmailTokenEntity 객체
-     * @return ModelAndView 객체
      */
     @RequestMapping(value = "/validate-email-token", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getValidateEmailToken(EmailTokenEntity emailToken) {
-        Result result = this.userService.validateEmailToken(emailToken);
+    public ModelAndView getValidateEmailToken(@RequestParam("email") String email, @RequestParam("key") String key) {
+        // 디버그 로그
+        System.out.println("Received email: " + email);
+        System.out.println("Received key: " + key);
+
+        Result result = userService.validateEmailToken(email, key);
+
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject(Result.NAME, result.nameToLower());
+        modelAndView.addObject("result", result.nameToLower()); // 결과를 템플릿에 바인딩
         modelAndView.setViewName("user/validateEmailToken");
         return modelAndView;
     }
+
 }

@@ -4,23 +4,42 @@
 body {
   @include flex(column, stretch, flex-start);
 }
+#main {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+  border-radius: 1rem;
+  margin: 5rem 1rem 1rem;
+  overflow: hidden;
+  position: relative;
 
+  > .content {
+    @include flex(row, center, center, 5rem);
+    display: contents;
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 70%;
+    backdrop-filter: brightness(200%) blur(2.5rem);
+    position: absolute;
 
-.nickname {
-  text-decoration: none; /* 기본 밑줄 제거 */
-  color: #007bfc; /* 파란색 텍스트 */
-  cursor: pointer; /* 클릭 가능한 요소임을 보여줌 */
+     #loginForm,
+     #registerForm,
+     #recoverForm {
+      @extend .modal;
+    }
+  }
 }
 
-.nickname:hover {
-  text-decoration: underline; /* 마우스 오버 시 밑줄 추가 */
-}
+
 
 /* 기본 슬라이더 스타일 */
 .image-slider {
   position: relative;
   width: 100%;
-  height: 400px; /* 슬라이더 높이 조정 */
+  height: 100%; /* 슬라이더 높이 조정 */
 }
 
 
@@ -102,34 +121,6 @@ body {
   }
 }
 
-#main {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #f5f5f5;
-  border-radius: 1rem;
-  margin: 5rem 1rem 1rem;
-  overflow: hidden;
-  position: relative;
-
-  > .content {
-    @include flex(row, center, center, 5rem);
-    display: contents;
-    top: 0;
-    left: 0;
-    width: 70%;
-    height: 70%;
-    backdrop-filter: brightness(200%) blur(2.5rem);
-    position: absolute;
-
-     #loginForm,
-     #registerForm,
-     #recoverForm {
-      @extend .modal;
-    }
-  }
-}
 
 #recoverForm {
   > .mode-container {

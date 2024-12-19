@@ -169,7 +169,7 @@ a:link, a:visited {
 }
 
 body {
-  @include minmaxWidth(100vw);
+  @include minmaxWidth(98.7vw);
   @include minmaxHeight(100vh);
   background-color: #ffffff;
   color: #d4d5d6;

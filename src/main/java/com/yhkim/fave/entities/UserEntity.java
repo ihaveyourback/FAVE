@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-@Entity(name = "fave")
+//@Entity(name = "fave")
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -68,16 +69,18 @@ public class UserEntity implements UserDetails, OAuth2User {
         this.updateAt = LocalDateTime.now();
     }
 
-
+    // 일반 로그인 시 가지고 가는 나의 id (identitiy)
     @Override
     public String getUsername() {
-        return nickname;
+        return email;
     }
 
     @Override
     public String getPassword() {
         return password;
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -87,6 +90,9 @@ public class UserEntity implements UserDetails, OAuth2User {
         }
         return authorities;
     }
+
+
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -130,8 +136,11 @@ public class UserEntity implements UserDetails, OAuth2User {
         );
     }
 
+    // sns로그인할때 가져가는 이 유저의 id (identity)
     @Override
     public String getName() {
         return email;
     }
+
+
 }

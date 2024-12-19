@@ -10,5 +10,7 @@ public interface EmailTokenMapper {
 
     EmailTokenEntity selectEmailTokenByUserEmailAndKey(@Param("userEmail") String userEmail,
                                                        @Param("key") String key);
+
+
     int updateEmailToken(EmailTokenEntity emailToken);
 }

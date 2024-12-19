@@ -25,9 +25,11 @@ public class HomeController {
         ModelAndView modelAndView = new ModelAndView();
         if (userDetails instanceof UserEntity user) {
             modelAndView.addObject("user", user); // user 객체 생성
+            modelAndView.addObject("email", user.getEmail());
             modelAndView.addObject("now", LocalDateTime.now());
             modelAndView.addObject("isAdmin", user.isAdmin());
             modelAndView.addObject("nickname", user.getUsername());
+            modelAndView.addObject("name", user.getNickname());
         }
 
         modelAndView.setViewName("home/index.main");

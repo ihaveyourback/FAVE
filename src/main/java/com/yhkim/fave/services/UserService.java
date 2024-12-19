@@ -5,6 +5,7 @@ import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.exceptions.TransactionalException;
 import com.yhkim.fave.mappers.EmailTokenMapper;
 import com.yhkim.fave.mappers.UserMapper;
+import com.yhkim.fave.repository.UserRepository;
 import com.yhkim.fave.results.CommonResult;
 import com.yhkim.fave.results.Result;
 import com.yhkim.fave.results.user.LoginResult;
@@ -25,6 +26,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -33,15 +35,16 @@ public class UserService {
     private final JavaMailSender mailSender; //2.  메일로 보낸다
     private final SpringTemplateEngine templateEngine; //1.  문자열로 받아와.
     private final BCryptPasswordEncoder encoder;
-
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserMapper userMapper, EmailTokenMapper emailTokenMapper, JavaMailSender mailSender, SpringTemplateEngine templateEngine) {
+    public UserService(UserMapper userMapper, EmailTokenMapper emailTokenMapper, JavaMailSender mailSender, UserRepository userRepository, SpringTemplateEngine templateEngine) {
         this.userMapper = userMapper;
         this.emailTokenMapper = emailTokenMapper;
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
         this.encoder = new BCryptPasswordEncoder();
+        this.userRepository = userRepository;
     }
 
     /**
@@ -133,7 +136,7 @@ public class UserService {
                 emailToken.getKey());
         Context context = new Context();
         context.setVariable("validationLink", validationLink);
-        String mailText =this.templateEngine.process("email/recoverPassword",context);
+        String mailText = this.templateEngine.process("email/recoverPassword", context);
         MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setFrom("yellow077@naver.com"); //발신자
@@ -143,10 +146,6 @@ public class UserService {
         this.mailSender.send(mimeMessage);
         return CommonResult.SUCCESS;
     }
-
-
-
-
 
 
     //결과값을 돌려줌과 동시에 이메일도 돌려줘야 하기에
@@ -168,14 +167,14 @@ public class UserService {
         if (emailToken == null ||
                 emailToken.getUserEmail() == null || emailToken.getUserEmail().length() < 8 || emailToken.getUserEmail().length() > 50 ||
                 emailToken.getKey() == null || emailToken.getKey().length() != 128 ||
-                password == null || password.length() < 6 || password.length() > 50){
+                password == null || password.length() < 6 || password.length() > 50) {
             return CommonResult.FAILURE;
         }
         EmailTokenEntity dbEmailToken = this.emailTokenMapper.selectEmailTokenByUserEmailAndKey(emailToken.getUserEmail(), emailToken.getKey());
-        if (dbEmailToken == null || dbEmailToken.isUsed()){
+        if (dbEmailToken == null || dbEmailToken.isUsed()) {
             return CommonResult.FAILURE;
         }
-        if (dbEmailToken.getExpiresAt().isBefore(LocalDateTime.now())){ //만료시간이 지났다.
+        if (dbEmailToken.getExpiresAt().isBefore(LocalDateTime.now())) { //만료시간이 지났다.
             return ResolveRecoverPasswordResulit.FAILURE_EXPIRED;
         }
         dbEmailToken.setUsed(true);
@@ -242,7 +241,7 @@ public class UserService {
                 emailToken.getKey());
         Context context = new Context();
         context.setVariable("validationLink", validationLink);
-        String mailText =this.templateEngine.process("email/register",context);
+        String mailText = this.templateEngine.process("email/register", context);
         MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setFrom("yellow6480@gmail.com"); //발신자
@@ -254,30 +253,103 @@ public class UserService {
     }
 
 
+    // 회원탈퇴 메서드
+    public boolean deactivateAccount(String email) {
+        Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            UserEntity user = optionalUser.get();
+            user.setDeletedAt(LocalDateTime.now());
+            // 탈퇴 처리
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
 
+    public void handleUserNotVerified(UserEntity user, String validationLink) throws MessagingException {
+        // 이메일 토큰 생성
+        EmailTokenEntity emailToken = new EmailTokenEntity();
+        emailToken.setUserEmail(user.getEmail());
+        emailToken.setKey(CryptoUtils.hashSha512(String.format("%s%s%f%f",
+                user.getEmail(),
+                user.getPassword(),
+                Math.random(),
+                Math.random()))); // 실제 구현에 맞게 키 생성
+        emailToken.setCreatedAt(LocalDateTime.now());
+        emailToken.setExpiresAt(LocalDateTime.now().plusHours(24));
+        emailToken.setUsed(false);
 
+        // 이메일 토큰을 DB에 저장
+        if (this.emailTokenMapper.insertEmailToken(emailToken) == 0) {
+            throw new RuntimeException("Email token insert failed.");
+        }
 
-    public Result validateEmailToken(EmailTokenEntity emailToken) {
-        if (emailToken == null ||
-                emailToken.getUserEmail() == null || emailToken.getUserEmail().length() < 8 || emailToken.getUserEmail().length() > 50 || emailToken.getKey() == null || emailToken.getKey().length() != 128){
+        // 이메일 인증 링크 생성 (validationLink를 생성 후 사용)
+        String emailValidationLink = String.format("http://localhost:8080/user/validate-email-token?email=%s&key=%s",
+                emailToken.getUserEmail(), emailToken.getKey());
+
+        // Thymeleaf 템플릿을 사용하여 이메일 내용 생성
+        Context context = new Context();
+        context.setVariable("validationLink", emailValidationLink);  // 이메일 링크를 템플릿에 전달
+        String mailText = templateEngine.process("email/register", context);
+
+        // 이메일 전송
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setFrom("your-email@example.com"); // 발신자 이메일
+        mimeMessageHelper.setTo(user.getEmail()); // 수신자 이메일
+        mimeMessageHelper.setSubject("[FAVE] 회원가입 인증 링크");
+        mimeMessageHelper.setText(mailText, true); // HTML 내용
+
+        mailSender.send(mimeMessage);  // 이메일 전송
+    }
+
+    public Result validateEmailToken(String email, String key) {
+        // 1. 이메일 및 키의 유효성 검사
+        if (email == null || email.length() < 8 || email.length() > 50) {
+            System.out.println("유효하지 않은 이메일 길이: " + email); // 디버그 로그
             return CommonResult.FAILURE;
         }
-        EmailTokenEntity dbEmailToken = this.emailTokenMapper.selectEmailTokenByUserEmailAndKey(emailToken.getUserEmail(), emailToken.getKey());
-        if (dbEmailToken == null || dbEmailToken.isUsed()) { // DB에 존재하지 않거나, 이미 사용된 토근이면
+        if (key == null || key.length() != 128) {
+            System.out.println("유효하지 않은 키 길이: " + (key != null ? key.length() : "null")); // 디버그 로그
             return CommonResult.FAILURE;
         }
-        if (dbEmailToken.getExpiresAt().isBefore(LocalDateTime.now())) {// 이메일 트큰의 만료 일시 가 현재 일시 보다 과거(isBefore)면,)
+
+        // 2. 이메일과 키를 사용하여 이메일 인증 토큰 조회
+        EmailTokenEntity dbEmailToken = this.emailTokenMapper.selectEmailTokenByUserEmailAndKey(email, key);
+        if (dbEmailToken == null || dbEmailToken.isUsed()) { // DB에 존재하지 않거나, 이미 사용된 토큰이면
+            System.out.println("토큰을 찾을 수 없거나 이미 사용된 토큰입니다."); // 디버그 로그
+            return CommonResult.FAILURE;
+        }
+
+        // 3. 토큰 만료 여부 확인
+        if (dbEmailToken.getExpiresAt().isBefore(LocalDateTime.now())) { // 이메일 토큰의 만료 일시가 현재 일시보다 과거이면
+            System.out.println("토큰이 만료되었습니다."); // 디버그 로그
             return ValidateEmailTokenResult.FAILURE_EXPIRED;
         }
-        dbEmailToken.setUsed(true); // 토큰을 사용된 것으로 처리한다. (인증은 한 번만 가능함으로)
-        if (this.emailTokenMapper.updateEmailToken(dbEmailToken) == 0){
-            throw new TransactionalException();
+
+        // 4. 토큰을 사용된 것으로 처리 (인증은 한 번만 가능함으로)
+        dbEmailToken.setUsed(true);
+        if (this.emailTokenMapper.updateEmailToken(dbEmailToken) == 0) {
+            throw new TransactionalException(); // 토큰 상태 업데이트 실패 시 예외 발생
         }
-        UserEntity user = this.userMapper.selectUserByEmail(emailToken.getUserEmail()); // 사용자 가져오기
-        user.setVerified(true); // 사용자에 대해 인증처리 된 것으로 수정한다.
-        if (this.userMapper.updateUser(user) == 0){
-            throw new TransactionalException();
+
+        // 5. 사용자 가져오기
+        UserEntity user = this.userMapper.selectUserByEmail(email);
+        if (user == null) {
+            System.out.println("사용자를 찾을 수 없습니다."); // 디버그 로그
+            return CommonResult.FAILURE;
         }
+
+        // 6. 사용자 인증 처리
+        user.setVerified(true);
+        if (this.userMapper.updateUser(user) == 0) {
+            throw new TransactionalException(); // 사용자 상태 업데이트 실패 시 예외 발생
+        }
+
+        // 7. 인증 성공
+        System.out.println("이메일 인증 성공: " + user.getEmail()); // 디버그 로그
         return CommonResult.SUCCESS;
     }
+
 }

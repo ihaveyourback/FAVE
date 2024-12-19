@@ -16,7 +16,7 @@
   .menu {
     @include flex(row, space-between, center);
     align-items: center; // 아이템 모두 헤더의 중앙으로 배치
-    width: 95%;
+    width: 100%;
 
     // 로고 섹션
     .item:first-child {
@@ -54,7 +54,6 @@
 
       .form {
         display: flex;
-        gap: 0.0625rem;
         width: 100%;
         max-width: 30rem;
         color: #ffffff;

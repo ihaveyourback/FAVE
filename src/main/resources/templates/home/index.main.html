@@ -55,7 +55,7 @@
         <li id="loginBtnWrapper" sec:authorize="!isAuthenticated()"> <!-- 비로그인 사용자 -->
             <button id="loginBtn" class="--obj-button -color-primary" type="button">로그인</button>
         </li>
-        <li class="nickname" th:if="${user != null}" th:text="|안녕하세요, ${nickname} 님!|">
+        <li class="name" th:if="${user != null}" th:text="|안녕하세요, ${name} 님!|">
         </li>
         <li id="logoutBtnWrapper" sec:authorize="isAuthenticated()"> <!-- 로그인한 사용자 -->
             <a id="logoutBtn" class="--obj-button -color-primary" th:href="@{/logout}">로그아웃</a>
@@ -66,10 +66,7 @@
 </header>
 <!-- Cover Screen -->
 <div class="cover" id="cover"></div>
-<!-- 로그인 폼 (숨김) -->
 <main id="main">
-
-
     <div class="content">
         <form novalidate class="login-form" id="loginForm" th:action="@{/api/login}" method="post">
             <h2 class="title">
@@ -190,15 +187,14 @@
         </form>
     </div>
 </main>
+
 <!-- 네비게이션 메뉴 -->
 <nav class="main-nav">
     <ul class="ul">
         <li><a href="#">지역별</a></li>
         <li><a href="#">2024 전국 축제</a></li>
-        <li><a href="#">게시판</a></li>
-        <li><a href="#">넣을거</a></li>
-        <li><a href="#">넣을거</a></li>
-        <li><a href="#">넣을거</a></li>
+        <li><a href="#">자유 게시판</a></li>
+        <li><a href="#">지도</a></li>
     </ul>
 </nav>
 
@@ -212,8 +208,11 @@
     </span>
     </section>
 </a>
+<!-- 로그인 폼 (숨김) -->
 
-
+<main>
+    <b><br><br><br><br></b>
+</main>
 <main>
     <section class="card-grid">
         <div class="card">

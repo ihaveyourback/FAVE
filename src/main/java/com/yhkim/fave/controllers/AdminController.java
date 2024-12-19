@@ -25,6 +25,7 @@ public class AdminController {
             modelAndView.addObject("now", LocalDateTime.now());
             modelAndView.addObject("isAdmin", user.isAdmin());
             modelAndView.addObject("nickname", user.getUsername());
+            modelAndView.addObject("name", user.getNickname());
         }
         modelAndView.setViewName("admin/adminIndex");
         return modelAndView;
