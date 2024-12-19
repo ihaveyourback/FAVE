@@ -2,7 +2,6 @@ package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.services.MyPageService;
 import com.yhkim.fave.services.ReportService;
 import com.yhkim.fave.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
