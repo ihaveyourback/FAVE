@@ -200,48 +200,6 @@ const editorConfig = {
         contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
     }
 };
-// $main.onsubmit = (e) => {
-//     e.preventDefault()
-//     // console.log(editor.getData())
-//     if ($main['title'].value === '') {
-//         return;
-//     }
-//     if ($main['nickname'.value === '']) {
-//         return;
-//     }
-//     if ($main['password'.value === '']) {
-//         return;
-//     }
-//     if ($main['password'.value !== $main['passwordCheck'].value]) {
-//         alert('입력하신 비밀번호가 서로 일치하지 않습니다.')
-//         $main['passwordCheck'].focus();
-//         return;
-//     }
-//     const xhr = new XMLHttpRequest();
-//     const formData = new FormData();
-//     formData.append('nickname', $main['nickname'].value); // 닉네임 싣고
-//     formData.append('password', $main['password'].value); // 비밀번호 싣고
-//     formData.append('title', $main['title'].value); // 제목 싣고
-//     formData.append('content', editor.getData()); // 내용 싣고
-//     xhr.onreadystatechange = () => {
-//         if (xhr.readyState !== XMLHttpRequest.DONE) {
-//             return;
-//         }
-//         if (xhr.status < 200 || xhr.status >= 300) {
-//             alert('게시글을 작성하지 못하였습니다. 잠시 후 다시 시도해 주세요.')
-//             return;
-//         }
-//         const response = JSON.parse(xhr.responseText);
-//         if (response['result'] === true) {
-//             location.href = `./read?index=${response['index']}`
-//         } else {
-//             alert('게시글을 작성하지 못하였습니다. 잠시 후 다시 시도해 주세요.')
-//         }
-//         // TODO
-//     };
-//     xhr.open('POST', location.href);
-//     xhr.send(formData); // xhr.send() 그냥 이렇게 보내면 닉네임 비밀번호 제목 내용 안 보내짐
-// };
 
 // region XHR
 ClassicEditor.create($mainForm['description'], editorConfig).then((editor) => {
