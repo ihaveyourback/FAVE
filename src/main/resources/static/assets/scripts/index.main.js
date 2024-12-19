@@ -79,9 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             Loading.hide();
-
+            const response = JSON.parse(xhr.responseText);
             if (xhr.status >= 200 && xhr.status < 300) {
-                const response = JSON.parse(xhr.responseText);
                 if (response['result'] === 'success') {
                     if ($loginForm['rememberEmail'].checked) {
                         localStorage.setItem('rememberedEmail', $loginForm['email'].value);
@@ -91,21 +90,44 @@ document.addEventListener("DOMContentLoaded", () => {
                     location.reload();
                     return;
                 }
-                handleFailure(response['result']);
-            } else {
-                try {
-                    const response = JSON.parse(xhr.responseText);
-                    handleFailure(response['result']);
-                } catch (error) {
+                // 예외 처리
+                if (!response['result']) {
+                    console.error('서버 응답에 result 값이 없습니다.');
                     Dialog.show({
                         title: '오류',
-                        content: '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.',
-                        buttons: [{
-                            text: '확인',
-                            onclick: ($dialog) => Dialog.hide($dialog)
-                        }]
+                        content: '서버로부터 유효하지 않은 응답이 반환되었습니다.',
+                        buttons: [{text: '확인', onclick: Dialog.hide}]
                     });
+                    return;
                 }
+                // result에 따른 메시지 매핑
+                const failureCases = {
+                    failure_bad_credentials: ['로그인', '이메일 혹은 비밀번호가 올바르지 않습니다. 다시 확인해 주세요.', ($dialog) => {
+                        Dialog.hide($dialog);
+                        $loginForm['email'].focus();
+                        $loginForm['email'].select();
+                    }],
+                    failure_not_verified: ['로그인', `해당 계정의 이메일 인증이 완료되지 않았습니다. 이메일을 확인해 주세요.<br><br>혹시 이메일이 오지 않았다면 인증 링크가 포함된 이메일을 <a href="/user/resend-register-email-token?email=${$loginForm['email'].value}" target="_blank">다시 전송</a>할 수 있습니다.`, ($dialog) => Dialog.hide($dialog)],
+                    failure_suspended: ['로그인', '해당 계정은 이용이 정지된 상태입니다. 관리자에게 문의해 주세요.', ($dialog) => Dialog.hide($dialog)],
+                    failure_deleted: ['로그인', '해당 계정은 삭제되었습니다. 관리자에게 문의해 주세요.', ($dialog) => Dialog.hide($dialog)],
+                };
+                // 응답 처리
+                const [title, content, onclick] = failureCases[response['result']] ||
+                ['오류', '서버가 알 수 없는 응답을 반환하였습니다.', ($dialog) => Dialog.hide($dialog)];
+                Dialog.show({
+                    title: title, content: content, buttons: [{
+                        text: '확인', onclick: onclick
+                    }]
+                });
+            } else {
+                Dialog.show({
+                    title: '오류',
+                    content: '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.',
+                    buttons: [{
+                        text: '확인',
+                        onclick: ($dialog) => Dialog.hide($dialog)
+                    }]
+                });
             }
         };
         xhr.open('POST', url.toString());
@@ -116,31 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }));
         Loading.show(0);
     };
-
-    function handleFailure(result) {
-        // result에 따른 메시지 매핑
-        const failureCases = {
-            failure_bad_credentials: ['로그인', '이메일 혹은 비밀번호가 올바르지 않습니다. 다시 확인해 주세요.', ($dialog) => {
-                Dialog.hide($dialog);
-                $loginForm['email'].focus();
-                $loginForm['email'].select();
-            }],
-            failure_not_verified: ['로그인', `해당 계정의 이메일 인증이 완료되지 않았습니다. 이메일을 확인해 주세요.<br><br>혹시 이메일이 오지 않았다면 인증 링크가 포함된 이메일을 <a href="/user/resend-register-email-token?email=${$loginForm['email'].value}" target="_blank">다시 전송</a>할 수 있습니다.`, ($dialog) => Dialog.hide($dialog)],
-            failure_suspended: ['로그인', '해당 계정은 이용이 정지된 상태입니다. 관리자에게 문의해 주세요.', ($dialog) => Dialog.hide($dialog)],
-            failure_deleted: ['로그인', '해당 계정은 삭제되었습니다. 관리자에게 문의해 주세요.', ($dialog) => Dialog.hide($dialog)],
-        };
-        // 응답 처리
-        const [title, content, onclick] = failureCases[result] ||
-        ['오류', '서버가 알 수 없는 응답을 반환하였습니다.', ($dialog) => Dialog.hide($dialog)];
-        Dialog.show({
-            title: title,
-            content: content,
-            buttons: [{
-                text: '확인',
-                onclick: onclick
-            }]
-        });
-    }
 
 
 

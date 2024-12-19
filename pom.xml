@@ -128,11 +128,6 @@
             <version>6.3.2</version> <!-- 사용 중인 Spring Boot 및 Spring Security 버전에 맞게 설정 -->
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.17.0</version>
-        </dependency>
-        <dependency>
             <groupId>jakarta.mail</groupId>
             <artifactId>jakarta.mail-api</artifactId>
             <version>2.0.1</version>
