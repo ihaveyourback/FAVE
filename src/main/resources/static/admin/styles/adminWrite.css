@@ -1,0 +1,78 @@
+#main > .content[rel=write] {
+  width: 100%;
+  height: auto;
+  margin: 1.25rem auto;
+  padding: 1.25rem;
+  background-color: #ffffff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+}
+#main > .content[rel=write] > .mainForm {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 1rem;
+}
+#main > .content[rel=write] > .mainForm > .line {
+  border: 0.01rem solid #c1b5a3;
+}
+#main > .content[rel=write] > .mainForm > .main-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+#main > .content[rel=write] > .mainForm > .main-container > .button-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+#main > .content[rel=write] > .mainForm > .main-container > .row {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+#main > .content[rel=write] > .mainForm > .main-container > .row > .preview-wrapper {
+  width: 19rem;
+  aspect-ratio: 1/1;
+  border: 0.0625rem solid #757575;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+#main > .content[rel=write] > .mainForm > .main-container > .row > .preview-wrapper > * {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: absolute;
+}
+#main > .content[rel=write] > .mainForm > .main-container > .row > .preview-wrapper > .text {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+#main > .content[rel=write] > .mainForm > .main-container > .row > .preview-wrapper > .image {
+  object-fit: cover;
+  object-position: center;
+}
+#main > .content[rel=write] > .mainForm > .main-container > .label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+#main > .content[rel=write] > .mainForm > .main-container > .label > .item {
+  width: 20rem;
+}
+#main > .content[rel=write] > .mainForm > .main-container > .label > .textarea {
+  height: auto;
+}
+
+/*# sourceMappingURL=adminWrite.css.map */

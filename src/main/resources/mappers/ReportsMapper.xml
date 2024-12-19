@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhkim.fave.mappers.ReportsMapper">
+    <select id="selectReports" parameterType="com.yhkim.fave.entities.ReportsEntity" resultType="com.yhkim.fave.entities.ReportsEntity">
+        SELECT `index`               AS `index`,
+               `user_email`          AS `userEmail`,
+               `reported_user_email` AS `reportUserEmail`,
+               `reported_post_id`    AS `reportedPostId`,
+               `reported_comment_id` AS `reportedCommentId`,
+               `status`              AS `status`,
+               `current_status`      AS `currentStatus`,
+               `reason`              AS `reason`,
+               `reason_detail`       AS `reasonDetail`,
+               `reported_at`         AS `reportedAt`
+        FROM `fave`.`reports`
+        WHERE `current_status` = '신고 처리 중'
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+    <select id="selectReportsCount" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `fave`.`reports`
+    </select>
+    <select id="selectReportByIndex" resultType="com.yhkim.fave.entities.ReportsEntity">
+        SELECT `index`               AS `index`,
+               `user_email`          AS `userEmail`,
+               `reported_user_email` AS `reportUserEmail`,
+               `reported_post_id`    AS `reportedPostId`,
+               `reported_comment_id` AS `reportedCommentId`,
+               `status`              AS `status`,
+               `current_status`      AS `currentStatus`,
+               `reason`              AS `reason`,
+               `reason_detail`       AS `reasonDetail`,
+               `reported_at`         AS `reportedAt`
+        FROM `fave`.`reports`
+        WHERE `index` = #{index}
+        LIMIT 1
+    </select>
+    <update id="updateReport">
+        UPDATE `fave`.`reports`
+        SET `current_status` = #{currentStatus}
+        WHERE `index` = #{index}
+    </update>
+</mapper>

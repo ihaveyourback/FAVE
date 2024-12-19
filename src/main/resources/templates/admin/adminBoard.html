@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/admin/styles/adminBoard.css" type="text/css">
+    <link rel="stylesheet" href="/admin/styles/common.css" type="text/css">
+    <script defer src="/admin/scripts/adminBoard.js" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/a3db7225ba.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<th:block th:replace="~{admin/common.html :: mainHeader}"></th:block>
+<th:block th:replace="~{admin/common.html :: mainNav}"></th:block>
+<main id="main">
+    <div class="content" rel="board">
+        <table class="article-table">
+            <thead>
+            <tr>
+                <th scope="col">번호</th>
+                <th scope="col" class="spring">제목</th>
+                <th scope="col">작성자</th>
+                <th scope="col">조회수</th>
+                <th scope="col">작성일</th>
+                <th><!--버튼 자리--></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="null" th:if="${board == null || board.length == 0}">
+                <td colspan="6">게시글이 존재 하지 않습니다.</td>
+            </tr>
+            <tr th:each="board : ${board}">
+                <td th:text="${board.getIndex()}"></td>
+                <td th:text="${board.getTitle()}"></td>
+                <td th:text="${board.getUserNickName()}"></td>
+                <td th:text="${board.getView()}"></td>
+                <td th:text="${#temporals.format(board.getCreatedAt(), 'yyyy-MM-dd')}"></td>
+                <td>
+                    <input type="hidden" name="userEmail" th:value="${board.getUser().getEmail()}">
+                    <input type="hidden" name="warning" th:value="${board.getUser().getWarning()}">
+                    <input type="hidden" name="index" th:value="${board.getIndex()}">
+                    <button id="deleted-button" class="user-button deleted-button" type="submit">삭제</button>
+                    <button id="warning-button" class="user-button warning-button" type="submit">경고</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <a th:each="page : ${#numbers.sequence(page.displayMinPage, page.displayMaxPage)}"
+                       th:text="${page}"
+                       th:href="@{'/board/' (filter=${filter}, keyword=${keyword}, page=${page})}"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <form id="board-form">
+            <label class="label">
+                <select name="filter" class="filter">
+                    <option value="all">제목 + 내용</option>
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
+                    <option value="nickname">작성자</option>
+                </select>
+            </label>
+            <label class="label">
+                <input type="text" placeholder="검색어" name="keyword" class="keyword">
+            </label>
+            <button type="submit" class="user-button">검색</button>
+        </form>
+    </div>
+</main>
+<th:block th:replace="~{admin/common.html :: mainFooter}"></th:block>
+
+
+</body>
+</html>

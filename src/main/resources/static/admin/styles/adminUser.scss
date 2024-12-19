@@ -1,0 +1,85 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+* {
+  box-sizing: border-box;
+}
+
+#main > .content[rel="user"] {
+  width: 100%;
+  height: 71vh;
+  margin: 1.25rem auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 1.25rem;
+  background-color: #ffffff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+
+  .table {
+    width: 100%;
+    margin: 0 auto;
+    //table-layout: fixed;
+    table-layout: auto;
+    border-collapse: separate;
+    font-size: 0.825rem;
+
+    .main-container {
+      background-color: #f5f5ec;
+    }
+
+    td, th {
+      text-align: center;
+      padding: 0.825rem;
+    }
+
+    tr.user-container {
+      td {
+        border-bottom: 1px solid #a6a6a6;
+      }
+    }
+
+    .page-container {
+      td {
+        a {
+          margin-right: 0.5rem;
+        }
+
+        a:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  > .main-form {
+    display: flex;
+    gap: 0.5rem;
+
+    > .label {
+
+      > .filter {
+        $border-color: #c1b5a3;
+        border: 0.08rem solid $border-color;
+        border-radius: 0.25rem;
+
+        &:focus {
+          border: 0.08rem solid darken($border-color, 10%);
+          outline: none;
+        }
+      }
+
+      > .keyword {
+        $border-color: #c1b5a3;
+        border: 0.08rem solid $border-color;
+        border-radius: 0.25rem;
+
+        &:focus {
+          border: 0.08rem solid darken($border-color, 10%);
+          outline: none;
+        }
+      }
+    }
+  }
+}
+
