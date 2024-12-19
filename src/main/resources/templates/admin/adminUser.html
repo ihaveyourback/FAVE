@@ -27,7 +27,7 @@
                 <td><!-- 버튼 자리 --></td>
             </tr>
             <tr class="null" th:if="${user == null || user.length == 0}">
-                <td>유저 정보가 존재 하지 않습니다.</td>
+                <td colspan="7" class="nullMessage">유저 정보가 존재 하지 않습니다.</td>
             </tr>
             <tr class="user-container" th:each="user : ${user}">
                 <td th:text="${user.getEmail()}"></td>
@@ -49,7 +49,7 @@
                 <td colspan="7">
                     <a th:each="page : ${#numbers.sequence(page.displayMinPage, page.displayMaxPage)}"
                        th:text="${page}"
-                       th:href="@{'/user/' (filter=${filter}, keyword=${keyword}, page=${page})}"></a>
+                       th:href="@{'/admin/user/' (filter=${filter}, keyword=${keyword}, page=${page})}"></a>
                 </td>
             </tr>
         </table>

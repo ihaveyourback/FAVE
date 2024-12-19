@@ -55,7 +55,7 @@
                 <td colspan="11">
                     <a th:each="page : ${#numbers.sequence(page.displayMinPage, page.displayMaxPage)}"
                        th:text="${page}"
-                       th:href="@{'/reports/' (page=${page})}"></a>
+                       th:href="@{'/admin/reports/' (page=${page})}"></a>
                 </td>
             </tr>
             </tbody>

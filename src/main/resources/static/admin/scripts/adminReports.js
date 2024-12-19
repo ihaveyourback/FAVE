@@ -38,13 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
                             location.reload();
                         }
                     };
-                    xhr.open('POST', '/reports/index');
+                    xhr.open('POST', '/admin/reports/index');
                     xhr.send(formData);
                 } else {
                     alert('알 수 없는 이유로 경고를 추가하지 못하였습니다.');
                 }
             };
-            xhr.open('PATCH', '/warning/');
+            xhr.open('PATCH', '/admin/warning/');
             xhr.send(formData);
         });
     });
@@ -83,13 +83,13 @@ document.addEventListener("DOMContentLoaded", () => {
                             location.reload();
                         }
                     };
-                    xhr.open('POST', '/reports/index');
+                    xhr.open('POST', '/admin/reports/index');
                     xhr.send(formData);
                 } else {
                     alert('알 수 없는 이유로 이용조치 처리를 실패하였습니다.')
                 }
             };
-            xhr.open('DELETE', '/delete/');
+            xhr.open('DELETE', '/admin/delete/');
             xhr.send(formData);
         })
     })

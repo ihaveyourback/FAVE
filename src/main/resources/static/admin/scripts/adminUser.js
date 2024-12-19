@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('알 수 없는 이유로 계정 삭제 조치를 하지 못하였습니다.')
                 }
             };
-            xhr.open('DELETE', '/delete/');
+            xhr.open('DELETE', '/admin/delete/');
             xhr.send(formData);
         })
     })
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('알 수 없는 이유로 경고를 추가하지 못하였습니다.')
                 }
             };
-            xhr.open('PATCH', '/warning/');
+            xhr.open('PATCH', '/admin/warning/');
             xhr.send(formData);
         });
     });

@@ -34,6 +34,10 @@ public class AdminPageService {
         this.reportsMapper = reportsMapper;
     }
 
+    public UserEntity[] getUsers() {
+        return this.userMapper.selectAllUser();
+    }
+
     public Boolean write(WriteEntity adminPage, MultipartFile coverFile) {
         if (adminPage == null || adminPage.getTitle() == null || adminPage.getTitle().length() < 2 || adminPage.getTitle().length() > 20 ||
                 adminPage.getLocation() == null || adminPage.getStartDate() == null || adminPage.getEndDate() == null || adminPage.getDescription() == null || adminPage.getDescription().isEmpty() || adminPage.getDescription().length() > 10000) {
@@ -65,7 +69,7 @@ public class AdminPageService {
     }
 
     public boolean updateDeleted(String userEmail) {
-        UserEntity user = this.userMapper.selectUserByEmailAdmin(userEmail);
+        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
         if (user == null) {
             return false;
         }
@@ -75,7 +79,7 @@ public class AdminPageService {
     }
 
     public boolean updateWarning(String userEmail, int warning) {
-        UserEntity user = this.userMapper.selectUserByEmailAdmin(userEmail);
+        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
         if (user == null) {
             return false;
         }
@@ -151,7 +155,7 @@ public class AdminPageService {
         if (userEmail == null || userEmail.isEmpty()) {
             return null;
         }
-        return this.userMapper.selectUserByEmailAdmin(userEmail);
+        return this.userMapper.selectUserByEmail(userEmail);
     }
 
     public boolean deleteBoardPost(int index) {

@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = "/")
+@RequestMapping(value = "/admin")
 public class AdminPageController {
 
     private final AdminPageService adminPageService;
@@ -40,7 +40,9 @@ public class AdminPageController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getIndex() {
+        UserEntity[] user = this.adminPageService.getUsers();
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("user", user);
         modelAndView.setViewName("admin/adminIndex");
         return modelAndView;
     }
