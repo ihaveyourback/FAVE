@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const sidebarButtons = document.querySelectorAll(".sidebar__button");
     const contentSections = document.querySelectorAll(".content__section");
     const deactivateForm = document.getElementById("deactivateForm");
+    const updateForm = document.getElementById("updateForm");
 
     // 모든 섹션을 숨기는 함수
     const hideAllSections = () => {
@@ -44,5 +45,30 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error:", error);
             alert("회원탈퇴 처리 중 오류가 발생하였습니다. 다시 시도해 주세요.");
         });
+    });
+
+    // 내 정보 수정 폼 제출 처리
+    updateForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = {
+            nickname: document.getElementById('nickname').value,
+            currentPassword: document.getElementById('currentPassword').value,
+            newPassword: document.getElementById('newPassword').value
+        };
+
+        fetch('/user/update-profile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     });
 });

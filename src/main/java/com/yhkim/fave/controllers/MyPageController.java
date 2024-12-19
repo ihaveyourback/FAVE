@@ -38,7 +38,6 @@ public class MyPageController {
 
     @GetMapping("/profile")
     public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal) {
-        // ReportService를 사용하여 로그인한 사용자의 신고 내역을 가져옴
         List<Report> reports = reportService.getReportsByLoggedInUser();
         ModelAndView modelAndView = new ModelAndView();
 
@@ -48,11 +47,10 @@ public class MyPageController {
 
         modelAndView.addObject("reports", reports);
         modelAndView.setViewName("user/profile");
-        modelAndView.addObject("username", principal.getName()); // 인증된 사용자 이름 추가
-        return modelAndView; // Thymeleaf 템플릿 경로 반환 (예: profile.html)
+        modelAndView.addObject("username", principal.getName());
+        return modelAndView;
     }
 
-    // 회원탈퇴
     @PostMapping("/secession")
     public ResponseEntity<?> secession(@AuthenticationPrincipal UserDetails userDetails,
                                        @RequestBody Map<String, String> payload) {
@@ -60,12 +58,10 @@ public class MyPageController {
             String email = user.getEmail();
             String currentPassword = payload.get("currentPassword");
 
-            // 현재 비밀번호가 맞는지 확인 (예: 패스워드 매칭 로직 추가)
             if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
             }
 
-            // 실제 탈퇴 처리 로직
             boolean isDeleted = userService.deactivateAccount(email);
             if (isDeleted) {
                 return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));
@@ -76,4 +72,32 @@ public class MyPageController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
     }
 
+    @PostMapping("/update-profile")
+    public ResponseEntity<?> updateUserInfo(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody Map<String, String> payload) {
+        if (!(userDetails instanceof UserEntity user)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "사용자 정보가 없습니다."));
+        }
+
+        String newNickname = payload.get("nickname");
+        String currentPassword = payload.get("currentPassword");
+        String newPassword = payload.get("newPassword");
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
+        }
+
+        if (newNickname != null && !newNickname.isEmpty()) {
+            if (!userService.updateNickname(user.getEmail(), newNickname)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "중복된 닉네임입니다."));
+            }
+        }
+
+        if (newPassword != null && !newPassword.isEmpty()) {
+            userService.updatePassword(user.getEmail(), newPassword);
+        }
+
+        return ResponseEntity.ok(Map.of("message", "사용자 정보가 성공적으로 업데이트되었습니다."));
+    }
 }

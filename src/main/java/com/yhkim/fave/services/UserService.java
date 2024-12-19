@@ -352,4 +352,34 @@ public class UserService {
         return CommonResult.SUCCESS;
     }
 
+
+
+    @Transactional
+    public boolean updateNickname(String email, String newNickname) {
+        // 새로운 닉네임이 이미 사용 중인지 확인
+        if (userMapper.selectUserByNickname(newNickname) != null) {
+            return false; // 중복된 닉네임이면 false 반환
+        }
+
+        // 이메일로 사용자 정보 조회
+        UserEntity user = userMapper.selectUserByEmail(email);
+        // 사용자 닉네임 업데이트
+        user.setNickname(newNickname);
+        // 업데이트 시간 설정
+        user.setUpdateAt(LocalDateTime.now());
+        // 사용자 정보 업데이트 후 성공 여부 반환
+        return userMapper.updateUser(user) > 0;
+    }
+
+    @Transactional
+    public void updatePassword(String email, String newPassword) {
+        // 이메일로 사용자 정보 조회
+        UserEntity user = userMapper.selectUserByEmail(email);
+        // 비밀번호 암호화 후 업데이트
+        user.setPassword(encoder.encode(newPassword));
+        // 업데이트 시간 설정
+        user.setUpdateAt(LocalDateTime.now());
+        // 사용자 정보 업데이트
+        userMapper.updateUser(user);
+    }
 }
