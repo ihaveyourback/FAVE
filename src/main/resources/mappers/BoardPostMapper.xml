@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhkim.fave.mappers.BoardPostMapper">
+
+    <select id="selectPostsByUserEmail" resultType="com.yhkim.fave.entities.BoardPostEntity">
+        SELECT `index`,
+               title,
+               content,
+               user_email    AS userEmail,
+               user_nickname AS userNickname,
+               create_at     AS createAt,
+               update_at     AS updateAt,
+               deleted_at    AS deletedAt,
+               `view`
+        FROM fave.board_posts
+        WHERE user_email = #{userEmail}
+        ORDER BY create_at DESC
+        LIMIT #{pageVo.offsetCount}, #{pageVo.countPerPage}
+    </select>
+
+    <select id="countPostsByUserEmail" resultType="int">
+        SELECT COUNT(*)
+        FROM fave.board_posts
+        WHERE user_email = #{userEmail}
+    </select>
+</mapper>

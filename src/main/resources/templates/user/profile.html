@@ -73,6 +73,9 @@
                 <button class="sidebar__button" data-target="favorites">찜 목록</button>
             </li>
             <li class="sidebar__item">
+                <button class="sidebar__button" data-target="posts">내 게시글</button>
+            </li>
+            <li class="sidebar__item">
                 <button class="sidebar__button" data-target="reports">신고 내역</button>
             </li>
             <li class="sidebar__item">
@@ -90,6 +93,38 @@
             <p>여기에 사용자가 찜한 게시글이 표시됩니다.</p>
         </div>
 
+        <div id="posts" class="content__section">
+            <h2>내 게시글</h2>
+            <table class="posts-table">
+                <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>내용</th>
+                    <th>작성일</th>
+                    <th>조회수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(posts)}">
+                    <td colspan="4">게시글이 없습니다.</td>
+                </tr>
+                <tr th:each="post : ${posts}">
+                    <td th:text="${post.title}">제목</td>
+                    <td th:text="${post.content}">내용</td>
+                    <td th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${post.view}">조회수</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <a th:if="${pageVo.displayMinPage > 1}" th:href="@{'/user/profile?page=' + ${pageVo.displayMinPage - 1}}">&laquo;</a>
+                <a th:each="i : ${#numbers.sequence(pageVo.displayMinPage, pageVo.displayMaxPage)}"
+                   th:href="@{'/user/profile?page=' + ${i}}"
+                   th:text="${i}"
+                   th:classappend="${i == pageVo.recordsPage} ? 'active' : ''"></a>
+                <a th:if="${pageVo.displayMaxPage < pageVo.movableMaxPage}" th:href="@{'/user/profile?page=' + ${pageVo.displayMaxPage + 1}}">&raquo;</a>
+            </div>
+        </div>
         <div id="reports" class="content__section">
             <h2>신고 내역</h2>
             <table class="reports-table">

@@ -12,6 +12,51 @@ body {
   margin: 0;
   padding: 0;
 }
+.posts-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: #1c1d1e;
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f8f4f0;
+  }
+
+  td {
+    background-color: #fff;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  a {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+
+    &:hover, &.active {
+      background-color: #e0c3a1;
+      color: #fff;
+    }
+
+    &:first-child, &:last-child {
+      font-weight: bold;
+    }
+  }
+}
 
 .reports-table {
   color: #1c1d1e;

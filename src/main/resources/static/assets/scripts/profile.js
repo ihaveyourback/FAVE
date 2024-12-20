@@ -4,17 +4,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const deactivateForm = document.getElementById("deactivateForm");
     const updateForm = document.getElementById("updateForm");
 
-    // 모든 섹션을 숨기는 함수
-    const hideAllSections = () => {
-        contentSections.forEach((section) => {
-            section.style.display = "none";
+    // 현재 표시된 섹션을 제외하고 모든 섹션을 숨기는 함수
+    const hideAllSections = (currentIndex) => {
+        contentSections.forEach((section, index) => {
+            if (index !== currentIndex) {
+                section.style.display = "none";
+            }
         });
     };
 
     // 사이드바 버튼 클릭 이벤트 처리
     sidebarButtons.forEach((button, index) => {
         button.addEventListener("click", () => {
-            hideAllSections(); // 먼저 모든 섹션 숨김 처리
+            hideAllSections(index); // 현재 인덱스를 제외하고 모든 섹션 숨김 처리
             contentSections[index].style.display = "block"; // 클릭한 버튼에 맞는 섹션 표시
         });
     });
@@ -70,5 +72,24 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(error => {
                 console.error('Error:', error);
             });
+    });
+
+    // 페이징 버튼 클릭 이벤트 처리
+    const paginationLinks = document.querySelectorAll(".pagination a");
+    paginationLinks.forEach(link => {
+        link.addEventListener("click", (event) => {
+            event.preventDefault(); // 새로고침 방지
+            const url = link.getAttribute("href");
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    document.querySelector("#posts").innerHTML = doc.querySelector("#posts").innerHTML;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
     });
 });

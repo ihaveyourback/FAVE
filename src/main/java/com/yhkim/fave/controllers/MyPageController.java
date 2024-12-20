@@ -1,9 +1,12 @@
 package com.yhkim.fave.controllers;
 
+import com.yhkim.fave.entities.BoardPostEntity;
 import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
+import com.yhkim.fave.services.BoardPostService;
 import com.yhkim.fave.services.ReportService;
 import com.yhkim.fave.services.UserService;
+import com.yhkim.fave.vos.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
@@ -27,17 +27,24 @@ import java.util.Map;
 public class MyPageController {
     private final UserService userService;
     private final ReportService reportService;
+    private final BoardPostService boardPostService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MyPageController(UserService userService , ReportService reportService, PasswordEncoder passwordEncoder) {
+    public MyPageController(UserService userService, ReportService reportService, BoardPostService boardPostService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.reportService = reportService;
+        this.boardPostService = boardPostService;
         this.passwordEncoder = passwordEncoder;
     }
 
+    // 프로필 페이지를 표시하는 메서드
     @GetMapping("/profile")
-    public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal) {
+    public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal,
+                                    @RequestParam(defaultValue = "1") int page) {
+        int totalCount = boardPostService.countPostsByUserEmail(principal.getName());
+        PageVo pageVo = new PageVo(page, totalCount);
+        List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), pageVo);
         List<Report> reports = reportService.getReportsByLoggedInUser();
         ModelAndView modelAndView = new ModelAndView();
 
@@ -46,11 +53,14 @@ public class MyPageController {
         }
 
         modelAndView.addObject("reports", reports);
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("pageVo", pageVo);
         modelAndView.setViewName("user/profile");
         modelAndView.addObject("username", principal.getName());
         return modelAndView;
     }
 
+    // 회원탈퇴를 처리하는 메서드
     @PostMapping("/secession")
     public ResponseEntity<?> secession(@AuthenticationPrincipal UserDetails userDetails,
                                        @RequestBody Map<String, String> payload) {
@@ -72,6 +82,7 @@ public class MyPageController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
     }
 
+    // 사용자 정보를 업데이트하는 메서드
     @PostMapping("/update-profile")
     public ResponseEntity<?> updateUserInfo(
             @AuthenticationPrincipal UserDetails userDetails,
