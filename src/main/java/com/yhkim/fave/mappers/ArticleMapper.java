@@ -1,7 +1,7 @@
 package com.yhkim.fave.mappers;
 
-import com.cykim.teamproject.entities.ArticleEntity;
-import com.cykim.teamproject.vos.ArticleVo;
+import com.yhkim.fave.entities.ArticleEntity;
+import com.yhkim.fave.vos.ArticleVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

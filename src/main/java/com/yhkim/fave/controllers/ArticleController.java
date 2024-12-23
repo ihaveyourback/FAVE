@@ -1,10 +1,10 @@
 package com.yhkim.fave.controllers;
 
-import com.cykim.teamproject.entities.ArticleEntity;
-import com.cykim.teamproject.entities.ImageEntity;
-import com.cykim.teamproject.results.article.ArticleResult;
-import com.cykim.teamproject.results.article.DeleteArticleResult;
-import com.cykim.teamproject.services.ArticleService;
+import com.yhkim.fave.entities.ArticleEntity;
+import com.yhkim.fave.entities.ImageEntity;
+import com.yhkim.fave.results.article.ArticleResult;
+import com.yhkim.fave.results.article.DeleteArticleResult;
+import com.yhkim.fave.services.ArticleService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

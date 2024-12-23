@@ -1,10 +1,10 @@
 package com.yhkim.fave.services;
 
-import com.cykim.teamproject.entities.CommentEntity;
-import com.cykim.teamproject.mappers.CommentMapper;
-import com.cykim.teamproject.results.article.ArticleResult;
-import com.cykim.teamproject.results.comment.DeleteCommentResult;
-import com.cykim.teamproject.results.comment.ModifyCommentResult;
+import com.yhkim.fave.entities.CommentEntity;
+import com.yhkim.fave.mappers.CommentMapper;
+import com.yhkim.fave.results.article.ArticleResult;
+import com.yhkim.fave.results.comment.DeleteCommentResult;
+import com.yhkim.fave.results.comment.ModifyCommentResult;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

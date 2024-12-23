@@ -1,10 +1,10 @@
 package com.yhkim.fave.controllers;
 
-import com.cykim.teamproject.entities.CommentEntity;
-import com.cykim.teamproject.results.article.ArticleResult;
-import com.cykim.teamproject.results.comment.DeleteCommentResult;
-import com.cykim.teamproject.results.comment.ModifyCommentResult;
-import com.cykim.teamproject.services.CommentService;
+import com.yhkim.fave.entities.CommentEntity;
+import com.yhkim.fave.results.article.ArticleResult;
+import com.yhkim.fave.results.comment.DeleteCommentResult;
+import com.yhkim.fave.results.comment.ModifyCommentResult;
+import com.yhkim.fave.services.CommentService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

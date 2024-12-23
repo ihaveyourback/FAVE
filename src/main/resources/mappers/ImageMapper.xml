@@ -2,18 +2,18 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cykim.teamproject.mappers.ImageMapper">
+<mapper namespace="com.yhkim.fave.mappers.ImageMapper">
     <insert id="insertImage"
             useGeneratedKeys="true"
             keyColumn="index"
             keyProperty="index"
-            parameterType="com.cykim.teamproject.entities.ImageEntity">
+            parameterType="com.yhkim.fave.entities.ImageEntity">
         INSERT INTO `fave`.`images` (`data`, `content_type`, `name`, `created_at`)
         VALUES (#{data}, #{contentType}, #{name}, #{createdAt})
     </insert>
 
     <select id="selectImageByIndex"
-            resultType="com.cykim.teamproject.entities.ImageEntity">
+            resultType="com.yhkim.fave.entities.ImageEntity">
         SELECT `index`        AS `index`,
                `data`         AS `data`,
                `content_type` AS `contentType`,

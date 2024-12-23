@@ -1,8 +1,9 @@
 package com.yhkim.fave.controllers;
 
-import com.cykim.teamproject.services.ArticleService;
-import com.cykim.teamproject.vos.ArticleVo;
-import com.cykim.teamproject.vos.PageVo;
+import com.yhkim.fave.services.ArticleService;
+import com.yhkim.fave.vos.ArticleVo;
+import com.yhkim.fave.vos.PageVo;
+import com.yhkim.fave.vos.PageVo_cy;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,7 +31,7 @@ public class BoardController {
             @RequestParam(value = "keyword", required = false) String keyword) {
 
         ModelAndView modelAndView = new ModelAndView();
-        Pair<ArticleVo[], PageVo> articles;
+        Pair<ArticleVo[], PageVo_cy> articles;
 
         if (filter == null || filter.isEmpty() || keyword == null || keyword.isEmpty()) {
             articles = this.articleService.getArticlesByPaging(page);

@@ -1,6 +1,6 @@
 package com.yhkim.fave.mappers;
 
-import com.cykim.teamproject.entities.ImageEntity;
+import com.yhkim.fave.entities.ImageEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

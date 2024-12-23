@@ -1,6 +1,6 @@
 package com.yhkim.fave.mappers;
 
-import com.cykim.teamproject.entities.CommentEntity;
+import com.yhkim.fave.entities.CommentEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

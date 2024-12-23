@@ -1,13 +1,13 @@
 package com.yhkim.fave.services;
 
-import com.cykim.teamproject.entities.ArticleEntity;
-import com.cykim.teamproject.entities.ImageEntity;
-import com.cykim.teamproject.mappers.ArticleMapper;
-import com.cykim.teamproject.mappers.ImageMapper;
-import com.cykim.teamproject.results.article.ArticleResult;
-import com.cykim.teamproject.results.article.DeleteArticleResult;
-import com.cykim.teamproject.vos.ArticleVo;
-import com.cykim.teamproject.vos.PageVo;
+import com.yhkim.fave.entities.ArticleEntity;
+import com.yhkim.fave.entities.ImageEntity;
+import com.yhkim.fave.mappers.ArticleMapper;
+import com.yhkim.fave.mappers.ImageMapper;
+import com.yhkim.fave.results.article.ArticleResult;
+import com.yhkim.fave.results.article.DeleteArticleResult;
+import com.yhkim.fave.vos.ArticleVo;
+import com.yhkim.fave.vos.PageVo_cy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,38 +86,38 @@ public class ArticleService {
         return this.articleMapper.updateArticle(dbArticle) > 0;
     }
 
-//    public Pair<ArticleEntity[], PageVo> searchArticles(String keyword, String filter, int page) {
+//    public Pair<ArticleEntity[], PageVo_cy> searchArticles(String keyword, String filter, int page) {
 //        int totalCount = articleMapper.selectArticleCountBySearch(filter, keyword);
-//        PageVo pageVo = new PageVo(page, totalCount);
+//        PageVo_cy pageVo = new PageVo_cy(page, totalCount);
 //        ArticleEntity[] articles = articleMapper.selectArticleBySearch(filter, keyword, pageVo.countPerPage, pageVo.offsetCount);
 //        return Pair.of(articles, pageVo);
 //    }
 //
-//    public Pair<ArticleEntity[], PageVo> getArticlesByPaging(int page) {
+//    public Pair<ArticleEntity[], PageVo_cy> getArticlesByPaging(int page) {
 //        int totalCount = this.articleMapper.getTotalArticlesCount();
-//        PageVo pageVo = new PageVo(page, totalCount);
+//        PageVo_cy pageVo = new PageVo_cy(page, totalCount);
 //        ArticleEntity[] articles = this.articleMapper.selectArticlesByPaging(pageVo.offsetCount, pageVo.countPerPage);
 //
 //        return Pair.of(articles, pageVo);
 //    }
 
-    public Pair<ArticleVo[], PageVo> searchArticles(String keyword, String filter, int page) {
+    public Pair<ArticleVo[], PageVo_cy> searchArticles(String keyword, String filter, int page) {
         int totalCount = articleMapper.selectArticleCountBySearch(filter, keyword);
-        PageVo pageVo = new PageVo(page, totalCount);
+        PageVo_cy pageVoCy = new PageVo_cy(page, totalCount);
 
         // 댓글 수를 포함한 게시물 조회
-        ArticleVo[] articles = articleMapper.selectArticleBySearch(filter, keyword, pageVo.countPerPage, pageVo.offsetCount);;
-        return Pair.of(articles, pageVo);
+        ArticleVo[] articles = articleMapper.selectArticleBySearch(filter, keyword, pageVoCy.countPerPage, pageVoCy.offsetCount);;
+        return Pair.of(articles, pageVoCy);
     }
 
-    public Pair<ArticleVo[], PageVo> getArticlesByPaging(int page) {
+    public Pair<ArticleVo[], PageVo_cy> getArticlesByPaging(int page) {
         int totalCount = this.articleMapper.getTotalArticlesCount();
-        PageVo pageVo = new PageVo(page, totalCount);
+        PageVo_cy pageVoCy = new PageVo_cy(page, totalCount);
 
         // 댓글 수를 포함한 페이징된 게시물 조회
-        ArticleVo[] articles = this.articleMapper.selectArticlesByPaging(pageVo.offsetCount, pageVo.countPerPage);
+        ArticleVo[] articles = this.articleMapper.selectArticlesByPaging(pageVoCy.offsetCount, pageVoCy.countPerPage);
 
-        return Pair.of(articles, pageVo);
+        return Pair.of(articles, pageVoCy);
     }
 
 
