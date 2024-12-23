@@ -25,4 +25,101 @@
         FROM fave.board_posts
         WHERE user_email = #{userEmail}
     </select>
+
+<!-- 김범수 -->
+    <select id="selectBoardPosts" resultType="com.yhkim.fave.entities.BoardPostEntity" parameterType="com.yhkim.fave.entities.BoardPostEntity">
+        SELECT `index`         AS `index`,
+               `title`         AS `title`,
+               `content`       AS `content`,
+               `user_email`    AS `userEmail`,
+               `user_nickname` AS `userNickName`,
+               `create_at`     AS `createdAt`,
+               `update_at`     AS `updatedAt`,
+               `deleted_at`    AS `deletedAt`,
+               `view`          AS `view`
+        FROM `fave`.`board_posts`
+        WHERE `deleted_at` IS NULL
+        ORDER BY `index` DESC
+    </select>
+
+    <select id="selectBoardPostCount" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `fave`.`board_posts`
+    </select>
+    <select id="selectBoardPost" resultType="com.yhkim.fave.entities.BoardPostEntity" parameterType="com.yhkim.fave.entities.BoardPostEntity">
+        SELECT `index`         AS `index`,
+               `title`         AS `title`,
+               `content`       AS `content`,
+               `user_email`    AS `userEmail`,
+               `user_nickname` AS `userNickName`,
+               `create_at`     AS `createdAt`,
+               `update_at`     AS `updatedAt`,
+               `deleted_at`    AS `deletedAt`,
+               `view`          AS `view`
+        FROM `fave`.`board_posts`
+        WHERE `deleted_at` IS NULL
+        ORDER BY `index` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+    <select id="selectBoardPostCountBySearch" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `fave`.`board_posts`
+        <if test="filter.equals('all')">
+            WHERE `title` LIKE CONCAT('%', #{keyword}, '%') OR `content` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('title')">
+            WHERE `title` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('content')">
+            WHERE `content` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('nickname')">
+            WHERE `user_nickname` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+    </select>
+    <select id="selectBoardPostBySearch" resultType="com.yhkim.fave.entities.BoardPostEntity" parameterType="com.yhkim.fave.entities.BoardPostEntity">
+        SELECT `index`         AS `index`,
+        `title`         AS `title`,
+        `content`       AS `content`,
+        `user_email`    AS `userEmail`,
+        `user_nickname` AS `userNickName`,
+        `create_at`     AS `createdAt`,
+        `update_at`     AS `updatedAt`,
+        `deleted_at`    AS `deletedAt`,
+        `view`          AS `view`
+        FROM `fave`.`board_posts`
+        WHERE `deleted_at` IS NULL
+        <if test="filter.equals('all')">
+            AND `title` LIKE CONCAT('%', #{keyword}, '%') OR `content` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('title')">
+            AND `title` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('content')">
+            AND `content` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('nickname')">
+            AND `user_nickname` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        ORDER BY `index` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+    <select id="selectBoardPostsByIndex" resultType="com.yhkim.fave.entities.BoardPostEntity">
+        SELECT `index`         AS `index`,
+               `title`         AS `title`,
+               `content`       AS `content`,
+               `user_email`    AS `userEmail`,
+               `user_nickname` AS `userNickName`,
+               `create_at`     AS `createdAt`,
+               `update_at`     AS `updatedAt`,
+               `deleted_at`    AS `deletedAt`,
+               `view`          AS `view`
+        FROM `fave`.`board_posts`
+        WHERE `index` = #{index}
+    </select>
+    <update id="updateBoardPost" parameterType="com.yhkim.fave.entities.BoardPostEntity">
+        UPDATE `fave`.`board_posts`
+        SET `deleted_at` = #{deletedAt}
+        WHERE `index` = #{index}
+    </update>
 </mapper>
