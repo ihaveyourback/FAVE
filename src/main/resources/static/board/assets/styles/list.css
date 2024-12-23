@@ -1,0 +1,194 @@
+@charset "UTF-8";
+#main {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: flex-start;
+  margin: 1rem 10rem;
+}
+#main > .article-table {
+  border-spacing: 0;
+}
+#main > .article-table > thead > tr > th {
+  background-color: #f5f5ec;
+  color: #000000;
+  font: inherit;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+}
+#main > .article-table > thead > tr > th:first-of-type {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+#main > .article-table > thead > tr > th:last-of-type {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+#main > .article-table > thead > tr > th.spring {
+  width: 100%;
+}
+#main > .article-table > tbody {
+  top: 0.5rem;
+  position: relative;
+}
+#main > .article-table > tbody > tr:first-of-type > td:first-of-type {
+  border-top-left-radius: 0.25rem;
+}
+#main > .article-table > tbody > tr:first-of-type > td:last-of-type {
+  border-top-right-radius: 0.25rem;
+}
+#main > .article-table > tbody > tr:last-of-type > td:first-of-type {
+  border-bottom-left-radius: 0.25rem;
+}
+#main > .article-table > tbody > tr:last-of-type > td:last-of-type {
+  border-bottom-right-radius: 0.25rem;
+}
+#main > .article-table > tbody > tr:not(:last-of-type) > td {
+  border-bottom: 0.0625rem solid #f0f0f0;
+}
+#main > .article-table > tbody > tr.empty > td {
+  padding: 2rem;
+  text-align: center;
+}
+#main > .article-table > tbody > tr > td {
+  background-color: #fcfbfa;
+  padding: 0.375rem 0.5rem;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+#main > .article-table > tbody > tr > td:nth-of-type(1) > a {
+  color: inherit;
+  text-decoration: none;
+  white-space: break-spaces;
+  margin-right: 0.4rem;
+  padding-left: 1rem;
+}
+#main > .article-table > tbody > tr > td:nth-of-type(1) > a:hover {
+  text-decoration: underline;
+}
+#main > .article-table > tbody > tr > td:nth-of-type(1) > b {
+  color: black;
+}
+#main .commentCount {
+  font-weight: 400;
+  font-size: 0.75rem;
+}
+#main > .move {
+  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+#main > .move .page {
+  width: 1.75rem;
+  aspect-ratio: 1/1;
+  background-color: #c1b5a3;
+  color: #ffffff;
+  line-height: 1;
+  text-decoration: none;
+  user-select: none;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+#main > .move .page:hover {
+  background-color: rgb(203.2662337662, 193.2532467532, 178.2337662338);
+}
+#main > .move .page:active {
+  background-color: rgb(213.5324675325, 205.5064935065, 193.4675324675);
+}
+#main > .move .page.selected {
+  background-color: rgb(172.4675324675, 156.4935064935, 132.5324675325);
+  color: #212121;
+  cursor: pointer;
+  pointer-events: none;
+}
+#main > .move > .page.first,
+#main > .move > .page.next {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+#main > .move > .page.prev,
+#main > .move > .page.last {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+#main > .move > .page-container {
+  margin: 0 0.5rem;
+  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+#main > .move > .page-container > .page:first-of-type {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+#main > .move > .page-container > .page:last-of-type {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+#main .button-container {
+  display: flex; /* Flexbox 사용 */
+  flex-direction: row; /* 가로 배치 */
+  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: space-between; /* 양쪽 정렬 */
+  gap: 1rem; /* 검색창과 버튼 사이 간격 */
+}
+#main .search-form {
+  display: flex;
+  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: center; /* 검색창 가운데 정렬 */
+  flex-grow: 1; /* 남은 공간을 채워 중앙 배치 */
+}
+#main .search-form .field {
+  background-color: #ffffff;
+  border: 0.0625rem solid #e0e0e0;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+}
+#main .search-form .field:hover {
+  border-color: rgb(198.5, 198.5, 198.5);
+}
+#main .search-form .field:focus {
+  border-color: #adadad;
+}
+#main .search-form .label {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem; /* 필드 사이 간격 */
+}
+#main .search-form button {
+  padding: 0.5rem 1rem;
+  background-color: #c1b5a3;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+#main .search-form button:hover {
+  background-color: rgb(182.7337662338, 168.7467532468, 147.7662337662);
+}
+#main .search-form button:active {
+  background-color: rgb(172.4675324675, 156.4935064935, 132.5324675325);
+}
+#main .button.write {
+  background-color: #c1b5a3;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+#main .button.write:hover {
+  background-color: rgb(182.7337662338, 168.7467532468, 147.7662337662);
+}
+#main .button.write:active {
+  background-color: rgb(172.4675324675, 156.4935064935, 132.5324675325);
+}
+
+/*# sourceMappingURL=list.css.map */

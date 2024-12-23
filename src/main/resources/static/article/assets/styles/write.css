@@ -1,0 +1,33 @@
+#main {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: flex-start;
+  margin: 1rem 10rem;
+}
+#main .input {
+  width: 100%;
+  background-color: #ffffff;
+  border: 0.0625rem solid #e0e0e0;
+  box-sizing: border-box;
+  padding: 0.625rem 0.625rem;
+}
+#main .input:hover {
+  border-color: rgb(198.5, 198.5, 198.5);
+}
+#main .input:focus {
+  border-color: #387aeb;
+}
+#main > .button-container {
+  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  gap: 0.375rem;
+  justify-content: flex-start;
+}
+#main > .button-container > .spring {
+  flex-grow: 1;
+}
+
+/*# sourceMappingURL=write.css.map */

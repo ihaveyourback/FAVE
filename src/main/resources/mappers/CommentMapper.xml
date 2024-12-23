@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykim.teamproject.mappers.CommentMapper">
+    <insert id="insertComment" parameterType="com.cykim.teamproject.entities.CommentEntity">
+        INSERT INTO `fave`.`board_comments` (`post_id`,`comment_id` ,`comment`, `user_email`, `user_nickname`, `create_at`, `update_at`, `is_deleted`)
+        VALUES (#{postId},#{commentId}, #{comment}, #{userEmail}, #{userNickname}, #{createdAt}, #{updateAt}, #{isDeleted})
+    </insert>
+
+    <select id="selectCommentsByPostId"
+            resultType="com.cykim.teamproject.entities.CommentEntity">
+        SELECT `index`         AS `index`,
+               `post_id`       AS `postId`,
+               `comment_id`    AS `commentId`,
+               `comment`       AS `comment`,
+               `user_email`    AS `userEmail`,
+               `user_nickname` AS `userNickname`,
+               `create_at`     AS `createdAt`,
+               `update_at`     AS `updateAt`,
+               `is_deleted`    AS `isDeleted`
+        FROM `fave`.`board_comments`
+        WHERE `post_id` = #{postId}
+          AND `is_deleted` IS NULL
+    </select>
+
+    <select id="selectCommentByIndex"
+            resultType="com.cykim.teamproject.entities.CommentEntity">
+        SELECT `index`         AS `index`,
+               `post_id`       AS `postId`,
+               `comment_id`    AS `commentId`,
+               `comment`       AS `comment`,
+               `user_email`    AS `userEmail`,
+               `user_nickname` AS `userNickname`,
+               `create_at`     AS `createdAt`,
+               `update_at`     AS `updateAt`,
+               `is_deleted`    AS `isDeleted`
+        FROM `fave`.`board_comments`
+        WHERE `index` = #{index}
+          AND `is_deleted` IS NULL
+    </select>
+
+    <select id="selectRepliesByParentId" resultType="com.cykim.teamproject.entities.CommentEntity">
+        SELECT `index`         AS `index`,
+               `post_id`       AS `postId`,
+               `comment_id`    AS `commentId`,
+               `comment`       AS `comment`,
+               `user_email`    AS `userEmail`,
+               `user_nickname` AS `userNickname`,
+               `create_at`     AS `createdAt`,
+               `update_at`     AS `updateAt`,
+               `is_deleted`    AS `isDeleted`
+        FROM `fave`.`board_comments`
+        WHERE `comment_id` = #{parentCommentId}
+          AND `is_deleted` IS NULL
+    </select>
+
+    <update id="updateComment" parameterType="com.cykim.teamproject.entities.CommentEntity">
+        UPDATE `fave`.`board_comments`
+        SET `post_id`       = #{postId},
+            `comment_id`    = #{commentId},
+            `comment`       = #{comment},
+            `user_email`    = #{userEmail},
+            `user_nickname` = #{userNickname},
+            `create_at`     = #{createdAt},
+            `update_at`     = #{updateAt},
+            `is_deleted`    = #{isDeleted}
+        WHERE `index` = #{index}
+          AND `is_deleted` IS NULL
+        LIMIT 1
+    </update>
+</mapper>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>축제잇슈 자유게시판</title>
+    <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
+    <link rel="stylesheet" type="text/css" href="/board/assets/styles/list.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common_cy.css">
+</head>
+<body>
+<div th:insert="~{common/common.html :: header_copy}"></div>
+<main id="main">
+    <h1 class="title" onclick="location.href='/board/list'" style="cursor: pointer">자유게시판</h1>
+    <table class="article-table">
+        <thead>
+        <tr>
+<!--            <th scope="col">번호</th>-->
+            <th class="spring" scope="col">제목</th>
+            <th scope="col">작성자</th>
+            <th scope="col">조회수</th>
+            <th scope="col">작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="empty" th:if="${articles == null || articles.length == 0}">
+            <td colspan="5">등록된 글이 없습니다.</td>
+        </tr>
+        <tr th:each="article : ${articles}">
+<!--            <td th:text="${article.getIndex()}">1</td>-->
+            <td>
+                <a th:text="${article.getTitle()}" th:href="@{'/article/read'(index=${article.getIndex()})}">제목입니다</a>
+                <b class="commentCount">[<span th:text="${article.getCommentCount()}"></span>]</b>
+            </td>
+            <td th:text="${article.getUserNickname()}">작성자입니다</td>
+            <td th:text="${#temporals.format(article.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">작성일입니다.</td>
+            <td th:text="${article.getView()}">조회수입니다</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="button-container">
+        <form class="search-form">
+            <label class="label">
+                <select name="filter" class="field" th:value="${filter}">
+                    <option th:selected="${filter != null && filter.equals('all')}" value="all">제목 + 내용</option>
+                    <option th:selected="${filter != null && filter.equals('title')}" value="title">제목</option>
+                    <option th:selected="${filter != null && filter.equals('nickname')}" value="nickname">닉네임</option>
+                </select>
+            </label>
+            <label class="label">
+                <input class="field" maxlength="10" minlength="0" name="keyword" type="text" th:value="${keyword}">
+            </label>
+            <button class="--obj-button -button_color" type="submit">검색</button>
+        </form>
+        <a th:href="@{'/article/write'}" target="_self" class="button write --obj-button -button_color">글 쓰기</a>
+    </div>
+    <div class="move" th:if="${articles != null && articles.length > 0}">
+        <a class="page first"
+           th:if="${pageVoCy.requestPage > pageVoCy.movableMinPage}"
+           th:href="@{'/board/list' (page=${pageVoCy.movableMinPage}, filter=${filter}, keyword=${keyword})}">&lt;&lt;</a>
+        <a class="page prev"
+           th:if="${pageVoCy.requestPage > pageVoCy.movableMinPage}"
+           th:href="@{'/board/list' (page=${pageVoCy.requestPage - 1}, filter=${filter}, keyword=${keyword})}">&lt;</a>
+        <div class="page-container">
+            <a class="page"
+               th:each="page : ${#numbers.sequence(pageVoCy.displayMinPage, pageVoCy.displayMaxPage)}"
+               th:text="${page}"
+               th:href="@{'/board/list' (page=${page}, filter=${filter}, keyword=${keyword})}"
+               th:classappend="${page == pageVoCy.requestPage} ? 'selected'"></a>
+        </div>
+        <a class="page next"
+           th:if="${pageVoCy.requestPage < pageVoCy.movableMaxPage}"
+           th:href="@{'/board/list' (page=${pageVoCy.requestPage + 1}, filter=${filter}, keyword=${keyword})}">&gt;</a>
+        <a class="page last"
+           th:if="${pageVoCy.requestPage < pageVoCy.movableMaxPage}"
+           th:href="@{'/board/list' (page=${pageVoCy.movableMaxPage}, filter=${filter}, keyword=${keyword})}">&gt;&gt;</a>
+    </div>
+</main>
+</body>
+</html>

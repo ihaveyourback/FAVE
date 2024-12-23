@@ -1,0 +1,372 @@
+#cover {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(33, 33, 33, 0.6274509804);
+  display: none;
+  position: fixed;
+  z-index: 7;
+}
+#cover.--visible {
+  display: block;
+}
+
+#main {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.container {
+  width: 80%;
+  background: #ffffff;
+  box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.container > .post {
+  background-color: rgb(234.0649350649, 230.012987013, 223.9350649351);
+  padding: 1.25rem;
+  border-bottom: 0.0625px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+.container > .post > .title {
+  font-weight: 500;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+.container > .post .meta-like-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.container > .post .meta-like-container > .like-container {
+  display: flex;
+  margin-left: auto;
+}
+.container > .post .meta-like-container > .like-container.liked .like {
+  display: none;
+}
+.container > .post .meta-like-container > .like-container.liked .unlike {
+  display: block;
+}
+.container > .post .meta-like-container > .like-container .like {
+  cursor: pointer;
+}
+.container > .post .meta-like-container > .like-container .like:hover > .icon {
+  filter: brightness(100%);
+}
+.container > .post .meta-like-container > .like-container .like .icon {
+  width: 1.375rem;
+  filter: brightness(75%);
+  transition-duration: 125ms;
+  transition-property: filter;
+  transition-timing-function: ease;
+}
+.container > .post .meta-like-container > .like-container .unlike {
+  cursor: pointer;
+  display: none;
+}
+.container > .post .meta-like-container > .like-container .unlike:hover {
+  filter: brightness(90%);
+}
+.container > .post .meta-like-container > .like-container .unlike:active {
+  filter: brightness(80%);
+}
+.container > .post .meta-like-container > .like-container .unlike .icon {
+  width: 1.375rem;
+  filter: brightness(100%);
+  transition-duration: 125ms;
+  transition-property: filter;
+  transition-timing-function: ease;
+}
+.container > .post .meta-like-container > .meta {
+  font-size: 0.9rem;
+  color: gray;
+}
+.container .button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+}
+.container .button-container .report {
+  margin-right: auto;
+  margin-left: 0.8rem;
+}
+.container .button-container .button_list {
+  margin-right: auto;
+  margin-left: 0.5rem;
+}
+.container .button-container .button {
+  padding: 0.3rem 0.8rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+.container .button-container .button.report {
+  background-color: #ed7777;
+}
+.container .button-container .button.report:hover {
+  background-color: rgb(231.038961039, 73.961038961, 73.961038961);
+}
+.container .button-container .button.report:active {
+  background-color: rgb(228.0584415584, 51.4415584416, 51.4415584416);
+}
+.container .button-container .button.modify {
+  background-color: #c1b5a3;
+}
+.container .button-container .button.modify:hover {
+  background-color: rgb(172.4675324675, 156.4935064935, 132.5324675325);
+}
+.container .button-container .button.modify:active {
+  background-color: rgb(162.2012987013, 144.2402597403, 117.2987012987);
+}
+.container .button-container .button.delete {
+  background-color: #bdbdbd;
+}
+.container .button-container .button.delete:hover {
+  background-color: rgb(163.5, 163.5, 163.5);
+}
+.container .button-container .button.delete:active {
+  background-color: rgb(150.75, 150.75, 150.75);
+}
+.container .button-container .button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+.container > .content {
+  min-height: 5rem;
+  padding: 1.25rem;
+  margin-top: 0.9rem;
+  line-height: 1.6rem;
+  font-size: 1rem;
+  border-bottom: 0.0625rem solid #ddd;
+}
+.container > .comments {
+  padding: 1.25rem;
+}
+.container > .comments > .comment_title {
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #000000;
+  margin-bottom: 1rem;
+}
+.container > .comments > .comment {
+  margin-bottom: 0.8rem;
+}
+.container > .comments > .comment > .author {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #000000;
+}
+.container > .comments > .comment > .text {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1.4rem;
+}
+
+.comment_write {
+  padding: 1.25rem;
+  background-color: #ffffff;
+  border-top: 0.0625rem solid #ddd;
+}
+.comment_write > .form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.comment_write > .form > .label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.comment_write > .form > .label > .text {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #000000;
+}
+.comment_write > .form > .label textarea {
+  width: 97%;
+  height: 4rem;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  border: 0.0625rem solid #ddd;
+  border-radius: 0.25rem;
+  outline: none;
+  resize: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.comment_write > .form > .label textarea:hover {
+  border-color: #aaaaaa;
+}
+.comment_write > .form > .label textarea:focus {
+  border-color: rgb(151.7402597403, 131.9480519481, 102.2597402597);
+}
+.comment_write > .form > .label textarea::placeholder {
+  font-size: 0.9rem;
+  color: rgb(168.6225, 166.8775, 166.8775);
+}
+.comment_write > .form > .button_write {
+  width: auto;
+  align-self: flex-end;
+  margin-right: 0.8rem;
+}
+
+#deleteDialog {
+  top: 50%;
+  left: 50%;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  display: none;
+  padding: 2rem;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  z-index: 8;
+  align-items: stretch;
+  flex-direction: column;
+  gap: 1.5rem;
+  justify-content: center;
+}
+#deleteDialog.--visible {
+  display: flex;
+}
+#deleteDialog .message {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333333;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 0.0625rem solid #e0e0e0;
+}
+#deleteDialog .button-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+#deleteDialog .button-container .--obj-button {
+  font-size: 1rem;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#deleteDialog .button-container .--obj-button.-button_color {
+  background-color: #c1b5a3;
+  color: #ffffff;
+}
+#deleteDialog .button-container .--obj-button.-button_color:hover {
+  background-color: rgb(172.4675324675, 156.4935064935, 132.5324675325);
+}
+#deleteDialog .button-container .--obj-button.-button_color:active {
+  background-color: rgb(162.2012987013, 144.2402597403, 117.2987012987);
+}
+#deleteDialog .button-container .--obj-button[name=cancel] {
+  background-color: #bdbdbd;
+  color: #ffffff;
+}
+#deleteDialog .button-container .--obj-button[name=cancel]:hover {
+  background-color: rgb(163.5, 163.5, 163.5);
+}
+#deleteDialog .button-container .--obj-button[name=cancel]:active {
+  background-color: rgb(150.75, 150.75, 150.75);
+}
+
+.comment-container ul {
+  list-style: none;
+}
+.comment-container .title {
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+.comment-container .item {
+  background-color: #ffffff;
+  border-radius: 0.25rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+.comment-container .item.reply {
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+}
+.comment-container .item .top {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.comment-container .item .top .nickname {
+  font-weight: bold;
+}
+.comment-container .item .top .datetime {
+  color: #757575;
+}
+.comment-container .item .content {
+  margin-bottom: 0.5rem;
+}
+.comment-container .item .action-container {
+  display: flex;
+  gap: 0.3rem;
+}
+.comment-container .item .action-container .action {
+  cursor: pointer;
+  color: #000000;
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 0.8rem;
+}
+.comment-container .item .action-container .action:hover {
+  border-bottom: 0.15rem solid #bdbdbd;
+}
+.comment-container .item .form {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+}
+.comment-container .item .form .--obj-button {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+.comment-container .item .form .label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.comment-container .item .form .label .text {
+  width: 100%;
+  font-size: 0.9rem;
+  color: #333;
+}
+.comment-container .item .form .label .field {
+  width: 98.5%;
+  height: 4rem;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  resize: none;
+}
+.comment-container .item .form.reply,
+.comment-container .item .form.modify {
+  display: flex;
+}
+
+/*# sourceMappingURL=read.css.map */

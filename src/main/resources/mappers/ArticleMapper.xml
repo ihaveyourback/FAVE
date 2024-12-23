@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykim.teamproject.mappers.ArticleMapper">
+    <insert id="insertArticle"
+            useGeneratedKeys="true"
+            keyColumn="index"
+            keyProperty="index"
+            parameterType="com.cykim.teamproject.entities.ArticleEntity">
+        INSERT INTO `fave`.`board_posts` (`title`, `content`, `user_email`, `user_nickname`, `create_at`, `update_at`, `deleted_at`, `view`)
+        VALUES (#{title}, #{content}, #{userEmail}, #{userNickname}, #{createdAt}, #{updateAt}, #{deletedAt}, #{view})
+    </insert>
+
+    <select id="selectArticleByIndex" resultType="com.cykim.teamproject.entities.ArticleEntity">
+        SELECT `index` AS `index`,
+               `title` AS `title`,
+               `content` AS `content`,
+               `user_email` AS `userEmail`,
+               `user_nickname` AS `userNickname`,
+               `create_at` AS `createdAt`,
+               `update_at` AS `updateAt`,
+               `deleted_at` AS `deletedAt`,
+               `view` AS `view`
+        FROM `fave`.`board_posts`
+        WHERE `index` = #{index}
+        LIMIT 1
+    </select>
+
+<!--    <select id="selectArticles" resultType="com.cykim.teamproject.entities.ArticleEntity">-->
+<!--        SELECT `index` AS `index`,-->
+<!--               `title` AS `title`,-->
+<!--               `content` AS `content`,-->
+<!--               `user_email` AS `userEmail`,-->
+<!--               `user_nickname` AS `userNickname`,-->
+<!--               `create_at` AS `createdAt`,-->
+<!--               `update_at` AS `updateAt`,-->
+<!--               `deleted_at` AS `deletedAt`,-->
+<!--               `view` AS `view`-->
+<!--        FROM `fave`.`board_posts`-->
+<!--        WHERE `deleted_at` IS NULL-->
+<!--        ORDER BY `index` DESC-->
+<!--    </select>-->
+
+<!--    <select id="selectArticlesByPaging" resultType="com.cykim.teamproject.entities.ArticleEntity">-->
+<!--        SELECT `index` AS `index`,-->
+<!--               `title` AS `title`,-->
+<!--               `content` AS `content`,-->
+<!--               `user_email` AS `userEmail`,-->
+<!--               `user_nickname` AS `userNickname`,-->
+<!--               `create_at` AS `createdAt`,-->
+<!--               `update_at` AS `updateAt`,-->
+<!--               `deleted_at` AS `deletedAt`,-->
+<!--               `view` AS `view`-->
+<!--        FROM `fave`.`board_posts`-->
+<!--        WHERE `deleted_at` IS NULL-->
+<!--        ORDER BY `index` DESC-->
+<!--        LIMIT #{offsetCount}, #{countPerPage}-->
+<!--    </select>-->
+
+<!--    mm-->
+    <!-- selectArticles 쿼리 수정 -->
+    <select id="selectArticles" resultType="com.cykim.teamproject.entities.ArticleEntity">
+        SELECT `index` AS `index`,
+               `title` AS `title`,
+               `content` AS `content`,
+               `user_email` AS `userEmail`,
+               `user_nickname` AS `userNickname`,
+               `create_at` AS `createdAt`,
+               `update_at` AS `updateAt`,
+               `deleted_at` AS `deletedAt`,
+               `view` AS `view`,
+               (SELECT COUNT(*) FROM `fave`.`board_comments` WHERE `post_id` = `fave`.`board_posts`.`index` AND `is_deleted` IS NULL) AS `comment_count`
+        FROM `fave`.`board_posts`
+        WHERE `deleted_at` IS NULL
+        ORDER BY `index` DESC
+    </select>
+
+    <!-- selectArticlesByPaging 쿼리 수정 -->
+    <select id="selectArticlesByPaging" resultType="com.cykim.teamproject.vos.ArticleVo">
+        SELECT `index` AS `index`,
+               `title` AS `title`,
+               `content` AS `content`,
+               `user_email` AS `userEmail`,
+               `user_nickname` AS `userNickname`,
+               `create_at` AS `createdAt`,
+               `update_at` AS `updateAt`,
+               `deleted_at` AS `deletedAt`,
+               `view` AS `view`,
+               (SELECT COUNT(*) FROM `fave`.`board_comments` WHERE `post_id` = `fave`.`board_posts`.`index` AND `is_deleted` IS NULL) AS `commentCount`
+        FROM `fave`.`board_posts`
+        WHERE `deleted_at` IS NULL
+        ORDER BY `index` DESC
+        LIMIT #{offsetCount}, #{countPerPage}
+    </select>
+
+<!--,-->
+    <select id="getTotalArticlesCount" resultType="int">
+        SELECT COUNT(0)
+        FROM `fave`.`board_posts`
+        WHERE `deleted_at` IS NULL;
+    </select>
+
+    <select id="selectArticleBySearch" resultType="com.cykim.teamproject.vos.ArticleVo">
+        SELECT `index` AS `index`,
+        `title` AS `title`,
+        `content` AS `content`,
+        `user_email` AS `userEmail`,
+        `user_nickname` AS `userNickname`,
+        `create_at` AS `createdAt`,
+        `update_at` AS `updateAt`,
+        `deleted_at` AS `deletedAt`,
+        `view` AS `view`,
+        (SELECT COUNT(*)
+         FROM `fave`.`board_comments`
+         WHERE `post_id` = `fave`.`board_posts`.`index`
+           AND `is_deleted` IS FALSE) AS `commentCount`
+        FROM `fave`.`board_posts`
+        WHERE `deleted_at` IS NULL
+        <if test="filter != null and filter == 'all' and keyword != null and !keyword.isEmpty()">
+            AND (`title` LIKE CONCAT('%', #{keyword}, '%') OR `content` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="filter != null and filter == 'title' and keyword != null and !keyword.isEmpty()">
+            AND `title` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter != null and filter == 'nickname' and keyword != null and !keyword.isEmpty()">
+            AND `user_nickname` = #{keyword}
+        </if>
+        ORDER BY `index` DESC
+        LIMIT #{offsetCount}, #{limitCount}
+    </select>
+
+    <select id="selectArticleCountBySearch" resultType="int">
+        SELECT COUNT(0)
+        FROM `fave`.`board_posts`
+        WHERE `deleted_at` IS NULL
+        <if test="filter != null and filter == 'all' and keyword != null and !keyword.isEmpty()">
+            AND (`title` LIKE CONCAT('%', #{keyword}, '%') OR `content` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="filter != null and filter == 'title' and keyword != null and !keyword.isEmpty()">
+            AND `title` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter != null and filter == 'nickname' and keyword != null and !keyword.isEmpty()">
+            AND `user_nickname` = #{keyword}
+        </if>
+    </select>
+
+    <update id="updateArticle"
+            parameterType="com.cykim.teamproject.entities.ArticleEntity">
+        UPDATE `fave`.`board_posts`
+        SET `user_email` = #{userEmail},
+            `user_nickname` = #{userNickname},
+            `title` = #{title},
+            `content` = #{content},
+            `create_at` = #{createdAt},
+            `update_at` = #{updateAt},
+            `deleted_at` = #{deletedAt},
+            `view` = #{view}
+        WHERE `index` = #{index}
+        LIMIT 1
+    </update>
+</mapper>
