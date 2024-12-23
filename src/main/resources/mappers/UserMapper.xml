@@ -85,4 +85,118 @@
         WHERE `email` = #{email}
         LIMIT 1
     </update>
+    <!--  user 테이블에 있는 데이터 불러오기 -->
+    <select id="selectAllUser" parameterType="com.yhkim.fave.entities.UserEntity"
+            resultType="com.yhkim.fave.entities.UserEntity">
+        SELECT `email`        AS `email`,
+               `password`     AS `password`,
+               `nickname`     AS `nickName`,
+               `contact`      AS `contact`,
+               `create_at`    AS `createdAt`,
+               `update_at`    AS `updatedAt`,
+               `deleted_at`   AS `deletedAt`,
+               `is_admin`     AS `isAdmin`,
+               `is_suspended` AS `isSuspended`,
+               `is_verified`  AS `isVerified`,
+               `warning`      AS `warning`
+        FROM `fave`.`users`
+        WHERE `deleted_at` IS NULL
+          AND `is_suspended` = false
+        ORDER BY `create_at` DESC
+    </select>
+    <!-- userEmail 이 동일한 데이터 불러오기 -->
+    <!-- 경고 횟수 , 탈퇴 처리 업데이트 랑 연결-->
+    <select id="selectUserByEmailAdmin" resultType="com.yhkim.fave.entities.UserEntity">
+        SELECT `email`        AS `email`,
+               `password`     AS `password`,
+               `nickname`     AS `nickName`,
+               `contact`      AS `contact`,
+               `create_at`    AS `createdAt`,
+               `update_at`    AS `updatedAt`,
+               `deleted_at`   AS `deletedAt`,
+               `is_admin`     AS `isAdmin`,
+               `is_suspended` AS `isSuspended`,
+               `is_verified`  AS `isVerified`,
+               `warning`      AS `warning`
+        FROM `fave`.`users`
+        WHERE `email` = #{userEmail}
+    </select>
+    <!--  경고 횟수 업데이트 , 이메일 탈퇴 처리  -->
+    <update id="updateWarning" parameterType="com.yhkim.fave.entities.UserEntity">
+        UPDATE `fave`.`users`
+        SET `deleted_at` = #{deletedAt},
+            `is_suspended` = #{isSuspended},
+            `warning`    = #{warning}
+        WHERE `email` = #{email}
+    </update>
+    <!--  user 테이블 의 정보 개수  -->
+    <select id="selectUserCount" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `fave`.`users`
+    </select>
+    <!--    회원 관리 페이지 페이징  -->
+    <select id="selectUserPage">
+        SELECT `email`        AS `email`,
+               `password`     AS `password`,
+               `nickname`     AS `nickName`,
+               `contact`      AS `contact`,
+               `create_at`    AS `createdAt`,
+               `update_at`    AS `updatedAt`,
+               `deleted_at`   AS `deletedAt`,
+               `is_admin`     AS `isAdmin`,
+               `is_suspended` AS `isSuspended`,
+               `is_verified`  AS `isVerified`,
+               `warning`      AS `warning`
+        FROM `fave`.`users`
+        WHERE `deleted_at` IS NULL
+          AND `is_suspended` = false
+        ORDER BY `create_at` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+    <select id="selectUserCountBySearch" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `fave`.`users`
+        <if test="filter.equals('email')">
+            WHERE `email` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('nickname')">
+            WHERE `nickname` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('contact')">
+            WHERE `contact` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('verified')">
+            WHERE `is_verified` = #{keyword}
+        </if>
+    </select>
+    <select id="selectUserBySearch" resultType="com.yhkim.fave.entities.UserEntity" parameterType="com.yhkim.fave.entities.UserEntity">
+        SELECT `email`        AS `email`,
+        `password`     AS `password`,
+        `nickname`     AS `nickName`,
+        `contact`      AS `contact`,
+        `create_at`    AS `createdAt`,
+        `update_at`    AS `updatedAt`,
+        `deleted_at`   AS `deletedAt`,
+        `is_admin`     AS `isAdmin`,
+        `is_suspended` AS `isSuspended`,
+        `is_verified`  AS `isVerified`,
+        `warning`      AS `warning`
+        FROM `fave`.`users`
+        WHERE `deleted_at` IS NULL
+        AND `is_suspended` = false
+        <if test="filter.equals('email')">
+            AND `email` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('nickname')">
+            AND `nickname` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('contact')">
+            AND `contact` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('verified')">
+            AND `is_verified` = #{keyword}
+        </if>
+        ORDER BY `create_at` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
 </mapper>

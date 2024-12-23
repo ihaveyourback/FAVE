@@ -1,0 +1,117 @@
+@charset "UTF-8";
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+$header-bg-color: #c1b5a3;
+$logo-bg-color: #ffffff;
+$logo-max-height: 50px;
+$text-color: #4c4c4c;
+$background-color: #f5f5f5;
+
+
+* {
+  box-sizing: border-box;
+}
+
+
+#main > .content[rel="index"] {
+  width: 100%;
+  height: 71vh;
+  margin: 1.25rem auto;
+  padding: 1.25rem;
+  background-color: $logo-bg-color;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+
+  > .category {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  > .grid-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    > .gird {
+      width: 20rem;
+      height: 27rem;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      grid-template-columns: 1fr 1fr 1fr;
+      background-color: #f5f5f5;
+
+      > table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+
+        > thead {
+          > tr {
+            > th {
+              padding: 0.625rem;
+              text-align: center;
+            }
+          }
+        }
+
+        > tbody {
+
+          > .main {
+            cursor: pointer;
+
+            > td {
+              text-align: center;
+              border-bottom: 1px solid #a6a6a6;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+
+            > td:first-of-type {
+              padding-left: 0.625rem;
+            }
+          }
+
+          > .board {
+            > td:first-of-type {
+              padding-left: 0;
+            }
+          }
+        }
+      }
+
+      > .page {
+        text-align: center;
+        padding: 0.25rem;
+        > a {
+          padding: 0.625rem;
+        }
+      }
+    }
+  }
+
+  > .Modal-container {
+    position: relative;
+
+    > .Modal {
+      position: absolute;
+      display: none;
+      width: 300px;
+      padding: 0.25rem;
+      background-color: #f5f5f5;
+      color: #333333;
+      border: 1px solid #a6a6a6;
+      border-radius: 0.25rem;
+      z-index: 10;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+      > .Modal-body {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}
