@@ -1,9 +1,9 @@
 package com.yhkim.fave.services;
 
 import com.yhkim.fave.entities.BoardPostEntity;
+import com.yhkim.fave.entities.FaveInfoEntity;
 import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.entities.WriteEntity;
 import com.yhkim.fave.mappers.BoardPostMapper;
 import com.yhkim.fave.mappers.ReportsMapper;
 import com.yhkim.fave.mappers.UserMapper;
@@ -28,9 +28,9 @@ public class AdminPageService {
     private final ReportsMapper reportsMapper;
 
     @Autowired
-    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, UserMapper userMapper, ReportsMapper reportsMapper) {
+    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, BoardPostMapper boardPostsMapper1, UserMapper userMapper, ReportsMapper reportsMapper) {
         this.writeMapper = writeMapper;
-        this.boardPostsMapper = boardPostsMapper;
+        this.boardPostsMapper = boardPostsMapper1;
         this.userMapper = userMapper;
         this.reportsMapper = reportsMapper;
     }
@@ -64,7 +64,7 @@ public class AdminPageService {
         return Pair.of(index, reports);
     }
 
-    public Boolean write(WriteEntity adminPage, MultipartFile coverFile) {
+    public Boolean write(FaveInfoEntity adminPage, MultipartFile coverFile) {
         if (adminPage == null || adminPage.getTitle() == null || adminPage.getTitle().length() < 2 || adminPage.getTitle().length() > 20 ||
                 adminPage.getLocation() == null || adminPage.getStartDate() == null || adminPage.getEndDate() == null || adminPage.getDescription() == null || adminPage.getDescription().isEmpty() || adminPage.getDescription().length() > 10000) {
             return false;
@@ -88,7 +88,7 @@ public class AdminPageService {
     }
 
     public boolean updateDeleted(String userEmail) {
-        UserEntity user = this.userMapper.selectUserByEmailAdmin(userEmail);
+        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
         if (user == null) {
             return false;
         }
@@ -98,7 +98,7 @@ public class AdminPageService {
     }
 
     public boolean updateWarning(String userEmail, int warning) {
-        UserEntity user = this.userMapper.selectUserByEmailAdmin(userEmail);
+        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
         if (user == null) {
             return false;
         }
@@ -178,7 +178,7 @@ public class AdminPageService {
         if (userEmail == null || userEmail.isEmpty()) {
             return null;
         }
-        return this.userMapper.selectUserByEmailAdmin(userEmail);
+        return this.userMapper.selectUserByEmail(userEmail);
     }
 
     public boolean deleteBoardPost(int index) {
