@@ -1,12 +1,13 @@
 package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.entities.UserEntity;
+import com.yhkim.fave.exceptions.EmailAlreadyExistsException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,22 +21,19 @@ import java.util.Map;
 @RequestMapping(value = "/")
 public class HomeController {
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getIndex(@AuthenticationPrincipal UserDetails userDetails) {
-        ModelAndView modelAndView = new ModelAndView();
-        if (userDetails instanceof UserEntity user) {
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE) // HTML 반환
+    public ModelAndView getIndex(@AuthenticationPrincipal UserDetails userDetails) {// 사용자 정보를 가져오는 메서드
+        ModelAndView modelAndView = new ModelAndView();// 뷰 객체 생성
+        if (userDetails instanceof UserEntity user) {// 사용자 정보가 UserEntity 객체인 경우
             modelAndView.addObject("user", user); // user 객체 생성
-            modelAndView.addObject("email", user.getEmail());
-            modelAndView.addObject("now", LocalDateTime.now());
-            modelAndView.addObject("isAdmin", user.isAdmin());
-            modelAndView.addObject("nickname", user.getUsername());
-            modelAndView.addObject("name", user.getNickname());
+            modelAndView.addObject("isAdmin", user.isAdmin()); // 관리자 여부를 가져옴
+
+
         }
 
         modelAndView.setViewName("home/index.main");
         return modelAndView;
     }
-
 
     // 로그인 성공 여부를 JSON으로 반환하는 API
     @RequestMapping(value = "/api/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,9 +49,9 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String getLogout(HttpSession session){
-     session.setAttribute("user", null);
-     return "redirect:/";
+    public String getLogout(HttpSession session) {
+        session.setAttribute("user", null);
+        return "redirect:/";
     }
 
 }

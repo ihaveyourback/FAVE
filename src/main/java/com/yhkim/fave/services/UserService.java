@@ -99,7 +99,7 @@ public class UserService {
         user.setPassword(dbUser.getPassword());
         user.setNickname(dbUser.getNickname());
         user.setContact(dbUser.getContact());
-        user.setCreateAt(dbUser.getCreateAt());
+        user.setCreatedAt(dbUser.getCreatedAt());
         user.setDeletedAt(dbUser.getDeletedAt());
         user.setAdmin(dbUser.isAdmin());
         user.setSuspended(dbUser.isSuspended());
@@ -211,8 +211,8 @@ public class UserService {
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
-        user.setCreateAt(LocalDateTime.now());
-        user.setUpdateAt(LocalDateTime.now());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
         user.setDeletedAt(null);
         user.setAdmin(false);
         user.setSuspended(false);
@@ -366,7 +366,7 @@ public class UserService {
         // 사용자 닉네임 업데이트
         user.setNickname(newNickname);
         // 업데이트 시간 설정
-        user.setUpdateAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
         // 사용자 정보 업데이트 후 성공 여부 반환
         return userMapper.updateUser(user) > 0;
     }
@@ -378,7 +378,7 @@ public class UserService {
         // 비밀번호 암호화 후 업데이트
         user.setPassword(encoder.encode(newPassword));
         // 업데이트 시간 설정
-        user.setUpdateAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
         // 사용자 정보 업데이트
         userMapper.updateUser(user);
     }

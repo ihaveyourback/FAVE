@@ -13,7 +13,7 @@
                create_at     AS createAt,
                update_at     AS updateAt,
                deleted_at    AS deletedAt,
-               `view`
+               `view`       AS view
         FROM fave.board_posts
         WHERE user_email = #{userEmail}
         ORDER BY create_at DESC

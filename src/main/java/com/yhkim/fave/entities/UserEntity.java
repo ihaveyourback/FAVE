@@ -8,11 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-//@Entity(name = "fave")
+import java.util.*;
+
 @Entity
 @Getter
 @Setter
@@ -31,116 +28,110 @@ public class UserEntity implements UserDetails, OAuth2User {
     @Column(nullable = false, length = 100)
     private String password;
 
-    @Column(nullable = false, unique = true, length = 10)
-    private String nickname;
+    @Column(nullable = false, length = 10)
+    private String nickname; // Removed unique = true
 
     @Column(nullable = false, unique = true, length = 12)
     private String contact;
 
-    @Column(name = "create_at", nullable = false)
-    private LocalDateTime createAt;
+    @Column(name = "create_at", nullable = false, updatable = false)
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @Column(name = "is_admin", nullable = false)
-    private boolean isAdmin;
+    @Builder.Default
+    private boolean admin = false;
 
     @Column(name = "is_suspended", nullable = false)
-    private boolean isSuspended;
+    @Builder.Default
+    private boolean suspended = false;
 
     @Column(name = "is_verified", nullable = false)
-    private boolean isVerified;
+    @Builder.Default
+    private boolean verified = false;
 
-    @Column(name = "warning", length = 10)
-    private int warning;
+    @Column
+    @Builder.Default
+    private int warning = 0;
 
+    @Column(name = "oauth2_provider", length = 50)
+    private String oauth2Provider;
+
+    @Column(name = "oauth2_id", length = 50)
+    private String oauth2Id;
 
     @PrePersist
     protected void onCreate() {
-        this.createAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updateAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-    // 일반 로그인 시 가지고 가는 나의 id (identitiy)
     @Override
     public String getUsername() {
         return email;
-    }
+    } // 사용자 이름을 가져오는 메서드
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if (isAdmin) {
-            authorities.add(new SimpleGrantedAuthority("IS_ADMIN")); // ROLE_* 제거
+    public Collection<? extends GrantedAuthority> getAuthorities() { // 권한을 가져오는 메서드
+        List<GrantedAuthority> authorities = new ArrayList<>(); // 권한을 저장할 리스트 객체 생성
+        if (admin) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN")); // 관리자 권한 추가
         }
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER")); // 사용자 권한 추가
         return authorities;
     }
-
-
-
 
     @Override
     public boolean isAccountNonExpired() {
         return true;
-    }
+    } // 계정이 만료되지 않았는지 확인하는 메서드
 
     @Override
     public boolean isAccountNonLocked() {
-        return !isSuspended;
-    }
+        return !suspended;
+    } // 계정이 잠기지 않았는지 확인하는 메서드
 
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
+    } // 자격이 만료되지 않았는지 확인하는 메서드
 
     @Override
     public boolean isEnabled() {
-        return isVerified && !isSuspended;
-    }
-
-//    @Column(name = "oauth2_provider")
-//    private String oauth2Provider; // 예: GOOGLE, FACEBOOK 등
-//
-//    @Column(name = "oauth2_id")
-//    private String oauth2Id;
+        return verified && !suspended && deletedAt == null;
+    } // 사용자가 활성화되었는지 확인하는 메서드
 
     @Override
-    public Map<String, Object> getAttributes() {
-        return Map.of(
-                "email", this.email,
-                "nickname", this.nickname,
-                "contact", this.contact,
-                "createAt", this.createAt,
-                "updateAt", this.updateAt,
-                "deletedAt", this.deletedAt,
-                "isAdmin", this.isAdmin,
-                "is_suspended", this.isSuspended,
-                "is_verified", this.isVerified,
-                "warning", this.warning
-        );
+    public Map<String, Object> getAttributes() { // 속성을 가져오는 메서드
+        Map<String, Object> attributes = new HashMap<>();   // 속성을 저장할 맵 객체 생성
+        attributes.put("email", this.email);
+        attributes.put("nickname", this.nickname);
+        attributes.put("contact", this.contact);
+        attributes.put("createdAt", this.createdAt);
+        attributes.put("updatedAt", this.updatedAt);
+        attributes.put("deletedAt", this.deletedAt);
+        attributes.put("admin", this.admin);
+        attributes.put("suspended", this.suspended);
+        attributes.put("verified", this.verified);
+        attributes.put("warning", this.warning);
+        attributes.put("oauth2Provider", this.oauth2Provider);
+        attributes.put("oauth2Id", this.oauth2Id);
+        return attributes;
     }
 
-    // sns로그인할때 가져가는 이 유저의 id (identity)
     @Override
     public String getName() {
         return email;
-    }
-
+    } // 이름을 가져오는 메서드
 
 }
