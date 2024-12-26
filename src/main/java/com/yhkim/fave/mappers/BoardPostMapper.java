@@ -10,8 +10,27 @@ import java.util.List;
 @Mapper
 public interface BoardPostMapper {
     List<BoardPostEntity> selectPostsByUserEmail(@Param("userEmail") String userEmail, @Param("pageVo") PageVo pageVo);
-    // 사용자 이메일로 게시물 목록 조회 (페이징 처리)
 
     int countPostsByUserEmail(String userEmail);
-    // 사용자 이메일로 게시물 수 조회
+
+//    김범수 // 
+
+    BoardPostEntity[] selectBoardPosts();
+
+    int selectBoardPostCount();
+
+    BoardPostEntity[] selectBoardPost(@Param(value = "limitCount") int limitCount,
+                                       @Param(value = "offsetCount") int offsetCount);
+
+    int selectBoardPostCountBySearch(@Param(value = "filter") String filter,
+                                     @Param(value = "keyword") String keyword);
+
+    BoardPostEntity[] selectBoardPostBySearch(@Param(value = "filter") String filter,
+                                               @Param(value = "keyword") String keyword,
+                                               @Param(value = "limitCount") int limitCount,
+                                               @Param(value = "offsetCount") int offsetCount);
+
+    BoardPostEntity selectBoardPostsByIndex(@Param("index") int index);
+
+    int updateBoardPost(BoardPostEntity board);
 }
