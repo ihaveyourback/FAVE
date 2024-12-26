@@ -1,0 +1,96 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+.logo-container .header {
+  background-color: #c1b5a3;
+  padding: 0.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo-container .header .logo {
+  width: 10rem;
+  height: auto;
+}
+
+body {
+  background-color: #f5f5f5;
+  color: #212121;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  margin: 0;
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+button, input, search, textarea {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  margin: 0;
+  outline: none;
+  padding-block: 0;
+  padding-inline: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font: inherit;
+  margin-block: 0;
+  margin-inline: 0;
+}
+
+#main > .title {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.--obj-button {
+  border-radius: 0.25rem;
+  cursor: pointer;
+  padding: 0.25rem 0.75rem;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  width: auto;
+  max-width: 5rem;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  justify-content: center;
+}
+.--obj-button.-light {
+  background-color: #a0a0a0;
+  color: #ffffff;
+}
+.--obj-button.-light:hover {
+  background-color: rgb(147.25, 147.25, 147.25);
+}
+.--obj-button.-light:active {
+  background-color: rgb(134.5, 134.5, 134.5);
+}
+.--obj-button.-button_color {
+  background-color: #c1b5a3;
+  color: #ffffff;
+}
+.--obj-button.-button_color:hover {
+  background-color: rgb(182.7337662338, 168.7467532468, 147.7662337662);
+}
+.--obj-button.-button_color:active {
+  background-color: rgb(172.4675324675, 156.4935064935, 132.5324675325);
+}
+.--obj-button.-primary_color {
+  background-color: #c1b5a3;
+  color: #ffffff;
+}
+.--obj-button.-primary_color:hover {
+  background-color: rgb(182.7337662338, 168.7467532468, 147.7662337662);
+}
+.--obj-button.-primary_color:active {
+  background-color: rgb(172.4675324675, 156.4935064935, 132.5324675325);
+}
+
+/*# sourceMappingURL=common_cy.css.map */
