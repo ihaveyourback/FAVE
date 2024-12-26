@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhkim.fave.mappers.FaveInfoMapper">
+    <update id="updateFaveInfoView">
+        UPDATE `fave`.`festival_info`
+        SET `view` = #{view}
+        WHERE `index` = #{index}
+    </update>
+
+    <select id="selectFaveInfo" resultType="com.yhkim.fave.entities.FaveInfoEntity">
+        SELECT `index`              AS `index`,
+               `title`              AS `title`,
+               `description`        AS `description`,
+               `start_date`         AS `startDate`,
+               `end_date`           AS `endDate`,
+               `location`           AS `location`,
+               `user_email`         AS `userEmail`,
+               `cover_data`         AS `coverData`,
+               `cover_content_type` AS `coverContentType`,
+               `create_at`          AS `createdAt`,
+               `update_at`          AS `updatedAt`,
+               `view`               AS `view`
+        FROM `fave`.`festival_info`
+        ORDER BY `index` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+    <select id="selectFaveInfoById" resultType="com.yhkim.fave.entities.FaveInfoEntity">
+        SELECT `index`              AS `index`,
+               `title`              AS `title`,
+               `description`        AS `description`,
+               `start_date`         AS `startDate`,
+               `end_date`           AS `endDate`,
+               `location`           AS `location`,
+               `user_email`         AS `userEmail`,
+               `cover_data`         AS `coverData`,
+               `cover_content_type` AS `coverContentType`,
+               `create_at`          AS `createdAt`,
+               `update_at`          AS `updatedAt`,
+               `view`               AS `view`
+        FROM `fave`.`festival_info`
+        WHERE `index` = #{index}
+        ORDER BY `index` DESC
+    </select>
+    <select id="selectFaveInfoCount" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `fave`.`festival_info`
+    </select>
+</mapper>

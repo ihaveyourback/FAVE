@@ -213,10 +213,6 @@ ClassicEditor.create($mainForm['description'], editorConfig).then((editor) => {
             alert('주소를 입력하지 않았습니다. 주소를 입력해 주세요.');
             return;
         }
-        if (!document.getElementById('sample6_detailAddress').value.trim()) {
-            alert('상세주소를 입력하지 않았습니다. 상세주소를 입력해 주세요.');
-            return;
-        }
         if (!$mainForm['startDate'].value || $mainForm['startDate'].value === null) {
             alert('축제 시작일을 입력하지 않았습니다. 시작일을 입력해주세요.');
             return;

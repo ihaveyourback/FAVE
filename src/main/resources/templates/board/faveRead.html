@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
+    <link rel="stylesheet" type="text/css" href="/board/styles/common_cy.css">
+    <link href="/board/styles/faveRead.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3a292de2c208474fb8fc896f87e4674b&libraries=services"></script>
+    <script src="/board/scripts/faveRead.js"></script>
+</head>
+<body>
+<div th:insert="~{board/common.html :: header_copy}"></div>
+<main id="main">
+    <div class="container">
+        <div class="post">
+            <div class="title" th:text="${fave.getTitle()}"></div>
+            <div class="meta-like-container">
+                <span class="meta"
+                      th:text="'작성일 : ' + ${#temporals.format(fave.getCreatedAt() , 'yyyy-MM-dd')} + ' | 조회수 : ' + ${fave.getView()}"></span>
+                <span class="mete" th:text="'축제 일정 : ' + ${fave.getStartDate()} + ' ~ ' + ${fave.getEndDate()}"></span>
+                <span class="meta" th:text="'축제 위치 : ' + ${fave.getLocation()}"></span>
+            </div>
+        </div>
+        <div class="content">
+            <div th:utext="${fave.getDescription()}"></div>
+        </div>
+        <div id="map" style="width:100%;height:15rem;"></div>
+    </div>
+    <div class="button-container">
+        <a class="button" th:href="@{'/fave/'}" target="_self">목록으로</a>
+    </div>
+</main>
+
+</body>
+</html>
