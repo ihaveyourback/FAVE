@@ -79,6 +79,9 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
         } else if ("NAVER".equals(provider)) { // 네이버인 경우
             return getAttribute(attributes, "response.id", "defaultProviderId");
         } // ID를 가져옴
+        else if ("GOOGLE".equals(provider)) { // 구글인 경우
+            return attributes.get("sub").toString(); // ID를 가져옴
+        }
         logger.debug("Provider ID not found for provider: {}", provider); // 제공자 ID를 찾을 수 없음
         return "defaultProviderId"; // 기본 제공자 ID 반환
     } // ID 반환
@@ -89,6 +92,8 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
             return "kakao_" + attributes.get("id") + "@kakao.com";
         } else if ("NAVER".equals(provider)) { // 네이버인 경우
             return getAttribute(attributes, "response.email", "defaultEmail@example.com"); // 이메일을 가져옴
+        } else if ("GOOGLE".equals(provider)) { // 구글인 경우
+            return attributes.get("email").toString(); // 이메일을 가져옴
         }
         logger.debug("Email not found for provider: {}", provider); // 이메일을 찾을 수 없음
         return "defaultEmail@example.com"; // 기본 이메일 반환  // 카카오는 이메일을 가져올 수 없어서 그럼, 네이버는 이메일을 가져올 수 있음
@@ -100,6 +105,8 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
             return getAttribute(attributes, "properties.nickname", "defaultNickname"); // 카카오인 경우
         } else if ("NAVER".equals(provider)) {
             return getAttribute(attributes, "response.nickname", "defaultNickname"); // 네이버인 경우
+        } else if ("GOOGLE".equals(provider)) {
+            return attributes.get("name").toString(); // 구글인 경우
         }
         logger.debug("Nickname not found for provider: {}", provider);
         return "defaultNickname";
@@ -111,6 +118,8 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
             return getAttribute(attributes, "kakao_account.phone_number", generateRandomPhoneNumber());
         } else if ("NAVER".equals(provider)) {
             return getAttribute(attributes, "response.mobile", generateRandomPhoneNumber());
+        } else if ("GOOGLE".equals(provider)) {
+            return generateRandomPhoneNumber();
         }
         logger.debug("Contact not found for provider: {}", provider);
         return generateRandomPhoneNumber();

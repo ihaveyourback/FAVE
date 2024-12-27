@@ -90,8 +90,10 @@
             <input type="hidden" name="_csrf" th:value="${_csrf?.token}"/>
             <button class="--obj-button -color-primary">로그인</button>
 
-            <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver
-                Login</a><br>
+            <a href="/oauth2/authorization/google" class="btn btn-sm btn-danger active" role="button">Google Login</a>
+            <br>
+            <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver Login</a>
+            <br>
             <a href="/oauth2/authorization/kakao" class="btn btn-third active" role="button">Kakao Login</a>
 
             <button class="--obj-button -color-light-gray" name="cancel" type="button">취소</button>
