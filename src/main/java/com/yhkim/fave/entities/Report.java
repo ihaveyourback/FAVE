@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Report {
+public class Report  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,4 +53,5 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "reported_user_email", referencedColumnName = "email", insertable = false, updatable = false)
     private UserEntity reportedUser;
+
 }

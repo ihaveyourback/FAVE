@@ -1,7 +1,7 @@
 package com.yhkim.fave.controllers;
 
-import com.yhkim.fave.entities.BoardPostEntity;
 import com.yhkim.fave.entities.FaveInfoEntity;
+import com.yhkim.fave.entities.BoardPostEntity;
 import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.services.AdminPageService;
@@ -16,15 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -104,6 +102,7 @@ public class AdminPageController {
         ModelAndView modelAndView = new ModelAndView();
         if (keyword == null) {
             Pair<UserPageVo, UserEntity[]> pair = this.adminPageService.selectUserPage(page);
+            System.out.println("pair:" + Arrays.toString(pair.getRight()));
             modelAndView.addObject("page", pair.getLeft());
             modelAndView.addObject("user", pair.getRight());
         } else {
@@ -181,9 +180,12 @@ public class AdminPageController {
         return response.toString();
     }
 
-    @RequestMapping(value = "festival/" ,method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getFestival() {
+    @RequestMapping(value = "festival/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getFestival(@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView modelAndView = new ModelAndView();
+        Pair<UserPageVo, FaveInfoEntity[]> pair = this.adminPageService.selectFaveInfo(page);
+        modelAndView.addObject("page", pair.getLeft());
+        modelAndView.addObject("fave", pair.getRight());
         modelAndView.setViewName("admin/adminFave");
         return modelAndView;
     }

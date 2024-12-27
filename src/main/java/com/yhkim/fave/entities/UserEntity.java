@@ -44,21 +44,17 @@ public class UserEntity implements UserDetails, OAuth2User {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @Column(name = "is_admin", nullable = false)
-    @Builder.Default
-    private boolean admin = false;
+    @Column(name = "is_admin")
+    private boolean admin;
 
     @Column(name = "is_suspended", nullable = false)
-    @Builder.Default
     private boolean suspended = false;
 
-    @Column(name = "is_verified", nullable = false)
-    @Builder.Default
-    private boolean verified = false;
+    @Column(name = "is_verified")
+    private boolean verified;
 
     @Column
-    @Builder.Default
-    private int warning = 0;
+    private int warning;
 
     @Column(name = "oauth2_provider", length = 50)
     private String oauth2Provider;
@@ -134,4 +130,7 @@ public class UserEntity implements UserDetails, OAuth2User {
         return email;
     } // 이름을 가져오는 메서드
 
+    public boolean isSuspended() {
+        return suspended;
+    } // suspended 속성에 대한 getter 메서드 추가
 }

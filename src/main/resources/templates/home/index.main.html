@@ -50,7 +50,7 @@
             <a class="--obj-button -color-primary" th:href="@{/user/profile}">마이 페이지</a> <!-- 사용자 -->
         </li>
         <li id="adminLinkWrapper" th:if="${isAdmin}">  <!-- 관리자 -->
-            <a class="--obj-button -color-primary" th:href="@{/admin/common}">관리자 페이지</a> <!-- 관리자 -->
+            <a class="--obj-button -color-primary" th:href="@{/admin/}">관리자 페이지</a> <!-- 관리자 -->
         </li>
         <li id="loginBtnWrapper" sec:authorize="!isAuthenticated()"> <!-- 비로그인 사용자 -->
             <button id="loginBtn" class="--obj-button -color-primary" type="button">로그인</button>

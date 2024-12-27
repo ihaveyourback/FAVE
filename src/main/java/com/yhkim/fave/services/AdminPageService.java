@@ -1,13 +1,10 @@
 package com.yhkim.fave.services;
 
-import com.yhkim.fave.entities.BoardPostEntity;
 import com.yhkim.fave.entities.FaveInfoEntity;
+import com.yhkim.fave.entities.BoardPostEntity;
 import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.mappers.BoardPostMapper;
-import com.yhkim.fave.mappers.ReportsMapper;
-import com.yhkim.fave.mappers.UserMapper;
-import com.yhkim.fave.mappers.WriteMapper;
+import com.yhkim.fave.mappers.*;
 import com.yhkim.fave.vos.BoardPostPageVo;
 import com.yhkim.fave.vos.IndexPageVo;
 import com.yhkim.fave.vos.ReportsPageVo;
@@ -26,13 +23,15 @@ public class AdminPageService {
     private final BoardPostMapper boardPostsMapper;
     private final UserMapper userMapper;
     private final ReportsMapper reportsMapper;
+    private final FaveInfoMapper faveInfoMapper;
 
     @Autowired
-    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, BoardPostMapper boardPostsMapper1, UserMapper userMapper, ReportsMapper reportsMapper) {
+    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, UserMapper userMapper, ReportsMapper reportsMapper, FaveInfoMapper faveInfoMapper) {
         this.writeMapper = writeMapper;
-        this.boardPostsMapper = boardPostsMapper1;
+        this.boardPostsMapper = boardPostsMapper;
         this.userMapper = userMapper;
         this.reportsMapper = reportsMapper;
+        this.faveInfoMapper = faveInfoMapper;
     }
 
     public Pair<IndexPageVo, UserEntity[]> selectIndexUser(int page) {
@@ -88,7 +87,7 @@ public class AdminPageService {
     }
 
     public boolean updateDeleted(String userEmail) {
-        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
+        UserEntity user = this.userMapper.selectUserByEmailAdmin(userEmail);
         if (user == null) {
             return false;
         }
@@ -98,7 +97,8 @@ public class AdminPageService {
     }
 
     public boolean updateWarning(String userEmail, int warning) {
-        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
+        UserEntity user = this.userMapper.selectUserByEmailAdmin(userEmail);
+        System.out.println("user: " + user);
         if (user == null) {
             return false;
         }
@@ -178,7 +178,8 @@ public class AdminPageService {
         if (userEmail == null || userEmail.isEmpty()) {
             return null;
         }
-        return this.userMapper.selectUserByEmail(userEmail);
+        return this.userMapper.selectUserByEmailAdmin(userEmail);
+        
     }
 
     public boolean deleteBoardPost(int index) {
@@ -210,5 +211,13 @@ public class AdminPageService {
         }
         reports.setCurrentStatus("신고 처리 완료");
         return this.reportsMapper.updateReport(reports) > 0;
+    }
+
+    public Pair<UserPageVo, FaveInfoEntity[]> selectFaveInfo(int page) {
+        page = Math.max(page, 1);
+        int totalCount = this.faveInfoMapper.selectFaveInfoCount();
+        UserPageVo userPageVo = new UserPageVo(page, totalCount);
+        FaveInfoEntity[] fave = this.faveInfoMapper.selectFaveInfo(userPageVo.countPerPage, userPageVo.offsetCount);
+        return Pair.of(userPageVo, fave);
     }
 }

@@ -50,12 +50,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/assets/**").permitAll() // 정적 자원
-                                .requestMatchers("/profile/**").authenticated()// 프로필
-                                .requestMatchers("/user/**").permitAll()// 사용자
-                                .requestMatchers("/admin/**").hasAuthority("IS_ADMIN") // 관리자
-                                .requestMatchers("/api/**").permitAll()// API
+                                .requestMatchers("/profile/**").authenticated() // 프로필
+                                .requestMatchers("/user/**").permitAll() // 사용자
+                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // 관리자 페이지 (권한) // ROLE_ADMIN 권한 필요
+                                .requestMatchers("/api/**").permitAll() // API
                                 .requestMatchers("/api/login").permitAll() // 로그인 API
-                                .anyRequest().authenticated()// 그 외
+                                .anyRequest().authenticated() // 그 외
                 )
                 .formLogin(form -> form
                         .loginPage("/")

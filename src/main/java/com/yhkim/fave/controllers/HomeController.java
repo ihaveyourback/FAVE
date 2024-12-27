@@ -7,10 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
@@ -27,13 +24,13 @@ public class HomeController {
         if (userDetails instanceof UserEntity user) {// 사용자 정보가 UserEntity 객체인 경우
             modelAndView.addObject("user", user); // user 객체 생성
             modelAndView.addObject("isAdmin", user.isAdmin()); // 관리자 여부를 가져옴
-
-
         }
 
         modelAndView.setViewName("home/index.main");
         return modelAndView;
     }
+
+
 
     // 로그인 성공 여부를 JSON으로 반환하는 API
     @RequestMapping(value = "/api/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

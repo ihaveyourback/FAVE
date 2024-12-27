@@ -11,4 +11,28 @@ public interface UserMapper {
     UserEntity selectUserByContact(@Param("contact") String contact); // 연락처로 사용자 조회
     UserEntity selectUserByNickname(@Param("nickname") String nickname); // 닉네임으로 사용자 조회
     int updateUser(UserEntity user); // 사용자 정보 수정
+
+
+
+    UserEntity[] selectAllUser();
+
+    UserEntity selectUserByEmailAdmin(@Param("userEmail") String userEmail);
+
+    int updateWarning(UserEntity user);
+
+    int selectUserCount();
+
+    UserEntity[] selectUserPage(@Param(value = "limitCount") int limitCount,
+                                @Param(value = "offsetCount") int offsetCount);
+
+    int selectUserCountBySearch(@Param(value = "filter") String filter,
+                                @Param(value = "keyword") String keyword);
+
+    UserEntity[] selectUserBySearch(@Param(value = "filter") String filter,
+                                    @Param(value = "keyword") String keyword,
+                                    @Param(value = "limitCount") int limitCount,
+                                    @Param(value = "offsetCount") int offsetCount);
+
+
+
 }
