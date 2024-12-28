@@ -5,6 +5,7 @@ import com.yhkim.fave.entities.FaveInfoEntity;
 import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.services.AdminPageService;
+import com.yhkim.fave.services.FaveService;
 import com.yhkim.fave.vos.BoardPostPageVo;
 import com.yhkim.fave.vos.IndexPageVo;
 import com.yhkim.fave.vos.ReportsPageVo;
@@ -33,10 +34,12 @@ import java.util.Map;
 public class AdminPageController {
 
     private final AdminPageService adminPageService;
+    private final FaveService faveService;
 
     @Autowired
-    public AdminPageController(AdminPageService adminPageService) {
+    public AdminPageController(AdminPageService adminPageService, FaveService faveService) {
         this.adminPageService = adminPageService;
+        this.faveService = faveService;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
@@ -95,6 +98,19 @@ public class AdminPageController {
             response.put("result", result.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    @RequestMapping(value = "modify/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getModify(@RequestParam(value = "index", required = false) int index) {
+        ModelAndView modelAndView = new ModelAndView();
+        FaveInfoEntity fave = this.faveService.selectFaveInfoById(index);
+        Map<String, String> addressParts = this.adminPageService.splitAddress(fave.getLocation());
+        modelAndView.addObject("mainAddress", addressParts.get("mainAddress"));
+        modelAndView.addObject("detailAddress", addressParts.get("detailAddress"));
+        modelAndView.addObject("extraAddress", addressParts.get("extraAddress"));
+        modelAndView.addObject("fave", fave);
+        modelAndView.setViewName("admin/adminModify");
+        return modelAndView;
     }
 
     @RequestMapping(value = "user/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
@@ -181,9 +197,12 @@ public class AdminPageController {
         return response.toString();
     }
 
-    @RequestMapping(value = "festival/" ,method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getFestival() {
+    @RequestMapping(value = "festival/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getFestival(@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView modelAndView = new ModelAndView();
+        Pair<UserPageVo, FaveInfoEntity[]> pair = this.adminPageService.selectFaveInfo(page);
+        modelAndView.addObject("page", pair.getLeft());
+        modelAndView.addObject("fave", pair.getRight());
         modelAndView.setViewName("admin/adminFave");
         return modelAndView;
     }

@@ -13,7 +13,7 @@ public interface BoardPostMapper {
 
     int countPostsByUserEmail(String userEmail);
 
-//    김범수 // 
+//    김범수 //
 
     BoardPostEntity[] selectBoardPosts();
 
