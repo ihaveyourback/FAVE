@@ -1,6 +1,6 @@
 package com.yhkim.fave.vos;
 
-import com.cykim.teamproject.entities.ArticleEntity;
+import com.yhkim.fave.entities.ArticleEntity;
 import lombok.Getter;
 import lombok.Setter;
 
