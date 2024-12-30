@@ -1,0 +1,58 @@
+#main {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+#main > .container {
+  width: 80%;
+  background: #ffffff;
+  box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+#main > .container > .post {
+  background-color: rgb(234.0649350649, 230.012987013, 223.9350649351);
+  padding: 1.25rem;
+  border-bottom: 0.0625px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+#main > .container > .post > .title {
+  font-weight: 500;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+#main > .container > .post > .meta-like-container {
+  display: flex;
+  flex-direction: column;
+}
+#main > .container > .content {
+  min-height: 5rem;
+  padding: 1.25rem;
+  margin-top: 0.9rem;
+  line-height: 1.6rem;
+  font-size: 1rem;
+  border-bottom: 0.0625rem solid #ddd;
+}
+#main > .button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.4rem;
+  width: 80%;
+}
+#main > .button-container > .button {
+  padding: 0.5rem;
+  background-color: #c1b5a3;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 0.3rem;
+  box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.1);
+}
+#main > .button-container > .button:hover {
+  text-decoration: underline;
+}
+
+/*# sourceMappingURL=faveRead.css.map */

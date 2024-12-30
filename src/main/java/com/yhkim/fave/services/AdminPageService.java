@@ -1,13 +1,10 @@
 package com.yhkim.fave.services;
 
 import com.yhkim.fave.entities.BoardPostEntity;
+import com.yhkim.fave.entities.FaveInfoEntity;
 import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.entities.WriteEntity;
-import com.yhkim.fave.mappers.BoardPostMapper;
-import com.yhkim.fave.mappers.ReportsMapper;
-import com.yhkim.fave.mappers.UserMapper;
-import com.yhkim.fave.mappers.WriteMapper;
+import com.yhkim.fave.mappers.*;
 import com.yhkim.fave.vos.BoardPostPageVo;
 import com.yhkim.fave.vos.IndexPageVo;
 import com.yhkim.fave.vos.ReportsPageVo;
@@ -19,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class AdminPageService {
@@ -26,13 +25,15 @@ public class AdminPageService {
     private final BoardPostMapper boardPostsMapper;
     private final UserMapper userMapper;
     private final ReportsMapper reportsMapper;
+    private final FaveInfoMapper faveInfoMapper;
 
     @Autowired
-    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, UserMapper userMapper, ReportsMapper reportsMapper) {
+    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, BoardPostMapper boardPostsMapper1, UserMapper userMapper, ReportsMapper reportsMapper, FaveInfoMapper faveInfoMapper) {
         this.writeMapper = writeMapper;
-        this.boardPostsMapper = boardPostsMapper;
+        this.boardPostsMapper = boardPostsMapper1;
         this.userMapper = userMapper;
         this.reportsMapper = reportsMapper;
+        this.faveInfoMapper = faveInfoMapper;
     }
 
     public Pair<IndexPageVo, UserEntity[]> selectIndexUser(int page) {
@@ -64,7 +65,7 @@ public class AdminPageService {
         return Pair.of(index, reports);
     }
 
-    public Boolean write(WriteEntity adminPage, MultipartFile coverFile) {
+    public Boolean write(FaveInfoEntity adminPage, MultipartFile coverFile) {
         if (adminPage == null || adminPage.getTitle() == null || adminPage.getTitle().length() < 2 || adminPage.getTitle().length() > 20 ||
                 adminPage.getLocation() == null || adminPage.getStartDate() == null || adminPage.getEndDate() == null || adminPage.getDescription() == null || adminPage.getDescription().isEmpty() || adminPage.getDescription().length() > 10000) {
             return false;
@@ -88,7 +89,7 @@ public class AdminPageService {
     }
 
     public boolean updateDeleted(String userEmail) {
-        UserEntity user = this.userMapper.selectUserByEmailAdmin(userEmail);
+        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
         if (user == null) {
             return false;
         }
@@ -98,7 +99,7 @@ public class AdminPageService {
     }
 
     public boolean updateWarning(String userEmail, int warning) {
-        UserEntity user = this.userMapper.selectUserByEmailAdmin(userEmail);
+        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
         if (user == null) {
             return false;
         }
@@ -178,7 +179,7 @@ public class AdminPageService {
         if (userEmail == null || userEmail.isEmpty()) {
             return null;
         }
-        return this.userMapper.selectUserByEmailAdmin(userEmail);
+        return this.userMapper.selectUserByEmail(userEmail);
     }
 
     public boolean deleteBoardPost(int index) {
@@ -210,5 +211,35 @@ public class AdminPageService {
         }
         reports.setCurrentStatus("신고 처리 완료");
         return this.reportsMapper.updateReport(reports) > 0;
+    }
+
+    public Pair<UserPageVo, FaveInfoEntity[]> selectFaveInfo(int page) {
+        page = Math.max(page, 1);
+        int totalCount = this.faveInfoMapper.selectFaveInfoCount();
+        UserPageVo userPageVo = new UserPageVo(page, totalCount);
+        FaveInfoEntity[] fave = this.faveInfoMapper.selectFaveInfo(userPageVo.countPerPage, userPageVo.offsetCount);
+        return Pair.of(userPageVo, fave);
+    }
+
+    public Map<String, String> splitAddress(String fullAddress) {
+        Map<String, String> addressParts = new HashMap<>();
+
+        String extraAddress = "";
+        if (fullAddress.contains("(") && fullAddress.contains(")")) {
+            int startIdx = fullAddress.indexOf("(");
+            int endIdx = fullAddress.indexOf(")");
+            extraAddress = fullAddress.substring(startIdx, endIdx + 1);
+            fullAddress = fullAddress.substring(0, startIdx).trim();
+        }
+
+        int lastSpaceIdx = fullAddress.lastIndexOf(" ");
+        String mainAddress = fullAddress.substring(0, lastSpaceIdx).trim();
+        String detailAddress = fullAddress.substring(lastSpaceIdx + 1).trim();
+
+        addressParts.put("mainAddress", mainAddress);
+        addressParts.put("detailAddress", detailAddress);
+        addressParts.put("extraAddress", extraAddress);
+
+        return addressParts;
     }
 }

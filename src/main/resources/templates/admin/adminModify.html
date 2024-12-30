@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="">
     <title>Document</title>
     <link rel="stylesheet" href="/admin/styles/common.css">
     <link rel="stylesheet" href="/admin/styles/adminWrite.css">
@@ -15,7 +16,7 @@
     <script src="/common/assets/libraries/ckeditor/ko.umd.js"></script>
     <script src="https://kit.fontawesome.com/a3db7225ba.js" crossorigin="anonymous"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script defer src="/admin/scripts/adminWrite.js"></script>
+    <script defer src="/admin/scripts/adminModify.js"></script>
     <style>
         .ck-editor__editable {
             width: 40rem;
@@ -75,6 +76,7 @@
     </script>
 </head>
 <body>
+
 <th:block th:replace="~{admin/common.html :: mainHeader}"></th:block>
 <th:block th:replace="~{admin/common.html :: mainNav}"></th:block>
 <main id="main">
@@ -83,38 +85,38 @@
             <div class="main-container">
                 <label class="label">
                     <span class="text">제목</span>
-                    <input class="item" type="text" name="title" minlength="2" maxlength="20">
+                    <input class="item" type="text" name="title" minlength="2" maxlength="20" th:value="${fave.getTitle()}">
                 </label>
                 <label class="label">
                     <span class="text">주소</span>
                     <input name="postcode" class="item" type="hidden" id="sample6_postcode" placeholder="우편번호">
-                    <input name="address" class="item" type="text" id="sample6_address" placeholder="주소">
-                    <input name="detailAddress" class="item" type="text" id="sample6_detailAddress" placeholder="상세주소">
-                    <input name="extraAddress" class="item" type="text" id="sample6_extraAddress" placeholder="참고항목">
+                    <input name="address" class="item" type="text" id="sample6_address" placeholder="주소" th:value="${mainAddress}">
+                    <input name="detailAddress" class="item" type="text" id="sample6_detailAddress" placeholder="상세주소" th:value="${detailAddress}">
+                    <input name="extraAddress" class="item" type="text" id="sample6_extraAddress" placeholder="참고항목" th:value="${extraAddress}">
                     <input class="button" type="button" onclick="sample6_execDaumPostcode()" value="주소 찾기">
                 </label>
                 <label class="label">
                     <span class="text">시작일</span>
-                    <input class="item" type="date" name="startDate">
+                    <input class="item" type="date" name="startDate" th:value="${fave.getStartDate()}">
                 </label>
                 <label class="label">
                     <span class="text">종료일</span>
-                    <input class="item" type="date" name="endDate">
+                    <input class="item" type="date" name="endDate" th:value="${fave.getEndDate()}">
                 </label>
                 <span class="row">
                 <span class="preview-wrapper">
                     <span class="text">배너 이미지</span>
-                    <img id="coverImage" class="image" src="" alt="" style="display: none">
-                    <input id="coverInput" hidden required accept="image/*" name="coverData" type="file">
+                    <img id="coverImage" class="image" th:src="@{'/fave/image' (index=${fave.getIndex()})}" alt="">
+                    <input id="coverInput" hidden accept="image/*" name="coverData" type="file">
                 </span>
             </span>
             </div>
             <div class="line"></div>
             <div class="main-container">
                 <label class="label">
-                    <textarea hidden="hidden" class="content" name="description" maxlength="10000" minlength="0"></textarea>
+                    <textarea hidden="hidden" class="content" name="description" maxlength="10000" minlength="0" th:data-value="${fave.getDescription()}"></textarea>
                 </label>
-                <button type="submit" class="button">축제 등록</button>
+                <button type="submit" class="button">축제 수정</button>
             </div>
         </form>
     </div>

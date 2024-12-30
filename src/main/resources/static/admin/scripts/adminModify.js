@@ -201,124 +201,97 @@ const editorConfig = {
     }
 };
 
-// region XHR
 ClassicEditor.create($mainForm['description'], editorConfig).then((editor) => {
+    editorInstance = editor;
+
+    editor.setData($mainForm['description'].getAttribute('data-value'));
+
     $mainForm.onsubmit = (e) => {
         e.preventDefault();
-        if ($mainForm['title'].value === '') {
-            alert('제목을 입력하지 않았습니다. 제목을 작성해 주세요.')
+
+        const title = $mainForm['title'].value.trim();
+        const address = document.getElementById('sample6_address').value.trim();
+        const startDate = $mainForm['startDate'].value;
+        const endDate = $mainForm['endDate'].value;
+        const coverData = $mainForm['coverData'].files[0];
+        const description = editor.getData();
+
+        if (!title) {
+            alert('제목을 입력하지 않았습니다. 제목을 작성해 주세요.');
             return;
         }
-        if (!document.getElementById('sample6_address').value.trim()) {
+
+        if (!address) {
             alert('주소를 입력하지 않았습니다. 주소를 입력해 주세요.');
             return;
         }
-        if (!$mainForm['startDate'].value || $mainForm['startDate'].value === null) {
+
+        if (!startDate) {
             alert('축제 시작일을 입력하지 않았습니다. 시작일을 입력해주세요.');
             return;
         }
-        if (!$mainForm['endDate'].value || $mainForm['endDate'].value === null) {
+
+        if (!endDate) {
             alert('축제 종료일을 입력하지 않았습니다. 종료일을 입력해주세요.');
             return;
         }
-        if (new Date($mainForm['startDate'].value) > new Date($mainForm['endDate'].value)) {
+
+        if (new Date(startDate) > new Date(endDate)) {
             alert('시작일은 종료일보다 늦을 수 없습니다.');
             return;
         }
-        if (!$mainForm['coverData'].files || !$mainForm['coverData'].files.length) {
-            alert('배너 이미지를 추가하지 않았습니다. 이미지를 추가 해주세요.');
-            return;
-        }
-        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        const file = $mainForm['coverData'].files[0];
-        if (!allowedMimeTypes.includes(file.type)) {
-            alert('허용되지 않는 파일 형식입니다. JPG, PNG 또는 GIF 이미지를 업로드하세요.');
-            return;
-        }
-        const address = document.getElementById('sample6_address').value.trim() + ' ' + document.getElementById('sample6_detailAddress').value.trim() + ' ' + document.getElementById('sample6_extraAddress').value.trim();
+
+        const fullAddress = `${address} ${document.getElementById('sample6_detailAddress').value.trim()} ${document.getElementById('sample6_extraAddress').value.trim()}`;
+
         const xhr = new XMLHttpRequest();
         const formData = new FormData();
-        formData.append('title', $mainForm['title'].value);
-        formData.append('location', address);
-        formData.append('startDate', $mainForm['startDate'].value);
-        formData.append('endDate', $mainForm['endDate'].value);
-        formData.append('coverData', $mainForm['coverData'].files[0]); // 파일 객체
-        formData.append('description', editor.getData());
+        formData.append('title', title);
+        formData.append('location', fullAddress);
+        formData.append('startDate', startDate);
+        formData.append('endDate', endDate);
+        formData.append('coverData', coverData);
+        formData.append('description', description);
+
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== XMLHttpRequest.DONE) {
                 return;
             }
+
             if (xhr.status < 200 || xhr.status >= 300) {
                 alert('게시글 작성에 실패 하였습니다.');
                 return;
             }
+
             const response = JSON.parse(xhr.responseText);
-            console.log(response)
             if (response['result'] === 'true') {
-                location.href = `./`
-                alert('작성 성공')
+                alert('작성 성공');
             } else {
-                alert('작성 실패')
+                alert('작성 실패');
                 history.back();
             }
         };
-        xhr.open('POST', location.href);
+
+        const index = location.search;
+        xhr.open('POST', `/admin/modify/${index}`);
         xhr.send(formData);
+    };
+});
+
+const coverImage = document.getElementById('coverImage');
+const coverInput = document.getElementById('coverInput');
+
+document.querySelector('.preview-wrapper').addEventListener('click', () => {
+    coverInput.click();
+});
+
+coverInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            coverImage.src = e.target.result;
+            coverImage.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
     }
 });
-// endregion
-
-// region 배너 이미지 이벤트 발생 시 파일찾기 이벤트 실행
-document.addEventListener('DOMContentLoaded', () => {
-    const coverImage = document.getElementById('coverImage');
-    const coverInput = document.getElementById('coverInput');
-
-    // 커버 이미지 클릭 이벤트
-    document.querySelector('.preview-wrapper').addEventListener('click', () => {
-        document.getElementById('coverInput').click();
-    });
-
-    // 파일 선택 시 이미지 미리보기
-    coverInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                coverImage.src = e.target.result; // 미리보기 이미지 업데이트
-                coverImage.style.display = 'block'; // 이미지 표시
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-});
-// endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

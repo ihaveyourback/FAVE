@@ -1,10 +1,11 @@
 package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.entities.BoardPostEntity;
+import com.yhkim.fave.entities.FaveInfoEntity;
 import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.entities.WriteEntity;
 import com.yhkim.fave.services.AdminPageService;
+import com.yhkim.fave.services.FaveService;
 import com.yhkim.fave.vos.BoardPostPageVo;
 import com.yhkim.fave.vos.IndexPageVo;
 import com.yhkim.fave.vos.ReportsPageVo;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,10 +34,12 @@ import java.util.Map;
 public class AdminPageController {
 
     private final AdminPageService adminPageService;
+    private final FaveService faveService;
 
     @Autowired
-    public AdminPageController(AdminPageService adminPageService) {
+    public AdminPageController(AdminPageService adminPageService, FaveService faveService) {
         this.adminPageService = adminPageService;
+        this.faveService = faveService;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
@@ -73,12 +76,12 @@ public class AdminPageController {
                                        @RequestParam("description") String description,
                                        @RequestParam("coverData") MultipartFile coverFile) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        LocalDateTime startDateTime = LocalDateTime.parse(startDate, formatter);
-        LocalDateTime endDateTime = LocalDateTime.parse(endDate, formatter);
+        LocalDate startDateTime = LocalDate.parse(startDate, formatter);
+        LocalDate endDateTime = LocalDate.parse(endDate, formatter);
 
-        WriteEntity adminPage = new WriteEntity();
+        FaveInfoEntity adminPage = new FaveInfoEntity();
         adminPage.setTitle(title);
         adminPage.setLocation(location);
         adminPage.setStartDate(startDateTime);
@@ -95,6 +98,19 @@ public class AdminPageController {
             response.put("result", result.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    @RequestMapping(value = "modify/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getModify(@RequestParam(value = "index", required = false) int index) {
+        ModelAndView modelAndView = new ModelAndView();
+        FaveInfoEntity fave = this.faveService.selectFaveInfoById(index);
+        Map<String, String> addressParts = this.adminPageService.splitAddress(fave.getLocation());
+        modelAndView.addObject("mainAddress", addressParts.get("mainAddress"));
+        modelAndView.addObject("detailAddress", addressParts.get("detailAddress"));
+        modelAndView.addObject("extraAddress", addressParts.get("extraAddress"));
+        modelAndView.addObject("fave", fave);
+        modelAndView.setViewName("admin/adminModify");
+        return modelAndView;
     }
 
     @RequestMapping(value = "user/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
@@ -179,5 +195,15 @@ public class AdminPageController {
         JSONObject response = new JSONObject();
         response.put("result", result);
         return response.toString();
+    }
+
+    @RequestMapping(value = "festival/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getFestival(@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+        ModelAndView modelAndView = new ModelAndView();
+        Pair<UserPageVo, FaveInfoEntity[]> pair = this.adminPageService.selectFaveInfo(page);
+        modelAndView.addObject("page", pair.getLeft());
+        modelAndView.addObject("fave", pair.getRight());
+        modelAndView.setViewName("admin/adminFave");
+        return modelAndView;
     }
 }
