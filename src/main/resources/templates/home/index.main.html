@@ -15,6 +15,8 @@
 
     <script type="text/javascript" src="/assets/scripts/common.js"></script>
     <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
+
+
 </head>
 <body>
 <header class="header">
@@ -43,20 +45,19 @@
                                     stroke-width="1.8"></circle>
                         </g>
                     </svg>
-                </button>
+                </button> <!-- 검색 버튼 -->
             </form>
         </li>
-        <li id="UserLinkWrapper" th:if="${user != null && !isAdmin}">
-            <a class="--obj-button -color-primary" th:href="@{/user/profile}">마이 페이지</a>
+        <li id="UserLinkWrapper" sec:authorize="isAuthenticated() and !hasAuthority('ROLE_ADMIN')">
+            <a class="--obj-button -color-primary" th:href="@{/user/profile}">마이 페이지</a> <!-- 사용자 -->
         </li>
-        <li id="adminLinkWrapper" th:if="${isAdmin}">
-            <a class="--obj-button -color-primary" th:href="@{/admin/user}">관리자 페이지</a>
+        <li id="adminLinkWrapper" th:if="${isAdmin}">  <!-- 관리자 -->
+            <a class="--obj-button -color-primary" th:href="@{/admin/}">관리자 페이지</a> <!-- 관리자 -->
         </li>
         <li id="loginBtnWrapper" sec:authorize="!isAuthenticated()"> <!-- 비로그인 사용자 -->
             <button id="loginBtn" class="--obj-button -color-primary" type="button">로그인</button>
         </li>
-        <li class="name" th:if="${user != null}" th:text="|안녕하세요, ${name} 님!|">
-        </li>
+        <li class="name" sec:authorize="isAuthenticated()" th:text="|안녕하세요, ${#authentication.principal.nickname} 님!|"></li> <!-- 로그인한 사용자 -->
         <li id="logoutBtnWrapper" sec:authorize="isAuthenticated()"> <!-- 로그인한 사용자 -->
             <a id="logoutBtn" class="--obj-button -color-primary" th:href="@{/logout}">로그아웃</a>
         </li>
@@ -91,8 +92,10 @@
             <input type="hidden" name="_csrf" th:value="${_csrf?.token}"/>
             <button class="--obj-button -color-primary">로그인</button>
 
-            <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver
-                Login</a><br>
+            <a href="/oauth2/authorization/google" class="btn btn-sm btn-danger active" role="button">Google Login</a>
+            <br>
+            <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver Login</a>
+            <br>
             <a href="/oauth2/authorization/kakao" class="btn btn-third active" role="button">Kakao Login</a>
 
             <button class="--obj-button -color-light-gray" name="cancel" type="button">취소</button>
@@ -192,13 +195,13 @@
 <nav class="main-nav">
     <ul class="ul">
         <li><a href="#">지역별</a></li>
-        <li><a href="#">2024 전국 축제</a></li>
+        <li><a href="#">올해 축제</a></li>
         <li><a href="#">자유 게시판</a></li>
         <li><a href="#">지도</a></li>
     </ul>
 </nav>
 
-
+<!--관리자가 소개하는 인기 축제  api?-->
 <a href="">
     <section class="main-section">
     <span class="image-slider">
@@ -208,7 +211,6 @@
     </span>
     </section>
 </a>
-<!-- 로그인 폼 (숨김) -->
 
 <main>
     <b><br><br><br><br></b>
@@ -263,6 +265,13 @@
     </div>
 </footer>
 
-
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var errorMessage = /*[[${errorMessage}]]*/ '';
+        if (errorMessage) {
+            alert(errorMessage);
+        }
+    });
+</script>
 </body>
 </html>

@@ -37,14 +37,14 @@
             <tr th:each="reports : ${reports}" th:if="${reports != null}" class="tbody-tr">
                 <td th:text="${reports.getIndex()}"></td>
                 <td th:text="${reports.getUserEmail()}"></td>
-                <td th:text="${reports.getReportUserEmail()}"></td>
+                <td th:text="${reports.getReportedUserEmail}"></td>
                 <td th:text="${reports.getReason()}"></td>
                 <td th:text="${reports.getReasonDetail()}"></td>
                 <td th:text="${reports.getStatus()}">/td>
                 <td th:text="${reports.getCurrentStatus()}"></td>
                 <td th:text="${#temporals.format(reports.getReportedAt(), 'yyyy-MM-dd')}">2024-01-01</td>
                 <td>
-                    <input type="hidden" name="getReportUserEmail" th:value="${reports.getReportUserEmail}">
+                    <input type="hidden" name="getReportUserEmail" th:value="${reports.getReportedUserEmail}">
                     <input type="hidden" name="warning" th:value="${reports.getUser().getWarning()}">
                     <input type="hidden" name="index" th:value="${reports.getIndex()}">
                     <button class="user-button warning-button">경고</button>

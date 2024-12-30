@@ -31,7 +31,7 @@
             </tr>
             <tr class="user-container" th:each="user : ${user}">
                 <td th:text="${user.getEmail()}"></td>
-                <td th:text="${user.getNickName()}"></td>
+                <td th:text="${user.getNickname}"></td>
                 <td th:text="${user.getContact()}"></td>
                 <td th:if="${user.isVerified() == true}">완료</td>
                 <td th:if="${user.isVerified() == false}">미완료</td>

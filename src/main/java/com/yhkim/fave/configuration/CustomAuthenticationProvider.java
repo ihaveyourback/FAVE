@@ -26,16 +26,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationProvider.class); // 로거 객체 생성
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        logger.info("CustomAuthenticationProvider invoked for authentication");
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException { // 사용자 인증 메서드
+        logger.info("CustomAuthenticationProvider invoked for authentication"); // 사용자 인증을 위해 CustomAuthenticationProvider가 호출됨
 
-        String email = authentication.getName();
-        String password = authentication.getCredentials().toString();
+        String email = authentication.getName(); // 사용자가 입력한 이메일
+        String password = authentication.getCredentials().toString(); // 사용자가 입력한 비밀번호
 
-        UserDetails user = userDetailsService.loadUserByUsername(email);
+        UserDetails user = userDetailsService.loadUserByUsername(email); // 사용자 정보를 가져옴
 
         if (user instanceof UserEntity userEntity) {
             logger.info("Checking if account is deleted for user: {}", email);
@@ -59,10 +59,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+        // 사용자 정보와 권한을 포함한 UsernamePasswordAuthenticationToken 객체 반환
     }
 
     @Override
-    public boolean supports(Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    public boolean supports(Class<?> authentication) { // 지원하는 인증 객체인지 확인하는 메서드
+        return authentication.equals(UsernamePasswordAuthenticationToken.class); // UsernamePasswordAuthenticationToken 클래스를 지원
     }
 }

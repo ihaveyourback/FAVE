@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity, String> {
-    // 올바른 메서드 정의
-    UserEntity findByNickname(String nickname);
-    UserEntity findByContact(String contact);
-
-    // 반환 타입 수정: Optional<UserEntity>
-    Optional<UserEntity> findByEmail(String username);
+    Optional<UserEntity> findByContact(String contact);
+    Optional<UserEntity> findByNickname(String nickname);
+    Optional<UserEntity> findByEmail(String email);
+    boolean existsByEmail(String email);
+    boolean existsByContact(String contact);
+    boolean existsByNickname(String nickname);
 }

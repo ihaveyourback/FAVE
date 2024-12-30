@@ -92,8 +92,6 @@ body {
   }
 }
 
-
-
 // 메인 컨텐츠 스타일
 .main-content {
   @include flex(column, flex-start, flex-start, 1rem);
@@ -176,12 +174,61 @@ body {
 .edit-form {
   @include flex(column, flex-start, flex-start, 1rem);
   align-items: center;
+  background-color: #f9f9f9; // 폼 배경색
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #1c1d1e;
+
+  label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    text-align: left;
+  }
+
+  input {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+
+    &:focus {
+      outline: none;
+      border-color: #e0c3a1;
+      box-shadow: 0 0 5px rgba(224, 195, 161, 0.5);
+    }
+  }
+
+  .button--submit {
+    background-color: #e0c3a1;
+    color: #fff;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #c99e7a;
+    }
+  }
+}
+// 회원탈퇴 폼 스타일
+.deactivate-form {
+  @include flex(column, flex-start, flex-start, 1rem);
+  align-items: center;
 
   &__label {
     font-size: 1rem;
     color: #333;
 
-    .edit-form__input {
+    .deactivate-form__input {
       display: block;
       width: 100%;
       padding: 0.8rem;

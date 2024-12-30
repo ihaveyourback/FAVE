@@ -36,14 +36,14 @@
                     <tr th:each="user : ${user}" class="main"
                         th:attr="
                         data-email=${user.getEmail()},
-                        data-nickname=${user.getNickName()},
+                        data-nickname=${user.getNickname()},
                         data-contact=${user.getContact()},
                         data-createat=${#temporals.format(user.getCreatedAt(), 'yyyy-MM-dd HH:mm:ss')},
                         data-isadmin=${user.isAdmin() == true ? '관리자' : '일반회원'},
                         data-verified=${user.isVerified() == true ? '완료' : '미완료'},
                         data-warning=${user.getWarning()}">
                         <td th:text="${user.getEmail}">아이디</td>
-                        <td th:text="${user.getNickName}">닉네임</td>
+                        <td th:text="${user.getNickname()}">닉네임</td>
                         <td th:if="${user.isVerified() == true}">완료</td>
                         <td th:if="${user.isVerified() == false}">미완료</td>
                     </tr>
@@ -72,12 +72,12 @@
                         data-title=${board.getTitle()},
                         data-content=${board.getContent()},
                         data-useremail=${board.getUserEmail()},
-                        data-usernickname=${board.getUserNickName()},
-                        data-createat=${#temporals.format(board.getCreatedAt(), 'yyyy-MM-dd HH:mm:ss')},
+                        data-usernickname=${board.getUserNickname()},
+                        data-createat=${#temporals.format(board.getCreateAt(), 'yyyy-MM-dd HH:mm:ss')},
                         data-view=${board.getView()}">
                         <td th:text="${board.getIndex()}"></td>
                         <td th:text="${board.getTitle()}"></td>
-                        <td th:text="${board.getUserNickName()}"></td>
+                        <td th:text="${board.getUserNickname()}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -103,7 +103,7 @@
                         th:attr="
                         data-index=${reports.getIndex()},
                         data-useremail=${reports.getUserEmail()},
-                        data-reporteduseremail=${reports.getReportUserEmail()},
+                        data-reporteduseremail=${reports.getReportedUserEmail()},
                         data-reportedpostid=${reports.getReportedPostId() == null ? '없음' : reports.getReportedPostId()},
                         data-reportedcommentid=${reports.getReportedCommentId() == null ? '없음' : reports.getReportedCommentId()},
                         data-status=${reports.getStatus()},

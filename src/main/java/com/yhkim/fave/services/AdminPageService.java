@@ -1,7 +1,7 @@
 package com.yhkim.fave.services;
 
-import com.yhkim.fave.entities.BoardPostEntity;
 import com.yhkim.fave.entities.FaveInfoEntity;
+import com.yhkim.fave.entities.BoardPostEntity;
 import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.mappers.*;
@@ -11,6 +11,8 @@ import com.yhkim.fave.vos.ReportsPageVo;
 import com.yhkim.fave.vos.UserPageVo;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,9 +30,9 @@ public class AdminPageService {
     private final FaveInfoMapper faveInfoMapper;
 
     @Autowired
-    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, BoardPostMapper boardPostsMapper1, UserMapper userMapper, ReportsMapper reportsMapper, FaveInfoMapper faveInfoMapper) {
+    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, UserMapper userMapper, ReportsMapper reportsMapper, FaveInfoMapper faveInfoMapper) {
         this.writeMapper = writeMapper;
-        this.boardPostsMapper = boardPostsMapper1;
+        this.boardPostsMapper = boardPostsMapper;
         this.userMapper = userMapper;
         this.reportsMapper = reportsMapper;
         this.faveInfoMapper = faveInfoMapper;
@@ -79,7 +81,15 @@ public class AdminPageService {
             adminPage.setCreatedAt(LocalDateTime.now());
             adminPage.setUpdatedAt(null);
 
-            adminPage.setUserEmail("yellow6480@gmail.com");
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String userEmail;
+            if (principal instanceof UserDetails) {
+                userEmail = ((UserEntity) principal).getEmail();
+            } else {
+                userEmail = principal.toString();
+            }
+
+            adminPage.setUserEmail(userEmail);
 
             return this.writeMapper.insertAdminWrite(adminPage) > 0;
         } catch (IOException e) {
@@ -89,7 +99,7 @@ public class AdminPageService {
     }
 
     public boolean updateDeleted(String userEmail) {
-        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
+        UserEntity user = this.userMapper.selectUserByEmailAdmin(userEmail);
         if (user == null) {
             return false;
         }
@@ -99,7 +109,8 @@ public class AdminPageService {
     }
 
     public boolean updateWarning(String userEmail, int warning) {
-        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
+        UserEntity user = this.userMapper.selectUserByEmailAdmin(userEmail);
+        System.out.println("user: " + user);
         if (user == null) {
             return false;
         }
@@ -179,7 +190,8 @@ public class AdminPageService {
         if (userEmail == null || userEmail.isEmpty()) {
             return null;
         }
-        return this.userMapper.selectUserByEmail(userEmail);
+        return this.userMapper.selectUserByEmailAdmin(userEmail);
+        
     }
 
     public boolean deleteBoardPost(int index) {

@@ -34,9 +34,10 @@
             <tr th:each="board : ${board}">
                 <td th:text="${board.getIndex()}"></td>
                 <td th:text="${board.getTitle()}"></td>
-                <td th:text="${board.getUserNickName()}"></td>
+                <td th:text="${board.getUserNickname()}"></td>
                 <td th:text="${board.getView()}"></td>
-                <td th:text="${#temporals.format(board.getCreatedAt(), 'yyyy-MM-dd')}"></td>
+                <td th:text="${board.createAt}"></td>
+                <td th:text="${#temporals.format(board.getCreateAt(), 'yyyy-MM-dd')}"></td>
                 <td>
                     <input type="hidden" name="userEmail" th:value="${board.getUser().getEmail()}">
                     <input type="hidden" name="warning" th:value="${board.getUser().getWarning()}">
