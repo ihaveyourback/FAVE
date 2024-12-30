@@ -20,7 +20,7 @@
         </div>
         <div class="header-actions">
             <!--            <a href="#" class="icon"><i class="fa-regular fa-user"></i> 프로필</a>-->
-            <a href="#" class="icon"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</a>
+            <a href="/logout" class="icon"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</a>
         </div>
     </div>
 </header>
@@ -35,7 +35,7 @@
             </ul>
         </li>
         <li><a th:href="@{'/admin/write/'}">게시글 등록</a></li>
-        <li><a href="#">문의 내역</a></li>
+        <li><a th:href="@{'/admin/inquiries/'}">문의 내역</a></li>
         <li><a th:href="@{'/admin/reports/'}">신고 내역</a></li>
     </ul>
 </nav>

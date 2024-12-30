@@ -1,19 +1,18 @@
 package com.yhkim.fave.services;
 
-import com.yhkim.fave.entities.FaveInfoEntity;
-import com.yhkim.fave.entities.BoardPostEntity;
-import com.yhkim.fave.entities.Report;
-import com.yhkim.fave.entities.UserEntity;
+import com.yhkim.fave.entities.*;
 import com.yhkim.fave.mappers.*;
 import com.yhkim.fave.vos.BoardPostPageVo;
 import com.yhkim.fave.vos.IndexPageVo;
 import com.yhkim.fave.vos.ReportsPageVo;
 import com.yhkim.fave.vos.UserPageVo;
+import jakarta.persistence.Index;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,14 +27,16 @@ public class AdminPageService {
     private final UserMapper userMapper;
     private final ReportsMapper reportsMapper;
     private final FaveInfoMapper faveInfoMapper;
+    private final InquiriesMapper inquiriesMapper;
 
     @Autowired
-    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, UserMapper userMapper, ReportsMapper reportsMapper, FaveInfoMapper faveInfoMapper) {
+    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, UserMapper userMapper, ReportsMapper reportsMapper, FaveInfoMapper faveInfoMapper, InquiriesMapper inquiriesMapper) {
         this.writeMapper = writeMapper;
         this.boardPostsMapper = boardPostsMapper;
         this.userMapper = userMapper;
         this.reportsMapper = reportsMapper;
         this.faveInfoMapper = faveInfoMapper;
+        this.inquiriesMapper = inquiriesMapper;
     }
 
     public Pair<IndexPageVo, UserEntity[]> selectIndexUser(int page) {
@@ -57,6 +58,14 @@ public class AdminPageService {
             boardPost.setUser(user);
         }
         return Pair.of(index, boardPosts);
+    }
+
+    public Pair<IndexPageVo, InquiriesEntity[]> selectAllInquiries(int page) {
+        page = Math.max(page, 1);
+        int totalCount = this.inquiriesMapper.selectInquiriesCount();
+        IndexPageVo index = new IndexPageVo(page, totalCount);
+        InquiriesEntity[] inquiries = this.inquiriesMapper.selectInquiries(index.countPerPage, index.offsetCount);
+        return Pair.of(index, inquiries);
     }
 
     public Pair<IndexPageVo, Report[]> selectIndexReport(int page) {
@@ -96,6 +105,40 @@ public class AdminPageService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Transactional
+    public Boolean modify(FaveInfoEntity adminPage, MultipartFile coverFile, Boolean deleteCover) {
+        if (adminPage == null) {
+            return false;
+        }
+
+        FaveInfoEntity dbFaveInfo = this.faveInfoMapper.selectFaveInfoById(adminPage.getIndex());
+        if (dbFaveInfo == null) {
+            return false;
+        }
+
+        dbFaveInfo.setTitle(adminPage.getTitle());
+        dbFaveInfo.setDescription(adminPage.getDescription());
+        dbFaveInfo.setStartDate(adminPage.getStartDate());
+        dbFaveInfo.setEndDate(adminPage.getEndDate());
+        dbFaveInfo.setLocation(adminPage.getLocation());
+        dbFaveInfo.setUpdatedAt(LocalDateTime.now());
+
+        try {
+            if (Boolean.TRUE.equals(deleteCover)) {
+                dbFaveInfo.setCoverData(null);
+                dbFaveInfo.setCoverContentType(null);
+            } else if (coverFile != null && !coverFile.isEmpty()) {
+                dbFaveInfo.setCoverData(coverFile.getBytes());
+                dbFaveInfo.setCoverContentType(coverFile.getContentType());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return this.faveInfoMapper.updateFaveInfo(dbFaveInfo) > 0;
     }
 
     public boolean updateDeleted(String userEmail) {
@@ -148,10 +191,6 @@ public class AdminPageService {
         UserPageVo userPageVo = new UserPageVo(page, totalCount);
         UserEntity[] user = this.userMapper.selectUserBySearch(filter, keyword, userPageVo.countPerPage, userPageVo.offsetCount);
         return Pair.of(userPageVo, user);
-    }
-
-    public BoardPostEntity[] selectBoardPosts() {
-        return this.boardPostsMapper.selectBoardPosts();
     }
 
     public Pair<BoardPostPageVo, BoardPostEntity[]> selectBoardPost(int page) {
@@ -253,5 +292,13 @@ public class AdminPageService {
         addressParts.put("extraAddress", extraAddress);
 
         return addressParts;
+    }
+
+    public Pair<ReportsPageVo, InquiriesEntity[]> selectInquiries(int page) {
+        page = Math.max(page, 1);
+        int totalCount = this.inquiriesMapper.selectInquiriesCount();
+        ReportsPageVo inquiriesPage = new ReportsPageVo(page, totalCount);
+        InquiriesEntity[] inquiries = this.inquiriesMapper.selectInquiries(inquiriesPage.countPerPage, inquiriesPage.offsetCount);
+        return Pair.of(inquiriesPage, inquiries);
     }
 }

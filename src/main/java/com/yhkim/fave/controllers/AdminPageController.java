@@ -1,9 +1,6 @@
 package com.yhkim.fave.controllers;
 
-import com.yhkim.fave.entities.FaveInfoEntity;
-import com.yhkim.fave.entities.BoardPostEntity;
-import com.yhkim.fave.entities.Report;
-import com.yhkim.fave.entities.UserEntity;
+import com.yhkim.fave.entities.*;
 import com.yhkim.fave.services.AdminPageService;
 import com.yhkim.fave.services.FaveService;
 import com.yhkim.fave.vos.BoardPostPageVo;
@@ -43,10 +40,12 @@ public class AdminPageController {
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getIndex(@RequestParam(value = "userPage", required = false, defaultValue = "1") int userPage,
                                  @RequestParam(value = "boardPage", required = false, defaultValue = "1") int boardPage,
-                                 @RequestParam(value = "reportPage", required = false, defaultValue = "1") int reportPage) {
+                                 @RequestParam(value = "reportPage", required = false, defaultValue = "1") int reportPage,
+                                 @RequestParam(value = "inquiriesPage", required = false, defaultValue = "1") int inquiriesPage) {
         Pair<IndexPageVo, UserEntity[]> user = this.adminPageService.selectIndexUser(userPage);
         Pair<IndexPageVo, BoardPostEntity[]> board = this.adminPageService.selectIndexBoard(boardPage);
         Pair<IndexPageVo, Report[]> reports = this.adminPageService.selectIndexReport(reportPage);
+        Pair<IndexPageVo, InquiriesEntity[]> Inquiries = this.adminPageService.selectAllInquiries(inquiriesPage);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("userPage", user.getLeft());
         modelAndView.addObject("user", user.getRight());
@@ -54,6 +53,8 @@ public class AdminPageController {
         modelAndView.addObject("board", board.getRight());
         modelAndView.addObject("reportsPage", reports.getLeft());
         modelAndView.addObject("reports", reports.getRight());
+        modelAndView.addObject("inquiriesPage", Inquiries.getLeft());
+        modelAndView.addObject("inquiries", Inquiries.getRight());
         modelAndView.setViewName("admin/adminIndex");
         return modelAndView;
     }
@@ -109,6 +110,41 @@ public class AdminPageController {
         modelAndView.addObject("fave", fave);
         modelAndView.setViewName("admin/adminModify");
         return modelAndView;
+    }
+
+    @RequestMapping(value = "modify/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> postModify(
+            @RequestParam("index") Integer index,
+            @RequestParam("title") String title,
+            @RequestParam("location") String location,
+            @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate,
+            @RequestParam("description") String description,
+            @RequestParam(value = "coverData", required = false) MultipartFile coverFile,
+            @RequestParam(value = "deleteCover", required = false) Boolean deleteCover) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDateTime = LocalDate.parse(startDate, formatter);
+        LocalDate endDateTime = LocalDate.parse(endDate, formatter);
+
+        FaveInfoEntity adminPage = new FaveInfoEntity();
+        adminPage.setIndex(index);
+        adminPage.setTitle(title);
+        adminPage.setLocation(location);
+        adminPage.setStartDate(startDateTime);
+        adminPage.setEndDate(endDateTime);
+        adminPage.setDescription(description);
+
+        Boolean result = this.adminPageService.modify(adminPage, coverFile, deleteCover);
+        Map<String, String> response = new HashMap<>();
+        response.put("result", result.toString());
+
+        if (result) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @RequestMapping(value = "user/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
@@ -203,6 +239,16 @@ public class AdminPageController {
         modelAndView.addObject("page", pair.getLeft());
         modelAndView.addObject("fave", pair.getRight());
         modelAndView.setViewName("admin/adminFave");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "inquiries/", method = RequestMethod.GET)
+    public ModelAndView getInquiries(@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+        ModelAndView modelAndView = new ModelAndView();
+        Pair<ReportsPageVo, InquiriesEntity[]> pair = this.adminPageService.selectInquiries(page);
+        modelAndView.addObject("page", pair.getLeft());
+        modelAndView.addObject("inquiries", pair.getRight());
+        modelAndView.setViewName("admin/adminInquiries");
         return modelAndView;
     }
 }

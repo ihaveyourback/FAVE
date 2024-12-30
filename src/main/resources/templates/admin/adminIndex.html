@@ -51,9 +51,11 @@
                 </table>
                 <div class="page">
                     <a th:if="${userPage.requestPage > userPage.movableMinPage}"
-                       th:href="@{'/admin/' (userPage=${userPage.requestPage - 1}, boardPage=${boardPage.requestPage}, reportsPage=${reportsPage.requestPage})}"><i class="fa-solid fa-angle-left"></i></a>
+                       th:href="@{'/admin/' (userPage=${userPage.requestPage - 1}, boardPage=${boardPage.requestPage}, reportsPage=${reportsPage.requestPage}, inquiriesPage=${inquiriesPage.requestPage})}"><i
+                            class="fa-solid fa-angle-left"></i></a>
                     <a th:if="${userPage.requestPage < userPage.movableMaxPage}"
-                       th:href="@{'/admin/' (userPage=${userPage.requestPage + 1}, boardPage=${boardPage.requestPage}, reportsPage=${reportsPage.requestPage})}"><i class="fa-solid fa-angle-right"></i></a>
+                       th:href="@{'/admin/' (userPage=${userPage.requestPage + 1}, boardPage=${boardPage.requestPage}, reportsPage=${reportsPage.requestPage}, inquiriesPage=${inquiriesPage.requestPage})}"><i
+                            class="fa-solid fa-angle-right"></i></a>
                 </div>
             </div>
             <div class="gird">
@@ -83,12 +85,50 @@
                 </table>
                 <div class="page">
                     <a th:if="${boardPage.requestPage > boardPage.movableMinPage}"
-                       th:href="@{'/admin/' (boardPage=${boardPage.requestPage - 1}, userPage=${userPage.requestPage}, reportsPage=${reportsPage.requestPage})}"><i class="fa-solid fa-angle-left"></i></a>
+                       th:href="@{'/admin/' (boardPage=${boardPage.requestPage - 1}, userPage=${userPage.requestPage}, reportsPage=${reportsPage.requestPage}, inquiriesPage=${inquiriesPage.requestPage})}"><i
+                            class="fa-solid fa-angle-left"></i></a>
                     <a th:if="${boardPage.requestPage < boardPage.movableMaxPage}"
-                       th:href="@{'/admin/' (boardPage=${boardPage.requestPage + 1}, userPage=${userPage.requestPage}, reportsPage=${reportsPage.requestPage})}"><i class="fa-solid fa-angle-right"></i></a>
+                       th:href="@{'/admin/' (boardPage=${boardPage.requestPage + 1}, userPage=${userPage.requestPage}, reportsPage=${reportsPage.requestPage}, inquiriesPage=${inquiriesPage.requestPage})}"><i
+                            class="fa-solid fa-angle-right"></i></a>
                 </div>
             </div>
-            <div class="gird"></div>
+            <div class="gird">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>해결</th>
+                    </tr>
+                    </thead>
+                    <tbody class="tbody">
+                    <tr th:each="in : ${inquiries}" class="main board"
+                        th:attr="
+                        data-index=${in.getIndex()},
+                        data-title=${in.getTitle()},
+                        data-content=${in.getContent()},
+                        data-useremail=${in.getUserEmail()},
+                        data-usernickname=${in.getUserNickName()},
+                        data-createat=${#temporals.format(in.getCreateAt(), 'yyyy-MM-dd HH:mm:ss')},
+                        data-updateat=${#temporals.format(in.getUpdateAt(), 'yyyy-MM-dd HH:mm:ss')== null ? '없음' : #temporals.format(in.getUpdateAt(), 'yyyy-MM-dd HH:mm:ss')},
+                        data-isdeleted=${#temporals.format(in.getIsDeleted(), 'yyyy-MM-dd HH:mm:ss') == null ? '없음' : #temporals.format(in.getIsDeleted(), 'yyyy-MM-dd HH:mm:ss')},
+                        data-isresolved=${in.getIsResolved()},
+                        data-view=${in.getView()}">
+                        <td th:text="${in.getIndex()}"></td>
+                        <td th:text="${in.getTitle()}"></td>
+                        <td th:text="${in.getIsResolved()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="page">
+                    <a th:if="${inquiriesPage.requestPage > inquiriesPage.movableMinPage}"
+                       th:href="@{'/admin/' (inquiriesPage=${inquiriesPage.requestPage - 1}, userPage=${userPage.requestPage}, reportsPage=${reportsPage.requestPage}, boardPage=${boardPage.requestPage})}"><i
+                            class="fa-solid fa-angle-left"></i></a>
+                    <a th:if="${inquiriesPage.requestPage < inquiriesPage.movableMaxPage}"
+                       th:href="@{'/admin/' (inquiriesPage=${inquiriesPage.requestPage + 1}, userPage=${userPage.requestPage}, reportsPage=${reportsPage.requestPage}, boardPage=${boardPage.requestPage})}"><i
+                            class="fa-solid fa-angle-right"></i></a>
+                </div>
+            </div>
             <div class="gird">
                 <table class="table">
                     <thead>
@@ -119,9 +159,11 @@
                 </table>
                 <div class="page">
                     <a th:if="${reportsPage.requestPage > reportsPage.movableMinPage}"
-                       th:href="@{'/admin/' (reportPage=${reportsPage.requestPage - 1}, boardPage=${boardPage.requestPage}, userPage=${userPage.requestPage})}"><i class="fa-solid fa-angle-left"></i></a>
+                       th:href="@{'/admin/' (reportPage=${reportsPage.requestPage - 1}, boardPage=${boardPage.requestPage}, userPage=${userPage.requestPage}, inquiriesPage=${inquiriesPage.requestPage})}"><i
+                            class="fa-solid fa-angle-left"></i></a>
                     <a th:if="${reportsPage.requestPage < reportsPage.movableMaxPage}"
-                       th:href="@{'/admin/' (reportPage=${reportsPage.requestPage + 1}, boardPage=${boardPage.requestPage}, userPage=${userPage.requestPage})}"><i class="fa-solid fa-angle-right"></i></a>
+                       th:href="@{'/admin/' (reportPage=${reportsPage.requestPage + 1}, boardPage=${boardPage.requestPage}, userPage=${userPage.requestPage}, inquiriesPage=${inquiriesPage.requestPage})}"><i
+                            class="fa-solid fa-angle-right"></i></a>
                 </div>
             </div>
         </div>
@@ -144,6 +186,18 @@
                     <span id="modalUserNickName"></span>
                     <span id="modalCreateAt2"></span>
                     <span id="modalView"></span>
+                </div>
+                <div class="Modal-body">
+                    <span id="inquiriesIndex"></span>
+                    <span id="inquiriesTitle"></span>
+                    <span id="inquiriesContent"></span>
+                    <span id="inquiriesUserEmail"></span>
+                    <span id="inquiriesUserNickName"></span>
+                    <span id="inquiriesCreateAt"></span>
+                    <span id="inquiriesUpdateAt"></span>
+                    <span id="inquiriesIsDeleted"></span>
+                    <span id="inquiriesIsResolved"></span>
+                    <span id="inquiriesView"></span>
                 </div>
                 <div class="Modal-body">
                     <span id="modalIndex2"></span>

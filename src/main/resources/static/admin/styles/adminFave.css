@@ -1,0 +1,52 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+* {
+  box-sizing: border-box;
+}
+
+#main > .content[rel=fave] {
+  width: 100%;
+  margin: 1.25rem auto;
+  padding: 1.25rem;
+  background-color: #ffffff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+}
+#main > .content[rel=fave] > .table {
+  width: 100%;
+  margin: 0 auto;
+  table-layout: auto;
+  border-collapse: separate;
+  font-size: 0.825rem;
+}
+#main > .content[rel=fave] > .table > .thead {
+  background-color: #f5f5ec;
+}
+#main > .content[rel=fave] > .table > .thead > .header-tr > td, #main > .content[rel=fave] > .table > .thead > .header-tr th {
+  text-align: center;
+  padding: 0.825rem;
+}
+#main > .content[rel=fave] > .table > .tbody > .null {
+  text-align: center;
+  font-size: 1rem;
+}
+#main > .content[rel=fave] > .table > .tbody > .tbody-tr > td {
+  text-align: center;
+  padding: 0.825rem;
+  border-bottom: 1px solid #a6a6a6;
+  font-size: 0.8rem;
+}
+#main > .content[rel=fave] > .table > .tbody > .tbody-tr > td > a {
+  color: #000000;
+}
+#main > .content[rel=fave] > .table > .tbody > .page-tr {
+  text-align: center;
+}
+#main > .content[rel=fave] > .table > .tbody > .page-tr > td {
+  padding: 0.825rem;
+}
+#main > .content[rel=fave] > .table > .tbody > .page-tr > td > a {
+  padding: 0.325rem;
+}
+
+/*# sourceMappingURL=adminFave.css.map */
