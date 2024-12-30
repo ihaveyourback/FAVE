@@ -8,7 +8,21 @@
         SET `view` = #{view}
         WHERE `index` = #{index}
     </update>
-
+    <update id="updateFaveInfo">
+        UPDATE `fave`.`festival_info`
+        SET `title` = #{title},
+            `description` = #{description},
+            `start_date` = #{startDate},
+            `end_date` = #{endDate},
+            `location` = #{location},
+            `user_email` = #{userEmail},
+            `cover_data` = #{coverData},
+            `cover_content_type` = #{coverContentType},
+            `create_at` = #{createdAt},
+            `update_at` = #{updatedAt},
+            `view` = #{view}
+        WHERE `index` = #{index}
+    </update>
     <select id="selectFaveInfo" resultType="com.yhkim.fave.entities.FaveInfoEntity">
         SELECT `index`              AS `index`,
                `title`              AS `title`,
