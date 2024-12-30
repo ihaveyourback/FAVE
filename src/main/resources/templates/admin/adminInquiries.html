@@ -5,50 +5,48 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/admin/styles/common.css" type="text/css">
-    <link rel="stylesheet" href="/admin/styles/adminFave.css">
-    <script defer src="/admin/scripts/adminFave.js"></script>
-    <script src="https://kit.fontawesome.com/a3db7225ba.js" crossorigin="anonymous"></script>
     <title>Document</title>
+    <link rel="stylesheet" href="/admin/styles/adminInquiries.css" type="text/css">
+    <link rel="stylesheet" href="/admin/styles/common.css" type="text/css">
+    <script src="https://kit.fontawesome.com/a3db7225ba.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <th:block th:replace="~{admin/common.html :: mainHeader}"></th:block>
 <th:block th:replace="~{admin/common.html :: mainNav}"></th:block>
+
 <main id="main">
-    <div class="content" rel="fave">
+    <div class="content" rel="inquiries">
         <table class="table">
             <thead class="thead">
             <tr class="header-tr">
                 <td>번호</td>
-                <td>제목</td>
-                <td>조회수</td>
-                <td>작성일</td>
-                <td></td>
+                <td>문의자</td>
+                <td>문의내용</td>
+                <td>문의일</td>
+                <td>답변</td>
             </tr>
             </thead>
             <tbody class="tbody">
-            <tr class="tbody-tr" th:each="fave : ${fave}">
-                <td th:text="${fave.getIndex()}"></td>
-                <td><a th:text="${fave.getTitle()}"
-                       th:href="@{'/fave/read/' (index=${fave.getIndex()})}"></a></td>
-                <td th:text="${fave.getView()}"></td>
-                <td th:text="${#temporals.format(fave.getCreatedAt, 'yyyy-MM-dd') }"></td>
-                <td class="button-td">
-                    <button type="button" class="user-button" th:data-index="${fave.getIndex()}">수정</button>
-                </td>
+            <tr class="null" th:if="${inquiries == null || inquiries.length == 0}">
+                <td colspan="5">문의 내역이 존재하지 않습니다.</td>
+            </tr>
+            <tr class="tbody-tr" th:each="in : ${inquiries}">
+                <td th:text="${in.getIndex()}">1</td>
+                <td th:text="${in.getUserEmail()}">test1234@example.com</td>
+                <td th:utext="${in.getContent()}">히힛</td>
+                <td th:text="${#temporals.format(in.getCreateAt(), 'yyyy-MM-dd')}">2024-12-30</td>
+                <td th:text="${in.getIsResolved()}">답변대기</td>
             </tr>
             <tr class="page-tr">
                 <td colspan="5"><a
                         th:each="page : ${#numbers.sequence(page.displayMinPage, page.displayMaxPage)}"
                         th:text="${page}"
-                        th:href="@{'/admin/festival/' (page=${page})}"></a></td>
+                        th:href="@{'/admin/inquiries/' (page=${page})}"></a></td>
             </tr>
             </tbody>
         </table>
     </div>
 </main>
 <th:block th:replace="~{admin/common.html :: mainFooter}"></th:block>
-
-
 </body>
 </html>

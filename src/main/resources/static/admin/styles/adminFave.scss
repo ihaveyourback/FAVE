@@ -12,16 +12,13 @@ $background-color: #f5f5f5;
   box-sizing: border-box;
 }
 
-#main > .content[rel="reports"] {
+#main > .content[rel="fave"] {
   width: 100%;
-  height: 71vh;
   margin: 1.25rem auto;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
   padding: 1.25rem;
-  background-color: #ffffff;
+  background-color: $logo-bg-color;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
   border-radius: 0.5rem;
 
   > .table {
@@ -36,6 +33,7 @@ $background-color: #f5f5f5;
 
       > .header-tr {
         > td, th {
+          //width: 1rem;
           text-align: center;
           padding: 0.825rem;
         }
@@ -46,10 +44,6 @@ $background-color: #f5f5f5;
       > .null {
         text-align: center;
         font-size: 1rem;
-
-        > td {
-          padding: 0.825rem;
-        }
       }
 
       > .tbody-tr {
@@ -58,14 +52,22 @@ $background-color: #f5f5f5;
           padding: 0.825rem;
           border-bottom: 1px solid #a6a6a6;
           font-size: 0.8rem;
+
+          > a {
+            color: #000000;
+          }
         }
       }
 
-      > .page-container {
+      > .page-tr {
         text-align: center;
 
         > td {
           padding: 0.825rem;
+
+          > a {
+            padding: 0.325rem;
+          }
         }
       }
     }

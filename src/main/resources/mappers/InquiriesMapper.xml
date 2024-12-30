@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhkim.fave.mappers.InquiriesMapper">
+
+
+    <select id="selectInquiries" resultType="com.yhkim.fave.entities.InquiriesEntity">
+        SELECT `index`         AS `index`,
+               `title`         AS `title`,
+               `content`       AS `content`,
+               `user_email`    AS `userEmail`,
+               `user_nickname` AS `userNickName`,
+               `create_at`     AS `createAt`,
+               `update_at`     AS `updateAt`,
+               `is_deleted`    AS `isDeleted`,
+               `is_resolved`   AS `isResolved`,
+               `view`          AS `view`
+        FROM `fave`.`inquiries`
+        WHERE `is_resolved` = '답변 대기'
+        ORDER BY `index` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+    <select id="selectInquiriesCount" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `fave`.`inquiries`
+        WHERE `is_resolved` = '답변 대기'
+    </select>
+</mapper>

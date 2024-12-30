@@ -1,0 +1,57 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+* {
+  box-sizing: border-box;
+}
+
+#main > .content[rel=inquiries] {
+  width: 100%;
+  height: 71vh;
+  margin: 1.25rem auto;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  background-color: #ffffff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+#main > .content[rel=inquiries] > .table {
+  width: 100%;
+  margin: 0 auto;
+  table-layout: auto;
+  border-collapse: separate;
+  font-size: 0.825rem;
+}
+#main > .content[rel=inquiries] > .table > .thead {
+  background-color: #f5f5ec;
+}
+#main > .content[rel=inquiries] > .table > .thead > .header-tr > td, #main > .content[rel=inquiries] > .table > .thead > .header-tr th {
+  text-align: center;
+  padding: 0.825rem;
+}
+#main > .content[rel=inquiries] > .table > .tbody > .null {
+  text-align: center;
+  font-size: 1rem;
+}
+#main > .content[rel=inquiries] > .table > .tbody > .null > td {
+  padding: 0.825rem;
+}
+#main > .content[rel=inquiries] > .table > .tbody > .tbody-tr > td {
+  text-align: center;
+  border-bottom: 1px solid #a6a6a6;
+  font-size: 0.8rem;
+}
+#main > .content[rel=inquiries] > .table > .tbody > .tbody-tr > td > a {
+  color: #000000;
+}
+#main > .content[rel=inquiries] > .table > .tbody > .page-tr {
+  text-align: center;
+}
+#main > .content[rel=inquiries] > .table > .tbody > .page-tr > td {
+  padding: 0.825rem;
+}
+#main > .content[rel=inquiries] > .table > .tbody > .page-tr > td > a {
+  padding: 0.325rem;
+}
+
+/*# sourceMappingURL=adminInquiries.css.map */
