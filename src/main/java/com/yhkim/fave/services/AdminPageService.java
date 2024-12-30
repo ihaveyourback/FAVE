@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class AdminPageService {
@@ -229,5 +231,27 @@ public class AdminPageService {
         UserPageVo userPageVo = new UserPageVo(page, totalCount);
         FaveInfoEntity[] fave = this.faveInfoMapper.selectFaveInfo(userPageVo.countPerPage, userPageVo.offsetCount);
         return Pair.of(userPageVo, fave);
+    }
+
+    public Map<String, String> splitAddress(String fullAddress) {
+        Map<String, String> addressParts = new HashMap<>();
+
+        String extraAddress = "";
+        if (fullAddress.contains("(") && fullAddress.contains(")")) {
+            int startIdx = fullAddress.indexOf("(");
+            int endIdx = fullAddress.indexOf(")");
+            extraAddress = fullAddress.substring(startIdx, endIdx + 1);
+            fullAddress = fullAddress.substring(0, startIdx).trim();
+        }
+
+        int lastSpaceIdx = fullAddress.lastIndexOf(" ");
+        String mainAddress = fullAddress.substring(0, lastSpaceIdx).trim();
+        String detailAddress = fullAddress.substring(lastSpaceIdx + 1).trim();
+
+        addressParts.put("mainAddress", mainAddress);
+        addressParts.put("detailAddress", detailAddress);
+        addressParts.put("extraAddress", extraAddress);
+
+        return addressParts;
     }
 }
