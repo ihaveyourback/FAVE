@@ -1,6 +1,7 @@
 package com.yhkim.fave.configuration;
 
 import com.yhkim.fave.exceptions.AccountDeletedException;
+import com.yhkim.fave.exceptions.OAuth2IdNotFoundException;
 import com.yhkim.fave.exceptions.UserNotVerifiedException;
 import com.yhkim.fave.exceptions.UserSuspendedException;
 import com.yhkim.fave.services.UserService;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,13 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
+        System.out.println(exception.toString());
+        if (exception instanceof OAuth2AuthenticationException) { // OAuth2IdNotFoundException 예외가 발생한 경우
+            System.out.println("!!?");
+            request.getSession().setAttribute("errorMessage", exception.getMessage()); // 에러 메시지를 세션에 추가
+            return;
+        }
+
         response.setContentType("application/json"); // 응답 콘텐츠 타입 설정
         response.setCharacterEncoding("UTF-8"); // 응답 문자 인코딩 설정
         String failureReason;

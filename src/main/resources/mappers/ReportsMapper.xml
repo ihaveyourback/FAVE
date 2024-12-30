@@ -6,7 +6,7 @@
     <select id="selectReports" parameterType="com.yhkim.fave.entities.Report" resultType="com.yhkim.fave.entities.Report">
         SELECT `index`               AS `index`,
                `user_email`          AS `userEmail`,
-               `reported_user_email` AS `reportUserEmail`,
+               `reported_user_email` AS `reportedUserEmail`,
                `reported_post_id`    AS `reportedPostId`,
                `reported_comment_id` AS `reportedCommentId`,
                `status`              AS `status`,

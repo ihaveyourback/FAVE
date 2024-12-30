@@ -62,7 +62,6 @@ public class UserController {
 
         // 서비스에서 사용자 인증 처리
         Result result = userService.login(user);
-        System.out.println("123123" + result);
 
         // JSON 형태의 응답 생성
         JSONObject response = new JSONObject();
@@ -180,4 +179,8 @@ public class UserController {
         return modelAndView;
     }
 
+    @GetMapping(value = "/error")
+    public ModelAndView getError() {
+        return new ModelAndView("user/error");
+    }
 }

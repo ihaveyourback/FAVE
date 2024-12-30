@@ -2,6 +2,7 @@ package com.yhkim.fave.services;
 
 import com.yhkim.fave.entities.CustomOAuth2User;
 import com.yhkim.fave.entities.UserEntity;
+import com.yhkim.fave.exceptions.OAuth2IdNotFoundException;
 import com.yhkim.fave.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -28,9 +29,9 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
         // OAuth2UserRequest를 통해 사용자 정보를 로드
         OAuth2User oAuth2User = super.loadUser(userRequest); // OAuth2User 객체를 가져옴
 
-        // 제공자 이름을 대문자로 변환하여 가져옴
-        String provider = userRequest.getClientRegistration().getRegistrationId().toUpperCase(); // 제공자 이름을 가져옴
-        Map<String, Object> attributes = oAuth2User.getAttributes(); // 속성을 가져옴
+        // 제공자 이름을 대문자로 변환하여 가져옴 (카카오, 네이버, 구글)
+        String provider = userRequest.getClientRegistration().getRegistrationId().toUpperCase(); // 제공자 이름을 가져옴 (대문자로 변환)
+        Map<String, Object> attributes = oAuth2User.getAttributes(); // 속성을 가져옴 (이메일, 닉네임, 연락처 등)
 
         // 제공자 ID, 이메일, 닉네임, 연락처를 가져옴
         String providerId = getProviderId(attributes, provider); // 제공자 ID를 가져옴
@@ -41,12 +42,16 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
         // 이메일로 사용자 존재 여부 확인
         if (userRepository.existsByEmail(email)) { // 이메일이 존재하면 (이미 가입한 사용자)
             UserEntity userEntity = userRepository.findByEmail(email) // 사용자 엔티티를 가져옴 (이메일로)
-                    .orElseThrow(() -> new OAuth2AuthenticationException("The account has been deleted.")); // 사용자가 삭제되었을 경우 예외 발생
+                    .orElseThrow(() -> new OAuth2AuthenticationException("계정이 삭제되었습니다.")); // 사용자가 삭제되었을 경우 예외 발생
             if (userEntity.getDeletedAt() != null) { // 사용자가 삭제되었을 경우 예외 발생
-                throw new OAuth2AuthenticationException("The account has been deleted.");
+                throw new OAuth2AuthenticationException("계정이 삭제되었습니다.");
             }
+            if (userEntity.getOauth2Id() == null) {
+                System.out.println("Throwing OAuth2IdNotFoundException...");
+                throw new OAuth2IdNotFoundException("해당 이메일로 이미 계정이 존재합니다. 계정 찾기 또는 비밀번호 찾기를 통해 로그인해주십시오."); // OAuth2IdNotFoundException 예외 발생 (OAuth2 ID가 없는 경우)
+            }
+
             email = userEntity.getEmail(); // 이메일은 고정
-            // nickname = userEntity.getNickname(); // 고유 닉네임을 보장하기 위해 주석 처리
             contact = userEntity.getContact(); // 연락처는 고정
         } else {
             // 고유 닉네임을 보장하고 사용자 생성
@@ -57,6 +62,8 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
         // CustomOAuth2User 객체를 반환
         return new CustomOAuth2User(oAuth2User, provider, email, nickname, contact, email);
     } // OAuth2User 객체 반환
+
+
 
     private void createUser(String email, String provider, String providerId, String nickname, String contact) {
         // 새로운 사용자 생성
@@ -114,12 +121,12 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
 
     private String getContact(Map<String, Object> attributes, String provider) {
         // 연락처를 가져옴
-        if ("KAKAO".equals(provider)) {
-            return getAttribute(attributes, "kakao_account.phone_number", generateRandomPhoneNumber());
-        } else if ("NAVER".equals(provider)) {
-            return getAttribute(attributes, "response.mobile", generateRandomPhoneNumber());
-        } else if ("GOOGLE".equals(provider)) {
-            return generateRandomPhoneNumber();
+        if ("KAKAO".equals(provider)) { //
+            return getAttribute(attributes, "kakao_account.phone_number", generateRandomPhoneNumber()); // 카카오인 경우 (연락처를 가져올 수 없어서 랜덤 전화번호 생성)
+        } else if ("NAVER".equals(provider)) { // 네이버인 경우
+            return getAttribute(attributes, "response.mobile", generateRandomPhoneNumber()); // 연락처를 가져옴 (연락처를 가져올 수 없어서 랜덤 전화번호 생성)
+        } else if ("GOOGLE".equals(provider)) { // 구글인 경우
+            return generateRandomPhoneNumber(); // 랜덤 전화번호 생성 (연락처를 가져올 수 없어서 랜덤 전화번호 생성)
         }
         logger.debug("Contact not found for provider: {}", provider);
         return generateRandomPhoneNumber();
@@ -128,10 +135,10 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
     private String generateRandomPhoneNumber() {
         // 랜덤 전화번호 생성
         Random random = new Random(); // 랜덤 객체 생성
-        StringBuilder phoneNumber = new StringBuilder(); // 전화번호 문자열 생성
-        phoneNumber.append("000-"); // 전화번호 앞자리
-        for (int i = 0; i < 8; i++) { // 8자리 랜덤 숫자 생성
-            phoneNumber.append(random.nextInt(10)); // 0부터 9까지 랜덤 숫자 생성
+        StringBuilder phoneNumber = new StringBuilder(); // 전화번호 문자열 생성 (문자열 연산이 많아서 StringBuilder 사용)
+        phoneNumber.append("000-"); // 전화번호 앞자리 추가
+        for (int i = 0; i < 8; i++) { // 8자리 랜덤 숫자 생성 (하이픈 포함)
+            phoneNumber.append(random.nextInt(10)); // 0부터 9까지 랜덤 숫자 생성 후 추가 (0 ~ 9)
             if (i == 3) phoneNumber.append("-"); // 4번째 자리에 하이픈 추가
         } // 8자리 랜덤 숫자 생성
         return phoneNumber.toString(); // 전화번호 문자열 반환

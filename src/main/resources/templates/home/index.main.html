@@ -15,6 +15,8 @@
 
     <script type="text/javascript" src="/assets/scripts/common.js"></script>
     <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
+
+
 </head>
 <body>
 <header class="header">
@@ -263,6 +265,13 @@
     </div>
 </footer>
 
-
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var errorMessage = /*[[${errorMessage}]]*/ '';
+        if (errorMessage) {
+            alert(errorMessage);
+        }
+    });
+</script>
 </body>
 </html>

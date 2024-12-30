@@ -1,7 +1,11 @@
 package com.yhkim.fave.configuration;
 
+import com.yhkim.fave.exceptions.OAuth2IdNotFoundException;
 import com.yhkim.fave.services.OAuth2MemberService;
 import com.yhkim.fave.services.SecurityUserDetailsService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,9 +14,16 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -79,12 +90,27 @@ public class SecurityConfig {
                         .clearAuthentication(true)// 인증 정보 삭제
                         .deleteCookies("JSESSIONID")
                 )
-                .oauth2Login(oauth2 -> oauth2 // OAuth2 로그인 설정
+                .oauth2Login(oauth2 -> oauth2
                         .loginPage("/") // 로그인 페이지
-                        .userInfoEndpoint()// 사용자 정보 엔드포인트
-                        .userService(oAuth2MemberService)// 사용자 정보 서비스
-                );
+                        .userInfoEndpoint()
+                        .userService(oAuth2MemberService)
+                        .and()
+                        .failureHandler(new ExceptionMappingAuthenticationFailureHandler() {
 
+
+                            @Override
+                            public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse  response, AuthenticationException exception) throws IOException, ServletException { // 인증 실패 시 호출되는 메서드 (오버라이딩)
+                                saveException(request, exception); // 예외 저장
+                                System.out.println("onAuthenticationFailure INVOKED");
+                                if (exception instanceof OAuth2IdNotFoundException) { // OAuth2IdNotFoundException 예외가 발생한 경우 (OAuth2IdNotFoundException)
+                                    System.out.println("!!! Thrown exception instances of OAuth2IdNotFoundException.");
+                                    getRedirectStrategy().sendRedirect(request, response, "/user/error?error=oauth2IdNotFound");  // 로그인 실패 시 홈으로 리다이렉트 (OAuth2IdNotFoundException)
+                                } else {
+                                    super.onAuthenticationFailure(request, response, exception);  // 기본 실패 핸들러 호출 (OAuth2IdNotFoundException)
+                                }
+                            }
+                        })
+                );
         return http.build();
     }
 

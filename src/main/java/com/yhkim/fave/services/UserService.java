@@ -360,7 +360,6 @@ public class UserService {
         if (userMapper.selectUserByNickname(newNickname) != null) {
             return false; // 중복된 닉네임이면 false 반환
         }
-
         // 이메일로 사용자 정보 조회
         UserEntity user = userMapper.selectUserByEmail(email);
         // 사용자 닉네임 업데이트

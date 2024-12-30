@@ -11,6 +11,8 @@ import com.yhkim.fave.vos.ReportsPageVo;
 import com.yhkim.fave.vos.UserPageVo;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,7 +79,15 @@ public class AdminPageService {
             adminPage.setCreatedAt(LocalDateTime.now());
             adminPage.setUpdatedAt(null);
 
-            adminPage.setUserEmail("yellow6480@gmail.com");
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String userEmail;
+            if (principal instanceof UserDetails) {
+                userEmail = ((UserEntity) principal).getEmail();
+            } else {
+                userEmail = principal.toString();
+            }
+
+            adminPage.setUserEmail(userEmail);
 
             return this.writeMapper.insertAdminWrite(adminPage) > 0;
         } catch (IOException e) {

@@ -2,11 +2,14 @@ package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.exceptions.EmailAlreadyExistsException;
+import com.yhkim.fave.exceptions.OAuth2IdNotFoundException;
+import com.yhkim.fave.services.OAuth2MemberService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,12 +22,15 @@ import java.util.Map;
 public class HomeController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE) // HTML 반환
-    public ModelAndView getIndex(@AuthenticationPrincipal UserDetails userDetails) {// 사용자 정보를 가져오는 메서드
+    public ModelAndView getIndex(@AuthenticationPrincipal UserDetails userDetails,
+                                 HttpSession session) {// 사용자 정보를 가져오는 메서드
         ModelAndView modelAndView = new ModelAndView();// 뷰 객체 생성
         if (userDetails instanceof UserEntity user) {// 사용자 정보가 UserEntity 객체인 경우
             modelAndView.addObject("user", user); // user 객체 생성
             modelAndView.addObject("isAdmin", user.isAdmin()); // 관리자 여부를 가져옴
         }
+
+        System.out.println(session.getAttribute("errorMessage"));
 
         modelAndView.setViewName("home/index.main");
         return modelAndView;
@@ -50,5 +56,4 @@ public class HomeController {
         session.setAttribute("user", null);
         return "redirect:/";
     }
-
 }
