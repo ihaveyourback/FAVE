@@ -16,4 +16,5 @@ public interface FaveInfoMapper {
 
     int updateFaveInfoView(FaveInfoEntity faveInfo);
 
+    int updateFaveInfo(FaveInfoEntity faveInfo);
 }
