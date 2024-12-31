@@ -91,7 +91,7 @@
     </aside>
 
     <section class="content">
-        <div id="favorites" class="content__section" style="display: none;">
+        <div id="favorites" class="content__section">
             <h2>찜 목록</h2>
             <p>여기에 사용자가 찜한 게시글이 표시됩니다.</p>
         </div>
@@ -138,6 +138,7 @@
                    th:href="@{'/user/profile?page=' + ${pageVo.movableMaxPage}}">&raquo;&raquo;</a>
             </div>
         </div>
+
         <div id="reports" class="content__section">
             <h2>신고 내역</h2>
             <table class="reports-table">
@@ -183,8 +184,7 @@
             <p>계정을 탈퇴하시겠습니까? 탈퇴 시 모든 정보가 삭제되며, 복구할 수 없습니다.</p>
             <form id="deactivateForm" class="deactivate-form">
                 <label class="deactivate-form__label">
-                    <input type="password" class="deactivate-form__input" name="currentPassword" placeholder="현재 비밀번호"
-                           required>
+                    <input type="password" class="deactivate-form__input" name="currentPassword" placeholder="현재 비밀번호">
                 </label>
                 <button type="submit" class="button button--submit">회원탈퇴</button>
             </form>

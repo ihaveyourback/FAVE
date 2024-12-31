@@ -1,8 +1,6 @@
 package com.yhkim.fave.controllers;
 
-import com.yhkim.fave.entities.BoardPostEntity;
-import com.yhkim.fave.entities.Report;
-import com.yhkim.fave.entities.UserEntity;
+import com.yhkim.fave.entities.*;
 import com.yhkim.fave.services.BoardPostService;
 import com.yhkim.fave.services.ReportService;
 import com.yhkim.fave.services.UserService;
@@ -63,27 +61,44 @@ public class MyPageController {
         return modelAndView;
     }
 
-    // 회원탈퇴를 처리하는 메서드
+    //회원탈퇴 메서드
     @PostMapping("/secession")
-    public ResponseEntity<?> secession(@AuthenticationPrincipal UserDetails userDetails,// 사용자 정보
-                                       @RequestBody Map<String, String> payload) {// 요청 본문
-        if (userDetails instanceof UserEntity user) {// 사용자 정보가 있으면
-            String email = user.getEmail(); // 사용자 이메일
-            String currentPassword = payload.get("currentPassword");// 현재 비밀번호
+    public ResponseEntity<?> secession(@AuthenticationPrincipal Object principal, @RequestBody Map<String, String> payload) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
+        }
 
-            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {// 현재 비밀번호가 일치하지 않으면
+        PrincipalDetails principalDetails;
+        if (principal instanceof PrincipalDetails) {
+            principalDetails = (PrincipalDetails) principal;
+        } else if (principal instanceof CustomOAuth2User) {
+            CustomOAuth2User oauthUser = (CustomOAuth2User) principal;
+            UserEntity user = new UserEntity();
+            user.setEmail(oauthUser.getEmail());
+            user.setNickname(oauthUser.getNickname());
+            user.setOauth2Provider(oauthUser.getProvider());
+            principalDetails = new PrincipalDetails(user, oauthUser.getAttributes());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
+        }
+
+        UserEntity user = principalDetails.getUser();
+        if (!user.isSocialLogin()) {
+            String currentPassword = payload.get("currentPassword");
+            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
             }
-
-            boolean isDeleted = userService.deactivateAccount(email);// 회원탈퇴 처리
-            if (isDeleted) {// 회원탈퇴가 완료되면
-                return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "회원탈퇴 처리 중 오류가 발생했습니다. 다시 시도해 주세요."));
-            }
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
+
+        String email = user.getEmail();
+        boolean isDeleted = userService.deactivateAccount(email);
+        if (isDeleted) {
+            return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "회원탈퇴 처리 중 오류가 발생했습니다. 다시 시도해 주세요."));
+        }
     }
+
 
     // 사용자 정보를 업데이트하는 메서드
     @PostMapping("/update-profile")

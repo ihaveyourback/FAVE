@@ -1,6 +1,5 @@
 package com.yhkim.fave.entities;
 
-import com.yhkim.fave.entities.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -13,8 +12,12 @@ public class PrincipalDetails implements OAuth2User, UserDetails { // OAuth2User
     private final Map<String, Object> attributes; // 사용자 속성
 
     public PrincipalDetails(UserEntity user, Map<String, Object> attributes) { // 생성자 메서드
-        this.user = user;// 사용자를 설정
+        this.user = user; // 사용자를 설정
         this.attributes = attributes; // 사용자 속성을 설정
+    }
+
+    public UserEntity getUser() { // 사용자 객체를 반환하는 메서드
+        return user; // 사용자 객체 반환
     }
 
     @Override

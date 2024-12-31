@@ -267,6 +267,7 @@ public class UserService {
     }
 
     public void handleUserNotVerified(UserEntity user, String validationLink) throws MessagingException {
+        // 사용자가 이메일 인증을 하지 않은 경우
         // 이메일 토큰 생성
         EmailTokenEntity emailToken = new EmailTokenEntity();
         emailToken.setUserEmail(user.getEmail());
@@ -294,7 +295,7 @@ public class UserService {
         String mailText = templateEngine.process("email/register", context);
 
         // 이메일 전송
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessage mimeMessage = mailSender.createMimeMessage(); // MimeMessage 생성
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setFrom("your-email@example.com"); // 발신자 이메일
         mimeMessageHelper.setTo(user.getEmail()); // 수신자 이메일
@@ -304,7 +305,7 @@ public class UserService {
         mailSender.send(mimeMessage);  // 이메일 전송
     }
 
-    public Result validateEmailToken(String email, String key) {
+    public Result validateEmailToken(String email, String key) { // 이메일 인증 토큰을 검증하는 메서드
         // 1. 이메일 및 키의 유효성 검사
         if (email == null || email.length() < 8 || email.length() > 50) {
             System.out.println("유효하지 않은 이메일 길이: " + email); // 디버그 로그
@@ -355,7 +356,7 @@ public class UserService {
 
 
     @Transactional
-    public boolean updateNickname(String email, String newNickname) {
+    public boolean updateNickname(String email, String newNickname) {   // 닉네임 업데이트 메서드
         // 새로운 닉네임이 이미 사용 중인지 확인
         if (userMapper.selectUserByNickname(newNickname) != null) {
             return false; // 중복된 닉네임이면 false 반환
@@ -371,7 +372,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(String email, String newPassword) {
+    public void updatePassword(String email, String newPassword) { // 비밀번호 업데이트 메서드
         // 이메일로 사용자 정보 조회
         UserEntity user = userMapper.selectUserByEmail(email);
         // 비밀번호 암호화 후 업데이트

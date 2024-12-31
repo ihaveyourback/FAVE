@@ -44,12 +44,14 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
             UserEntity userEntity = userRepository.findByEmail(email) // 사용자 엔티티를 가져옴 (이메일로)
                     .orElseThrow(() -> new OAuth2AuthenticationException("계정이 삭제되었습니다.")); // 사용자가 삭제되었을 경우 예외 발생
             if (userEntity.getDeletedAt() != null) { // 사용자가 삭제되었을 경우 예외 발생
+                System.out.println("탈퇴된 계정입니다----------------------------------------------------------------------");
                 throw new OAuth2AuthenticationException("계정이 삭제되었습니다.");
             }
             if (userEntity.getOauth2Id() == null) {
                 System.out.println("Throwing OAuth2IdNotFoundException...");
                 throw new OAuth2IdNotFoundException("해당 이메일로 이미 계정이 존재합니다. 계정 찾기 또는 비밀번호 찾기를 통해 로그인해주십시오."); // OAuth2IdNotFoundException 예외 발생 (OAuth2 ID가 없는 경우)
             }
+
 
             email = userEntity.getEmail(); // 이메일은 고정
             contact = userEntity.getContact(); // 연락처는 고정

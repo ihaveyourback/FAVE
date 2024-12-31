@@ -112,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+
     // 마지막으로 선택된 섹션 로드
     loadLastSelectedSection();
 });
