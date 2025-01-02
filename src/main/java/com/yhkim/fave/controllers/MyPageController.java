@@ -8,6 +8,7 @@ import com.yhkim.fave.services.ReportService;
 import com.yhkim.fave.services.UserService;
 import com.yhkim.fave.vos.PageVo;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,11 +44,12 @@ public class MyPageController {
     // 프로필 페이지를 표시하는 메서드
     @GetMapping("/profile")
     public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal ,
-                                    @RequestParam(defaultValue = "1") int page) { // 페이지 번호 (기본값: 1)
+                                    @RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "1") int reportPage) { // 페이지 번호 (기본값: 1)
         int totalCount = boardPostService.countPostsByUserEmail(principal.getName()); // 사용자의 게시물 수
         PageVo pageVo = new PageVo(page, totalCount); // 페이지 정보 생성
         List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), pageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
-        List<ReportEntity> reportEntities = reportService.getReportsByLoggedInUser(); // 사용자의 신고 목록 가져오기 (페이징 처리)
+        Pair<PageVo, List<ReportEntity>> reportEntities = reportService.getReportsByLoggedInUser(reportPage, 10); // 사용자의 신고 목록 가져오기 (페이징 처리)
         ModelAndView modelAndView = new ModelAndView();// 뷰와 모델을 함께 설정 가능
 
         if (userDetails instanceof UserEntity user) {
