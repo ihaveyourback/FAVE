@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yhkim.fave.mappers.ReportsMapper">
-    <select id="selectReports" parameterType="com.yhkim.fave.entities.Report" resultType="com.yhkim.fave.entities.Report">
+    <select id="selectReports" parameterType="com.yhkim.fave.entities.ReportEntity" resultType="com.yhkim.fave.entities.ReportEntity">
         SELECT `index`               AS `index`,
                `user_email`          AS `userEmail`,
                `reported_user_email` AS `reportedUserEmail`,
@@ -14,15 +14,15 @@
                `reason`              AS `reason`,
                `reason_detail`       AS `reasonDetail`,
                `reported_at`         AS `reportedAt`
-        FROM `fave`.`reports`
+        FROM `fave`.`reportEntities`
         WHERE `current_status` = '신고 처리 중'
         LIMIT #{limitCount} OFFSET #{offsetCount}
     </select>
     <select id="selectReportsCount" resultType="java.lang.Integer">
         SELECT COUNT(0)
-        FROM `fave`.`reports`
+        FROM `fave`.`reportEntities`
     </select>
-    <select id="selectReportByIndex" resultType="com.yhkim.fave.entities.Report">
+    <select id="selectReportByIndex" resultType="com.yhkim.fave.entities.ReportEntity">
         SELECT `index`               AS `index`,
                `user_email`          AS `userEmail`,
                `reported_user_email` AS `reportUserEmail`,
@@ -33,12 +33,12 @@
                `reason`              AS `reason`,
                `reason_detail`       AS `reasonDetail`,
                `reported_at`         AS `reportedAt`
-        FROM `fave`.`reports`
+        FROM `fave`.`reportEntities`
         WHERE `index` = #{index}
         LIMIT 1
     </select>
     <update id="updateReport">
-        UPDATE `fave`.`reports`
+        UPDATE `fave`.`reportEntities`
         SET `current_status` = #{currentStatus}
         WHERE `index` = #{index}
     </update>

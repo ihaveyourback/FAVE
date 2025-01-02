@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yhkim.fave.mappers.InquiriesMapper">
 
-
+<!--김범수-->
     <select id="selectInquiries" resultType="com.yhkim.fave.entities.InquiriesEntity">
         SELECT `index`         AS `index`,
                `title`         AS `title`,
@@ -26,4 +26,163 @@
         FROM `fave`.`inquiries`
         WHERE `is_resolved` = '답변 대기'
     </select>
+<!--    &#45;&#45;이석민-->
+    <insert id="insertArticle"
+            useGeneratedKeys="true"
+            keyColumn="index"
+            keyProperty="index"
+            parameterType="com.yhkim.fave.entities.InquiriesArticleEntity">
+        INSERT INTO `fave`.`inquiries` (`title`, `content`, `user_email`, `user_nickname`, `create_at`, `update_at`,
+                                        `is_deleted`, `view`, `is_resolved`)
+        VALUES (#{title}, #{content}, #{userEmail}, #{userNickname}, #{createdAt}, #{updateAt}, #{isDeleted}, #{view},
+                #{isResolved})
+    </insert>
+
+    <select id="selectArticleByIndex" resultType="com.yhkim.fave.entities.InquiriesArticleEntity">
+        SELECT `index`         AS `index`,
+               `title`         AS `title`,
+               `content`       AS `content`,
+               `user_email`    AS `userEmail`,
+               `user_nickname` AS `userNickname`,
+               `create_at`     AS `createdAt`,
+               `update_at`     AS `updateAt`,
+               `is_deleted`    AS `isDeleted`,
+               `view`          AS `view`,
+               `is_resolved`   AS `isResolved`
+        FROM `fave`.`inquiries`
+        WHERE `index` = #{index}
+        LIMIT 1
+    </select>
+
+    <!--    <select id="selectArticles" resultType="com.cykim.teamproject.entities.ArticleEntity">-->
+    <!--        SELECT `index` AS `index`,-->
+    <!--               `title` AS `title`,-->
+    <!--               `content` AS `content`,-->
+    <!--               `user_email` AS `userEmail`,-->
+    <!--               `user_nickname` AS `userNickname`,-->
+    <!--               `create_at` AS `createdAt`,-->
+    <!--               `update_at` AS `updateAt`,-->
+    <!--               `deleted_at` AS `deletedAt`,-->
+    <!--               `view` AS `view`-->
+    <!--        FROM `fave`.`board_posts`-->
+    <!--        WHERE `deleted_at` IS NULL-->
+    <!--        ORDER BY `index` DESC-->
+    <!--    </select>-->
+
+    <!--    <select id="selectArticlesByPaging" resultType="com.cykim.teamproject.entities.ArticleEntity">-->
+    <!--        SELECT `index` AS `index`,-->
+    <!--               `title` AS `title`,-->
+    <!--               `content` AS `content`,-->
+    <!--               `user_email` AS `userEmail`,-->
+    <!--               `user_nickname` AS `userNickname`,-->
+    <!--               `create_at` AS `createdAt`,-->
+    <!--               `update_at` AS `updateAt`,-->
+    <!--               `deleted_at` AS `deletedAt`,-->
+    <!--               `view` AS `view`-->
+    <!--        FROM `fave`.`board_posts`-->
+    <!--        WHERE `deleted_at` IS NULL-->
+    <!--        ORDER BY `index` DESC-->
+    <!--        LIMIT #{offsetCount}, #{countPerPage}-->
+    <!--    </select>-->
+
+    <!--    mm-->
+    <!-- selectArticles 쿼리 수정 -->
+    <select id="selectArticles" resultType="com.yhkim.fave.entities.InquiriesArticleEntity">
+        SELECT `index`                      AS `index`,
+               `title`                      AS `title`,
+               `content`                    AS `content`,
+               `user_email`                 AS `userEmail`,
+               `user_nickname`              AS `userNickname`,
+               `create_at`                  AS `createdAt`,
+               `update_at`                  AS `updateAt`,
+               `is_deleted`                 AS `isDeleted`,
+               `view`                       AS `view`,
+               `is_resolved`                AS `isResolved`
+        FROM `fave`.`inquiries`
+        WHERE `is_deleted` IS NULL
+        ORDER BY `index` DESC
+    </select>
+
+    <!-- selectArticlesByPaging 쿼리 수정 -->
+    <select id="selectArticlesByPaging" resultType="com.yhkim.fave.vos.InquiriesArticleVo">
+        SELECT `index`                      AS `index`,
+               `title`                      AS `title`,
+               `content`                    AS `content`,
+               `user_email`                 AS `userEmail`,
+               `user_nickname`              AS `userNickname`,
+               `create_at`                  AS `createdAt`,
+               `update_at`                  AS `updateAt`,
+               `is_deleted`                 AS `IsDeleted`,
+               `view`                       AS `view`,
+               `is_resolved`                AS `isResolved`
+        FROM `fave`.`inquiries`
+        WHERE `is_deleted` IS NULL
+        ORDER BY `index` DESC
+        LIMIT #{offsetCount}, #{countPerPage}
+    </select>
+
+    <!--,-->
+    <select id="getTotalArticlesCount" resultType="int">
+        SELECT COUNT(0)
+        FROM `fave`.`inquiries`
+        WHERE `is_deleted` IS NULL;
+    </select>
+
+    <select id="selectArticleBySearch" resultType="com.yhkim.fave.vos.InquiriesArticleVo">
+        SELECT `index` AS `index`,
+        `title` AS `title`,
+        `content` AS `content`,
+        `user_email` AS `userEmail`,
+        `user_nickname` AS `userNickname`,
+        `create_at` AS `createdAt`,
+        `update_at` AS `updateAt`,
+        `is_deleted` AS `isDeleted`,
+        `view` AS `view`,
+        `is_resolved` AS `isResolved`
+        FROM `fave`.`inquiries`
+        WHERE `is_deleted` IS NULL
+        <if test="filter != null and filter == 'all' and keyword != null and !keyword.isEmpty()">
+            AND (`title` LIKE CONCAT('%', #{keyword}, '%') OR `content` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="filter != null and filter == 'title' and keyword != null and !keyword.isEmpty()">
+            AND `title` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter != null and filter == 'nickname' and keyword != null and !keyword.isEmpty()">
+            AND `user_nickname` = #{keyword}
+        </if>
+        ORDER BY `index` DESC
+        LIMIT #{offsetCount}, #{limitCount}
+    </select>
+
+    <select id="selectArticleCountBySearch" resultType="int">
+        SELECT COUNT(0)
+        FROM `fave`.`inquiries`
+        WHERE `is_deleted` IS NULL
+        <if test="filter != null and filter == 'all' and keyword != null and !keyword.isEmpty()">
+            AND (`title` LIKE CONCAT('%', #{keyword}, '%') OR `content` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="filter != null and filter == 'title' and keyword != null and !keyword.isEmpty()">
+            AND `title` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter != null and filter == 'nickname' and keyword != null and !keyword.isEmpty()">
+            AND `user_nickname` = #{keyword}
+        </if>
+    </select>
+
+    <update id="updateArticle"
+            parameterType="com.yhkim.fave.entities.InquiriesArticleEntity">
+        UPDATE `fave`.`inquiries`
+        SET `user_email`    = #{userEmail},
+            `user_nickname` = #{userNickname},
+            `title`         = #{title},
+            `content`       = #{content},
+            `create_at`     = #{createdAt},
+            `update_at`     = #{updateAt},
+            `is_deleted`    = #{isDeleted},
+            `view`          = #{view},
+            `is_resolved`   =#{isResolved}
+        WHERE `index` = #{index}
+        LIMIT 1
+    </update>
+</mapper>
 </mapper>

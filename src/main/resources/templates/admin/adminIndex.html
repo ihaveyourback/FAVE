@@ -139,21 +139,21 @@
                     </tr>
                     </thead>
                     <tbody class="tbody">
-                    <tr th:each="reports : ${reports}" class="main board"
+                    <tr th:each="reportEntities : ${reportEntities}" class="main board"
                         th:attr="
-                        data-index=${reports.getIndex()},
-                        data-useremail=${reports.getUserEmail()},
-                        data-reporteduseremail=${reports.getReportedUserEmail()},
-                        data-reportedpostid=${reports.getReportedPostId() == null ? '없음' : reports.getReportedPostId()},
-                        data-reportedcommentid=${reports.getReportedCommentId() == null ? '없음' : reports.getReportedCommentId()},
-                        data-status=${reports.getStatus()},
-                        data-currentstatus=${reports.getCurrentStatus()},
-                        data-reason=${reports.getReason()},
-                        data-reasondetail=${reports.getReasonDetail() == null ? '없음' : reports.getReasonDetail()},
-                        data-reportedat=${reports.getReportedAt()}">
-                        <td th:text="${reports.getIndex()}"></td>
-                        <td th:text="${reports.getReason()}"></td>
-                        <td th:text="${reports.getStatus()}"></td>
+                        data-index=${reportEntities.getIndex()},
+                        data-useremail=${reportEntities.getUserEmail()},
+                        data-reporteduseremail=${reportEntities.getReportedUserEmail()},
+                        data-reportedpostid=${reportEntities.getReportedPostId() == null ? '없음' : reportEntities.getReportedPostId()},
+                        data-reportedcommentid=${reportEntities.getReportedCommentId() == null ? '없음' : reportEntities.getReportedCommentId()},
+                        data-status=${reportEntities.getStatus()},
+                        data-currentstatus=${reportEntities.getCurrentStatus()},
+                        data-reason=${reportEntities.getReason()},
+                        data-reasondetail=${reportEntities.getReasonDetail() == null ? '없음' : reportEntities.getReasonDetail()},
+                        data-reportedat=${reportEntities.getReportedAt()}">
+                        <td th:text="${reportEntities.getIndex()}"></td>
+                        <td th:text="${reportEntities.getReason()}"></td>
+                        <td th:text="${reportEntities.getStatus()}"></td>
                     </tr>
                     </tbody>
                 </table>
