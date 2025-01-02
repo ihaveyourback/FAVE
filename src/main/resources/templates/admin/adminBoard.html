@@ -36,7 +36,6 @@
                 <td th:text="${board.getTitle()}"></td>
                 <td th:text="${board.getUserNickname()}"></td>
                 <td th:text="${board.getView()}"></td>
-                <td th:text="${board.createAt}"></td>
                 <td th:text="${#temporals.format(board.getCreateAt(), 'yyyy-MM-dd')}"></td>
                 <td>
                     <input type="hidden" name="userEmail" th:value="${board.getUser().getEmail()}">

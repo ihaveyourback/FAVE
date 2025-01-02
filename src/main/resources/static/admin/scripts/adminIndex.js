@@ -17,6 +17,17 @@ const $modalUserNickName = document.getElementById('modalUserNickName');
 const $modalCreateAt2 = document.getElementById('modalCreateAt2')
 const $modalView = document.getElementById('modalView');
 
+const $inquiriesIndex = document.getElementById('inquiriesIndex');
+const $inquiriesTitle = document.getElementById('inquiriesTitle');
+const $inquiriesContent = document.getElementById('inquiriesContent');
+const $inquiriesUserEmail = document.getElementById('inquiriesUserEmail');
+const $inquiriesUserNickName = document.getElementById('inquiriesUserNickName');
+const $inquiriesCreateAt = document.getElementById('inquiriesCreateAt');
+const $inquiriesUpdateAt = document.getElementById('inquiriesUpdateAt');
+const $inquiriesIsDeleted = document.getElementById('inquiriesIsDeleted');
+const $inquiriesIsResolved = document.getElementById('inquiriesIsResolved');
+const $inquiriesView = document.getElementById('inquiriesView');
+
 const $modalIndex2 = document.getElementById('modalIndex2')
 const $modalUserEmail2 = document.getElementById('modalUserEmail2')
 const $modalReportedUserEmail = document.getElementById('modalReportedUserEmail')
@@ -30,6 +41,7 @@ const $modalReportedAt = document.getElementById('modalReportedAt')
 
 const $users = document.querySelectorAll('.grid-container > .gird:first-of-type .main');
 const $boards = document.querySelectorAll('.grid-container > .gird:nth-of-type(2) .main');
+const $inquiries = document.querySelectorAll('.grid-container > .gird:nth-of-type(3) .main');
 const $reports = document.querySelectorAll('.grid-container > .gird:nth-of-type(4) .main');
 
 function updateModalPosition(grid) {
@@ -72,6 +84,17 @@ function resetModal() {
     $modalUserNickName.textContent = '';
     $modalCreateAt2.textContent = '';
     $modalView.textContent = '';
+
+    $inquiriesIndex.textContent = '';
+    $inquiriesTitle.textContent = '';
+    $inquiriesContent.textContent = '';
+    $inquiriesUserEmail.textContent = '';
+    $inquiriesUserNickName.textContent = '';
+    $inquiriesCreateAt.textContent = '';
+    $inquiriesUpdateAt.textContent = '';
+    $inquiriesIsDeleted.textContent = '';
+    $inquiriesIsResolved.textContent = '';
+    $inquiriesView.textContent = '';
 
     // 신고 데이터 초기화
     $modalIndex2.textContent = '';
@@ -142,6 +165,39 @@ $boards.forEach(($board) => {
     });
 });
 
+$inquiries.forEach(($inquiries) => {
+    $inquiries.addEventListener('mouseover', () => {
+        resetModal();
+        const $index = $inquiries.dataset.index;
+        const $title = $inquiries.dataset.title;
+        const $content = $inquiries.dataset.content;
+        const $userEmail = $inquiries.dataset.useremail;
+        const $userNickName = $inquiries.dataset.usernickname;
+        const $createAt = $inquiries.dataset.createat;
+        const $updateAt = $inquiries.dataset.updateat;
+        const $isDeleted = $inquiries.dataset.isdeleted;
+        const $isResolved = $inquiries.dataset.isresolved
+        const $view = $inquiries.dataset.view;
+
+        $inquiriesIndex.textContent = "번호 : " + $index;
+        $inquiriesTitle.textContent = "제목 : " + $title;
+        $inquiriesContent.textContent = "문의내용 : " + $content;
+        $inquiriesUserEmail.textContent = "문의자 이메일 : " + $userEmail;
+        $inquiriesUserNickName.textContent = "문의자 닉네임 : " + $userNickName;
+        $inquiriesCreateAt.textContent = "문의일 : " + $createAt;
+        $inquiriesUpdateAt.textContent = "수정일 : " + $updateAt;
+        $inquiriesIsDeleted.textContent = "삭제일 : " + $isDeleted;
+        $inquiriesIsResolved.textContent = "답변 : " + $isResolved;
+        $inquiriesView.textContent = "조회수 : " + $view;
+
+        updateModalPosition(document.querySelector('.grid-container > .gird:nth-of-type(3)'));
+        $modal.style.display = 'block';
+    })
+    $inquiries.addEventListener('mouseout', () => {
+        $modal.style.display = 'none';
+    });
+})
+
 $reports.forEach(($report) => {
     $report.addEventListener('mouseover', () => {
         resetModal();
@@ -166,7 +222,6 @@ $reports.forEach(($report) => {
         $modalReason.textContent = '신고이유 : ' + $Reason;
         $modalReasonDetail.textContent = '신고내용 : ' + $ReasonDetail;
         $modalReportedAt.textContent = '신고일 : ' + $ReportedAt;
-
 
         updateModalPositionReports(document.querySelector('.grid-container > .gird:nth-of-type(4)'));
         $modal.style.display = 'block';

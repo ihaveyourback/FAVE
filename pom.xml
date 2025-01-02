@@ -147,6 +147,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.17.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.9.0</version>
+        </dependency> <!-- 의존성 추가후 크롬드라이브 설치해서 경로 지정해야 크롤링이 작동함. -->
     </dependencies>
 
     <build>
