@@ -94,22 +94,22 @@
             </table>
             <div class="pagination">
                 <!-- 현재 페이지가 1보다 크면 첫 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage > pageVo.movableMinPage}"
+                <a th:if="${postPageVo.recordsPage > postPageVo.movableMinPage}"
                    th:href="@{'/user/profile?page=1'}">&laquo;&laquo;</a>
                 <!-- 현재 페이지가 1보다 크면 이전 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage > pageVo.movableMinPage}"
-                   th:href="@{'/user/profile?page=' + ${pageVo.recordsPage - 1}}">&laquo;</a>
+                <a th:if="${postPageVo.recordsPage > postPageVo.movableMinPage}"
+                   th:href="@{'/user/profile?page=' + ${postPageVo.recordsPage - 1}}">&laquo;</a>
                 <!-- 표시할 페이지 번호들을 순회하며 페이지 번호 버튼을 생성 -->
-                <a th:each="page : ${#numbers.sequence(pageVo.displayMinPage, pageVo.displayMaxPage)}"
+                <a th:each="page : ${#numbers.sequence(postPageVo.displayMinPage, postPageVo.displayMaxPage)}"
                    th:href="@{'/user/profile?page=' + ${page}}"
                    th:text="${page}"
-                   th:classappend="${page == pageVo.recordsPage} ? 'active' : ''"></a>
+                   th:classappend="${page == postPageVo.recordsPage} ? 'active' : ''"></a>
                 <!-- 현재 페이지가 마지막 페이지보다 작으면 다음 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage < pageVo.movableMaxPage}"
-                   th:href="@{'/user/profile?page=' + ${pageVo.recordsPage + 1}}">&raquo;</a>
+                <a th:if="${postPageVo.recordsPage < postPageVo.movableMaxPage}"
+                   th:href="@{'/user/profile?page=' + ${postPageVo.recordsPage + 1}}">&raquo;</a>
                 <!-- 현재 페이지가 마지막 페이지보다 작으면 마지막 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage < pageVo.movableMaxPage}"
-                   th:href="@{'/user/profile?page=' + ${pageVo.movableMaxPage}}">&raquo;&raquo;</a>
+                <a th:if="${postPageVo.recordsPage < postPageVo.movableMaxPage}"
+                   th:href="@{'/user/profile?page=' + ${postPageVo.movableMaxPage}}">&raquo;&raquo;</a>
             </div>
         </div>
 
@@ -138,25 +138,24 @@
             </table>
             <div class="pagination">
                 <!-- 현재 페이지가 1보다 크면 첫 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage > pageVo.movableMinPage}"
-                   th:href="@{'/user/profile?page=1'}">&laquo;&laquo;</a>
+                <a th:if="${reportPageVo.recordsPage > reportPageVo.movableMinPage}"
+                   th:href="@{'/user/profile?reportPage=1'}">&laquo;&laquo;</a>
                 <!-- 현재 페이지가 1보다 크면 이전 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage > pageVo.movableMinPage}"
-                   th:href="@{'/user/profile?page=' + ${pageVo.recordsPage - 1}}">&laquo;</a>
+                <a th:if="${reportPageVo.recordsPage > reportPageVo.movableMinPage}"
+                   th:href="@{'/user/profile?reportPage=' + ${reportPageVo.recordsPage - 1}}">&laquo;</a>
                 <!-- 표시할 페이지 번호들을 순회하며 페이지 번호 버튼을 생성 -->
-                <a th:each="page : ${#numbers.sequence(pageVo.displayMinPage, pageVo.displayMaxPage)}"
-                   th:href="@{'/user/profile?page=' + ${page}}"
+                <a th:each="page : ${#numbers.sequence(reportPageVo.displayMinPage, reportPageVo.displayMaxPage)}"
+                   th:href="@{'/user/profile?reportPage=' + ${page}}"
                    th:text="${page}"
-                   th:classappend="${page == pageVo.recordsPage} ? 'active' : ''"></a>
+                   th:classappend="${page == reportPageVo.recordsPage} ? 'active' : ''"></a>
                 <!-- 현재 페이지가 마지막 페이지보다 작으면 다음 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage < pageVo.movableMaxPage}"
-                   th:href="@{'/user/profile?page=' + ${pageVo.recordsPage + 1}}">&raquo;</a>
+                <a th:if="${reportPageVo.recordsPage < reportPageVo.movableMaxPage}"
+                   th:href="@{'/user/profile?reportPage=' + ${reportPageVo.recordsPage + 1}}">&raquo;</a>
                 <!-- 현재 페이지가 마지막 페이지보다 작으면 마지막 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage < pageVo.movableMaxPage}"
-                   th:href="@{'/user/profile?page=' + ${pageVo.movableMaxPage}}">&raquo;&raquo;</a>
+                <a th:if="${reportPageVo.recordsPage < reportPageVo.movableMaxPage}"
+                   th:href="@{'/user/profile?reportPage=' + ${reportPageVo.movableMaxPage}}">&raquo;&raquo;</a>
             </div>
         </div>
-
         <div id="edit-info" class="content__section">
             <form id="updateForm" class="edit-form">
                 <label for="nickname">새로운 닉네임:</label>
