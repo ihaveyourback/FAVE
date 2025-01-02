@@ -24,6 +24,7 @@ public class BoardController {
         this.articleService = articleService;
     }
 
+    // 게시글 목록 조회
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getList(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
