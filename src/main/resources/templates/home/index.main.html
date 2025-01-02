@@ -8,6 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>Fave</title>
+
     <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
@@ -105,6 +106,7 @@
             <a th:href="@{'/fave/read/' (index=${fave.getIndex() })}">
                 <img class="img" th:src="@{'/fave/image' (index=${fave.getIndex()})}" alt="">
             </a>
+            <span th:text="${fave.getTitle()}"></span>
         </div>
     </div>
 </main>
