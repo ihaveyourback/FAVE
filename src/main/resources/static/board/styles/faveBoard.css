@@ -16,12 +16,19 @@ body {
   font-size: 0.8rem;
   margin-top: 0.5rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 #main > .grid-container > .grid > a > .img, #faveMain > .grid-container > .grid > a > .img {
-  width: 20rem;
-  height: 20rem;
+  width: 15rem;
+  height: 15rem;
+}
+#main > .grid-container > .grid > span, #faveMain > .grid-container > .grid > span {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1A1A24;
+  padding: 0.25rem;
 }
 #main > .page-container, #faveMain > .page-container {
   display: flex;
