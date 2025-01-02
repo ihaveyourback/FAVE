@@ -54,7 +54,7 @@ public class AdminPageService {
 
         for (BoardPostEntity boardPost : boardPosts) {
             UserEntity user = this.findUserByEmail(boardPost.getUserEmail());
-            boardPost.setUser(user);
+            boardPost.setUserEmail(user.getEmail());
         }
         return Pair.of(index, boardPosts);
     }
@@ -200,7 +200,7 @@ public class AdminPageService {
 
         for (BoardPostEntity boardPost : boardPosts) {
             UserEntity user = this.findUserByEmail(boardPost.getUserEmail());
-            boardPost.setUser(user);
+            boardPost.setUserEmail(user.getEmail());
         }
         return Pair.of(boardPostPageVo, boardPosts);
     }
@@ -219,7 +219,7 @@ public class AdminPageService {
 
         for (BoardPostEntity boardPost : boardPosts) {
             UserEntity user = this.findUserByEmail(boardPost.getUserEmail());
-            boardPost.setUser(user);
+            boardPost.setUserEmail(user.getEmail());
         }
         return Pair.of(boardPostPageVo, boardPosts);
     }

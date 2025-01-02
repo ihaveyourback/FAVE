@@ -31,7 +31,7 @@ public class UserEntity implements UserDetails, OAuth2User {
     @Column(nullable = false, length = 10)
     private String nickname; // Removed unique = true
 
-    @Column(nullable = false, unique = true, length = 12)
+    @Column(nullable = false, unique = true, length = 50)
     private String contact;
 
     @Column(name = "create_at", nullable = false, updatable = false)
