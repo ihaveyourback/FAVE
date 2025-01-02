@@ -20,6 +20,7 @@
             <a th:href="@{'/fave/read/' (index=${fave.getIndex() })}">
                 <img class="img" th:src="@{'/fave/image' (index=${fave.getIndex()})}" alt="">
             </a>
+            <span th:text="${fave.getTitle()}"></span>
         </div>
     </div>
     <div class="page-container">
