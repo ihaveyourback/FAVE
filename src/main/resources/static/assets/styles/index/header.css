@@ -2,14 +2,13 @@
 .header {
   align-items: space-between;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 0;
   justify-content: center;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 4rem;
   background-color: #c1b5a3;
   color: #fff;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
@@ -27,6 +26,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+  height: 4rem;
 }
 .header .menu > .-spring {
   flex-grow: 1;
@@ -99,30 +99,10 @@
 .header .menu .stretch .form .keyword-label .submit-button svg:hover {
   fill: #584f47;
 }
-.hidden {
-  display: none;
-}
-
-.main-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  height: 300px;
-}
-.main-section .image-slider {
-  display: flex;
-  transition: transform 1s ease-in-out;
-}
-.main-section .main-image {
+.header .nav {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 1rem;
 }
-
-/* 네비게이션 메뉴 */
-.main-nav ul {
+.header .nav ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
@@ -133,17 +113,39 @@
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 }
-.main-nav ul a {
+.header .nav ul a {
   color: gray;
   text-decoration: none;
   font-size: 1rem;
   font-weight: bold;
 }
-.main-nav ul a:hover {
+.header .nav ul a:hover {
   color: #4d4d4d;
 }
-.main-nav ul a:active {
+.header .nav ul a:active {
   color: #4d4d4d;
+}
+
+.hidden {
+  display: none;
+}
+
+.main-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: 480px;
+}
+.main-section .image-slider {
+  display: flex;
+  transition: transform 1s ease-in-out;
+}
+.main-section .main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
 }
 
 /* 카드 그리드 */

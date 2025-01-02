@@ -69,4 +69,17 @@ public class FaveBoardController {
         response.put("address", fave.getLocation());
         return ResponseEntity.ok(response.toString());
     }
+
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public ModelAndView searchBoard(@RequestParam(value = "keyword", required = false) String keyword,
+                                    @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                    @RequestParam(value = "filter", required = false, defaultValue = "all") String filter) {
+        ModelAndView modelAndView = new ModelAndView();
+        Pair<FaveBoardVo, FaveInfoEntity[]> pair = this.faveService.searchFaveInfo(page, filter, keyword);
+        modelAndView.addObject("page", pair.getLeft());
+        modelAndView.addObject("fave", pair.getRight());
+        modelAndView.setViewName("board/faveBoard");
+        return modelAndView;
+    }
 }

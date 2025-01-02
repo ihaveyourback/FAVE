@@ -27,21 +27,16 @@ import java.io.IOException;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     @Autowired
     private SecurityUserDetailsService userDetailsService;
-
     @Lazy
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
-
     @Autowired
     private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
-
     @Lazy
     @Autowired
     private OAuth2MemberService oAuth2MemberService;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -60,6 +55,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/assets/**").permitAll()
+                                .requestMatchers("/board/**").permitAll()
+                                .requestMatchers("/fave/**").permitAll()
                                 .requestMatchers("/profile/**").authenticated()
                                 .requestMatchers("/user/secession").authenticated()
                                 .requestMatchers("/user/**").permitAll()

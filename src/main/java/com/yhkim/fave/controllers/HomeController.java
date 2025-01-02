@@ -1,10 +1,15 @@
 package com.yhkim.fave.controllers;
 
+import com.yhkim.fave.entities.FaveInfoEntity;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.exceptions.EmailAlreadyExistsException;
 import com.yhkim.fave.exceptions.OAuth2IdNotFoundException;
+import com.yhkim.fave.services.FaveService;
 import com.yhkim.fave.services.OAuth2MemberService;
+import com.yhkim.fave.vos.FaveBoardVo;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,14 +26,26 @@ import java.util.Map;
 @RequestMapping(value = "/")
 public class HomeController {
 
+    private final FaveService faveService;
+
+    @Autowired
+    public HomeController(FaveService faveService) {
+        this.faveService = faveService;
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE) // HTML 반환
     public ModelAndView getIndex(@AuthenticationPrincipal UserDetails userDetails,
-                                 HttpSession session) {// 사용자 정보를 가져오는 메서드
+                                 HttpSession session,
+                                 @RequestParam(value = "page", required = false, defaultValue = "1")int page) {// 사용자 정보를 가져오는 메서드
         ModelAndView modelAndView = new ModelAndView();// 뷰 객체 생성
         if (userDetails instanceof UserEntity user) {// 사용자 정보가 UserEntity 객체인 경우
             modelAndView.addObject("user", user); // user 객체 생성
             modelAndView.addObject("isAdmin", user.isAdmin()); // 관리자 여부를 가져옴
         }
+        Pair<FaveBoardVo, FaveInfoEntity[]> pair = this.faveService.selectFaveInfo(page);
+        modelAndView.addObject("page", pair.getLeft());
+        modelAndView.addObject("fave", pair.getRight());
+
 
         System.out.println(session.getAttribute("errorMessage"));
 

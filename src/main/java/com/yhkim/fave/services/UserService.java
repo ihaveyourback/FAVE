@@ -1,6 +1,7 @@
 package com.yhkim.fave.services;
 
 import com.yhkim.fave.entities.EmailTokenEntity;
+import com.yhkim.fave.entities.FaveInfoEntity;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.exceptions.TransactionalException;
 import com.yhkim.fave.mappers.EmailTokenMapper;
@@ -26,6 +27,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -381,5 +383,11 @@ public class UserService {
         user.setUpdatedAt(LocalDateTime.now());
         // 사용자 정보 업데이트
         userMapper.updateUser(user);
+    }
+
+
+    public List<FaveInfoEntity> getFavoritePostsByUserEmail(String email) {
+        System.out.println(email);
+        return userMapper.selectFavoritePostsByUserEmail(email); // 사용자 이메일로 즐겨찾기 게시물 조회
     }
 }

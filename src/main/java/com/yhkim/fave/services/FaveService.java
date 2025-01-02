@@ -7,6 +7,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FaveService {
 
@@ -38,5 +40,20 @@ public class FaveService {
         }
         faveInfo.setView(faveInfo.getView() + 1);
         return this.faveInfoMapper.updateFaveInfoView(faveInfo) > 0;
+    }
+
+
+    public Pair<FaveBoardVo, FaveInfoEntity[]> searchFaveInfo(int page, String filter, String keyword) {
+        page = Math.max(1, page);
+        if (filter == null || (!filter.equals("all") && !filter.equals("title") && !filter.equals("nickname"))) {
+            filter = "all";
+        }
+        if (keyword == null) {
+            keyword = "";
+        }
+        int totalCount = this.faveInfoMapper.selectFaveInfoCountBySearch(filter, keyword);
+        FaveBoardVo pageInfo = new FaveBoardVo(page, totalCount);
+        List<FaveInfoEntity> results = this.faveInfoMapper.searchFaveInfo(filter, keyword, pageInfo.countPerPage, pageInfo.offsetCount);
+        return Pair.of(pageInfo, results.toArray(new FaveInfoEntity[0]));
     }
 }

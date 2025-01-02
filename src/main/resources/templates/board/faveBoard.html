@@ -10,13 +10,28 @@
     <script src="/board/scripts/faveBoard.js"></script>
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
     <link rel="stylesheet" type="text/css" href="/board/styles/common_cy.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
+
+    <script type="text/javascript" src="/assets/scripts/common.js"></script>
+    <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
+
+
     <title>Document</title>
 </head>
 <body>
-<div th:insert="~{board/common.html :: header_copy}"></div>
+<div th:insert="~{home/index.main.html :: header}"></div>
+<br>
 <main id="main">
+    <br><br>
+    <br><br>
+
     <div class="grid-container">
-        <div class="grid" th:each="fave : ${fave}">
+        <div class="empty" th:if="${fave == null || fave.length == 0}">
+            <span>해당 축제는 없습니다.</span>
+        </div>
+        <div class="grid" th:each="fave : ${fave}" >
             <a th:href="@{'/fave/read/' (index=${fave.getIndex() })}">
                 <img class="img" th:src="@{'/fave/image' (index=${fave.getIndex()})}" alt="">
             </a>
@@ -30,26 +45,7 @@
     </div>
 </main>
 
-<!--<table>-->
-<!--    <thead class="thead">-->
-<!--    <tr class="board-title">-->
-<!--        <th>번호</th>-->
-<!--        <th>제목</th>-->
-<!--        <th>축제일정</th>-->
-<!--        <th>작성일</th>-->
-<!--        <th>조회수</th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody class="tbody">-->
-<!--    <tr class="board-list" th:each="fave : ${fave}">-->
-<!--        <td th:text="${fave.getIndex()}"></td>-->
-<!--        <td><a th:text="${fave.getTitle()}" th:href="@{'/read/' (index=${fave.getIndex()})}"></a></td>-->
-<!--        <td th:text="${fave.getStartDate() + ' ~ ' + fave.getEndDate()}"></td>-->
-<!--        <td th:text="${#temporals.format(fave.getCreatedAt(), 'yyyy-MM-dd')}"></td>-->
-<!--        <td th:text="${fave.getView()}"></td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
+
 
 
 </body>

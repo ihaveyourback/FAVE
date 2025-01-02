@@ -6,6 +6,7 @@ import com.yhkim.fave.services.ReportService;
 import com.yhkim.fave.services.UserService;
 import com.yhkim.fave.vos.PageVo;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,28 +41,32 @@ public class MyPageController {
 
     // 프로필 페이지를 표시하는 메서드
     @GetMapping("/profile")
-    public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal ,
-                                    @RequestParam(defaultValue = "1") int page) { // 페이지 번호 (기본값: 1)
+    public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal,
+                                    @RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "1") int reportPage) { // 페이지 번호 (기본값: 1)
         int totalCount = boardPostService.countPostsByUserEmail(principal.getName()); // 사용자의 게시물 수
         PageVo pageVo = new PageVo(page, totalCount); // 페이지 정보 생성
         List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), pageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
-        List<Report> reports = reportService.getReportsByLoggedInUser(); // 사용자의 신고 목록 가져오기 (페이징 처리)
-        ModelAndView modelAndView = new ModelAndView();// 뷰와 모델을 함께 설정 가능
+        Pair<PageVo, List<Report>> reportPair = reportService.getReportsByLoggedInUser(reportPage, 10); // 사용자의 신고 목록 가져오기 (페이징 처리)
+        List<FaveInfoEntity> favoritePosts = userService.getFavoritePostsByUserEmail(principal.getName()); // 사용자의 찜 목록 가져오기
+
+        ModelAndView modelAndView = new ModelAndView(); // 뷰와 모델을 함께 설정 가능
 
         if (userDetails instanceof UserEntity user) {
-            modelAndView.addObject("email", user.getEmail());// 사용자 이메일
+            modelAndView.addObject("email", user.getEmail()); // 사용자 이메일
             modelAndView.addObject("nickname", user.getNickname()); // 사용자 닉네임
         }
 
-        modelAndView.addObject("reports", reports);
+        modelAndView.addObject("reports", reportPair.getRight());
+        modelAndView.addObject("reportPageVo", reportPair.getLeft());
         modelAndView.addObject("posts", posts);
+        modelAndView.addObject("favoritePosts", favoritePosts); // 찜 목록 추가
         modelAndView.addObject("pageVo", pageVo);
         modelAndView.setViewName("user/profile");
         modelAndView.addObject("username", principal.getName()); // 사용자 이름
         return modelAndView;
     }
-
-    //회원탈퇴 메서드
+    // 회원탈퇴 메서드
     @PostMapping("/secession")
     public ResponseEntity<?> secession(@AuthenticationPrincipal Object principal, @RequestBody Map<String, String> payload) {
         if (principal == null) {
@@ -99,22 +104,21 @@ public class MyPageController {
         }
     }
 
-
     // 사용자 정보를 업데이트하는 메서드
     @PostMapping("/update-profile")
     public ResponseEntity<?> updateUserInfo(
-            @AuthenticationPrincipal UserDetails userDetails,// 사용자 정보
-            @RequestBody Map<String, String> payload,// 요청 본문
+            @AuthenticationPrincipal UserDetails userDetails, // 사용자 정보
+            @RequestBody Map<String, String> payload, // 요청 본문
             HttpServletRequest request) { // 사용자 정보 업데이트
-        if (!(userDetails instanceof UserEntity user)) {// 사용자 정보가 없으면
+        if (!(userDetails instanceof UserEntity user)) { // 사용자 정보가 없으면
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
                     "message", "사용자 정보가 없습니다. 소셜 로그인은 사용불가능합니다."
             ));
         }
 
-        String newNickname = payload.get("nickname");// 새 닉네임
+        String newNickname = payload.get("nickname"); // 새 닉네임
         String currentPassword = payload.get("currentPassword"); // 현재 비밀번호
-        String newPassword = payload.get("newPassword");// 새 비밀번호
+        String newPassword = payload.get("newPassword"); // 새 비밀번호
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
@@ -131,7 +135,7 @@ public class MyPageController {
         }
 
         // 세션 무효화 및 인증 정보 지우기
-        request.getSession().invalidate();// 세션 무효화
+        request.getSession().invalidate(); // 세션 무효화
         SecurityContextHolder.clearContext(); // 인증 정보 지우기
 
         return ResponseEntity.ok(Map.of("message", "사용자 정보가 성공적으로 업데이트되었습니다. 로그아웃 후 변경된 비밀번호로 다시 로그인 해주세요."));

@@ -10,7 +10,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public String handleOAuth2IdNotFoundException(Exception ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage()); // Model에 추가
-        System.out.println("에러에러에러에러에러에러에러에러에러" + ex.getMessage());
+        System.out.println("handleOAuth2IdNotFoundException 가 실행되었음" + ex.getMessage());
         return "home/index.main"; // 템플릿 반환
     }
 }

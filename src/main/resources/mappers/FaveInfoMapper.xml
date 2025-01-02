@@ -10,17 +10,17 @@
     </update>
     <update id="updateFaveInfo">
         UPDATE `fave`.`festival_info`
-        SET `title` = #{title},
-            `description` = #{description},
-            `start_date` = #{startDate},
-            `end_date` = #{endDate},
-            `location` = #{location},
-            `user_email` = #{userEmail},
-            `cover_data` = #{coverData},
+        SET `title`              = #{title},
+            `description`        = #{description},
+            `start_date`         = #{startDate},
+            `end_date`           = #{endDate},
+            `location`           = #{location},
+            `user_email`         = #{userEmail},
+            `cover_data`         = #{coverData},
             `cover_content_type` = #{coverContentType},
-            `create_at` = #{createdAt},
-            `update_at` = #{updatedAt},
-            `view` = #{view}
+            `create_at`          = #{createdAt},
+            `update_at`          = #{updatedAt},
+            `view`               = #{view}
         WHERE `index` = #{index}
     </update>
     <select id="selectFaveInfo" resultType="com.yhkim.fave.entities.FaveInfoEntity">
@@ -60,5 +60,39 @@
     <select id="selectFaveInfoCount" resultType="java.lang.Integer">
         SELECT COUNT(0)
         FROM `fave`.`festival_info`
+    </select>
+    <select id="searchFaveInfo" resultType="com.yhkim.fave.entities.FaveInfoEntity">
+        SELECT *
+        FROM `fave`.`festival_info`
+        WHERE
+        <choose>
+            <when test="filter == 'title'">
+                `title` LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="filter == 'nickname'">
+                `user_email` LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                (`title` LIKE CONCAT('%', #{keyword}, '%') OR `description` LIKE CONCAT('%', #{keyword}, '%'))
+            </otherwise>
+        </choose>
+        ORDER BY `index` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+    <select id="selectFaveInfoCountBySearch" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM `fave`.`festival_info`
+        WHERE
+        <choose>
+            <when test="filter == 'title'">
+                `title` LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="filter == 'nickname'">
+                `user_email` LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                (`title` LIKE CONCAT('%', #{keyword}, '%') OR `description` LIKE CONCAT('%', #{keyword}, '%'))
+            </otherwise>
+        </choose>
     </select>
 </mapper>

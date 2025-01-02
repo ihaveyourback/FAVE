@@ -12,6 +12,11 @@
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
+    <link rel="stylesheet" href="/board/styles/faveBoard.css">
+    <link rel="stylesheet" href="/admin/styles/common.css">
+    <script src="/board/scripts/faveBoard.js"></script>
+    <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
+    <link rel="stylesheet" type="text/css" href="/board/styles/common_cy.css">
 
     <script type="text/javascript" src="/assets/scripts/common.js"></script>
     <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
@@ -19,24 +24,32 @@
 
 </head>
 <body>
-<header class="header">
+<header class="header"  th:fragment="header">
     <ul class="menu">
         <!-- 로고 -->
         <li class="item">
+            <a th:href="@{/}">
             <img alt="Fave" src="/assets/images/header-logo.png">
+            </a>
         </li>
         <!-- 검색 폼 -->
         <li class="stretch">
-            <form class="form">
+            <form class="form" action="/fave/search" method="get">
                 <label class="keyword-label">
                     <input autocomplete="off"
                            class="input"
                            name="keyword"
                            placeholder="새로운 잇슈 검색!"
                            spellcheck="false"
-                           type="search"/>
+                           type="text" th:value="${keyword}">
                 </label>
-                <button class="submit-button" type="submit">
+                <label class="label">
+                    <select class="field" name="filter">
+                        <option selected value="all" th:selected="${filter != null && filter.equals('all')}">제목 + 내용</option>
+                        <option value="title" th:selected="${filter != null && filter.equals('title')}">제목</option>
+                    </select>
+                </label>
+                <button class="submit-button" type="submit"></button>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g opacity="0.9">
                             <path d="M15.8999 14.5L19.0862 17.7187" stroke="currentColor" stroke-width="1.8"
@@ -45,7 +58,6 @@
                                     stroke-width="1.8"></circle>
                         </g>
                     </svg>
-                </button> <!-- 검색 버튼 -->
             </form>
         </li>
         <li id="UserLinkWrapper" sec:authorize="isAuthenticated() and !hasAuthority('ROLE_ADMIN')">
@@ -62,11 +74,41 @@
             <a id="logoutBtn" class="--obj-button -color-primary" th:href="@{/logout}">로그아웃</a>
         </li>
     </ul>
-
-
+    <!-- 네비게이션 메뉴 -->
+    <nav class="nav">
+        <ul class="ul">
+            <li><a href="/board/list">Q&A</a></li>
+            <li><a href="/fave/">올해 축제</a></li>
+            <li><a href="/board/list">자유 게시판</a></li>
+        </ul>
+    </nav>
 </header>
 <!-- Cover Screen -->
 <div class="cover" id="cover"></div>
+<br><br>
+<!--관리자가 소개하는 인기 축제  api?-->
+<a href="">
+    <section class="main-section">
+    <span class="image-slider">
+        <img src="./assets/images/section/image1.jpg" class="main-image" alt="Image 1"/>
+        <img src="./assets/images/section/image2.jpg" class="main-image" alt="Image 2"/>
+        <img src="./assets/images/section/image3.jpg" class="main-image" alt="Image 3"/>
+    </span>
+    </section>
+</a>
+<main id="faveMain">
+    <div class="grid-container">
+        <div class="empty" th:if="${fave == null || fave.length == 0}">
+            <span>해당 축제는 없습니다.</span>
+        </div>
+        <div class="grid" th:each="fave : ${fave}" >
+            <a th:href="@{'/fave/read/' (index=${fave.getIndex() })}">
+                <img class="img" th:src="@{'/fave/image' (index=${fave.getIndex()})}" alt="">
+            </a>
+        </div>
+    </div>
+</main>
+
 <main id="main">
     <div class="content">
         <form novalidate class="login-form" id="loginForm" th:action="@{/api/login}" method="post">
@@ -110,8 +152,6 @@
                 </li>
             </ul>
         </form>
-
-
         <form novalidate class="register-form" id="registerForm">
             <h2 class="title">회원가입</h2>
             <label class="--obj-label" data-id="email">
@@ -150,8 +190,6 @@
             <button class="--obj-button -color-primary" type="submit">회원가입</button>
             <button class="--obj-button -color-light-gray" name="cancel" type="button">취소</button>
         </form>
-
-
         <form class="recover-form" id="recoverForm">
             <h2 class="title">계정 찾기</h2>
             <div class="mode-container">
@@ -191,70 +229,6 @@
     </div>
 </main>
 
-<!-- 네비게이션 메뉴 -->
-<nav class="main-nav">
-    <ul class="ul">
-        <li><a href="#">지역별</a></li>
-        <li><a href="#">올해 축제</a></li>
-        <li><a href="#">자유 게시판</a></li>
-        <li><a href="#">지도</a></li>
-    </ul>
-</nav>
-
-<!--관리자가 소개하는 인기 축제  api?-->
-<a href="">
-    <section class="main-section">
-    <span class="image-slider">
-        <img src="./assets/images/section/image1.jpg" class="main-image" alt="Image 1"/>
-        <img src="./assets/images/section/image2.jpg" class="main-image" alt="Image 2"/>
-        <img src="./assets/images/section/image3.jpg" class="main-image" alt="Image 3"/>
-    </span>
-    </section>
-</a>
-
-<main>
-    <b><br><br><br><br></b>
-</main>
-<main>
-    <section class="card-grid">
-        <div class="card">
-            <img src="" alt="용과 방아 가족 축제">
-            <h3>용과 방아 가족 축제</h3>
-        </div>
-        <div class="card">
-            <img src="" alt="자연 교감 체험농장">
-            <h3>자연 교감 체험농장</h3>
-        </div>
-        <div class="card">
-            <img src="" alt="교과체험 동물농장">
-            <h3>교과체험 동물농장</h3>
-        </div>
-        <div class="card">
-            <img src="" alt="체험농장 특별 행사">
-            <h3>체험농장 특별 행사</h3>
-        </div>
-        <div class="card">
-            <img src="" alt="가족 테마여행">
-            <h3>가족 테마여행</h3>
-        </div>
-        <div class="card">
-            <img src="" alt="캠핑 자연 탐험">
-            <h3>캠핑 자연 탐험</h3>
-        </div>
-        <div class="card">
-            <img src="" alt="지역 축제 체험">
-            <h3>지역 축제 체험</h3>
-        </div>
-        <div class="card">
-            <img src="" alt="연인 테마여행">
-            <h3>연인 테마여행</h3>
-        </div>
-        <div class="card">
-            <img src="" alt="단체 체험 여행">
-            <h3>단체 체험 여행</h3>
-        </div>
-    </section>
-</main>
 
 <footer>
     <div class="footer-content">
@@ -265,13 +239,5 @@
     </div>
 </footer>
 
-<script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function() {
-        var errorMessage = /*[[${errorMessage}]]*/ '';
-        if (errorMessage) {
-            alert(errorMessage);
-        }
-    });
-</script>
 </body>
 </html>

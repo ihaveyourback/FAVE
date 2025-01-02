@@ -1,8 +1,11 @@
 package com.yhkim.fave.mappers;
 
+import com.yhkim.fave.entities.FaveInfoEntity;
 import com.yhkim.fave.entities.UserEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -34,5 +37,6 @@ public interface UserMapper {
                                     @Param(value = "offsetCount") int offsetCount);
 
 
+    List<FaveInfoEntity> selectFavoritePostsByUserEmail(String email);
 
 }
