@@ -79,7 +79,7 @@
                 <button class="sidebar__button" data-target="posts">내 게시글</button>
             </li>
             <li class="sidebar__item">
-                <button class="sidebar__button" data-target="reports">신고 내역</button>
+                <button class="sidebar__button" data-target="reportEntities">신고 내역</button>
             </li>
             <li class="sidebar__item">
                 <button class="sidebar__button" data-target="edit-info">내 정보 수정</button>
@@ -138,9 +138,9 @@
                    th:href="@{'/user/profile?page=' + ${pageVo.movableMaxPage}}">&raquo;&raquo;</a>
             </div>
         </div>
-        <div id="reports" class="content__section">
+        <div id="reportEntities" class="content__section">
             <h2>신고 내역</h2>
-            <table class="reports-table">
+            <table class="reportEntities-table">
                 <thead>
                 <tr>
                     <th>신고 대상</th>
@@ -150,14 +150,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${#lists.isEmpty(reports)}">
+                <tr th:if="${#lists.isEmpty(reportEntities)}">
                     <td colspan="4">신고 내역이 없습니다.</td>
                 </tr>
-                <tr th:each="report : ${reports}">
-                    <td th:text="${report.reportedUserEmail}">상대 이메일</td>
-                    <td th:text="${report.reason}">사유</td>
-                    <td th:text="${report.reportedAt}">일자</td>
-                    <td th:text="${report.status}">상태</td>
+                <tr th:each="reportEntity : ${reportEntities}">
+                    <td th:text="${reportEntity.reportedUserEmail}">상대 이메일</td>
+                    <td th:text="${reportEntity.reason}">사유</td>
+                    <td th:text="${reportEntity.reportedAt}">일자</td>
+                    <td th:text="${reportEntity.status}">상태</td>
                 </tr>
                 </tbody>
             </table>

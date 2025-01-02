@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신고하기</title>
+    <link rel="stylesheet" href="/assets/styles/report.css">
+    <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
+    <script defer src="/assets/scripts/report.js"></script>
+</head>
+<body>
+<header class="top-header">
+    <div class="header-logo" >
+        <img src="/assets/images/header-logo.png" alt="로고">
+    </div>
+    <br>
+</header>
+
+<main class="report-container">
+    <h1>신고하기</h1>
+    <form id="form" method="POST" action="/submitReport">
+        <div class="input-group">
+            <label for="userEmail"></label>
+            <input type="hidden" id="userEmail" name="userEmail" required maxlength="50" th:value="${#authentication.principal.email}">
+        </div>
+        <div class="input-group">
+            <label for="reportedUserEmail"></label>
+            <input type="hidden" id="reportedUserEmail" name="reportedUserEmail" required maxlength="50"
+                   th:value="${(comments != null && !comments.isEmpty()) ? comments[0].getUserEmail() : article?.getUserEmail()}">
+        </div>
+
+
+
+
+        <!-- 신고 상태 -->
+        <!--        <div class="input-group">-->
+        <!--            <label for="status"></label>-->
+        <!--            <select id="status" name="status" required>-->
+        <!--                <option id="board" value="게시글">게시글</option>-->
+        <!--                <option id="comment" value="댓글">댓글</option>-->
+        <!--            </select>-->
+        <!--        </div>-->
+        <div class="input-group">
+            <!-- 댓글이 존재하거나 게시글 신고 시 postId 가져오기 -->
+            <label>
+                <input type="hidden" id="reportedPostId" name="reportedPostId"
+                       th:value="${comments == null ? '' : article.getIndex()}">
+            </label>
+
+
+            <!-- 댓글 신고 시에만 댓글 index 가져오기 -->
+            <label th:if="${comments != null}">
+                <input type="hidden" id="reportedCommentId" name="reportedCommentId" th:each="comment:${comments}" th:value="${comment.getCommentIndex()}">
+            </label>
+        </div>
+
+
+
+
+
+        <fieldset class="reason-group">
+            <legend>신고 사유</legend>
+            <label>
+                <input type="radio" name="reason" value="스팸홍보/도배글입니다." required>
+                스팸홍보/도배글입니다.
+            </label>
+            <label>
+                <input type="radio" name="reason" value="음란물입니다.">
+                음란물입니다.
+            </label>
+            <label>
+                <input type="radio" name="reason" value="불법정보를 포함하고 있습니다.">
+                불법정보를 포함하고 있습니다.
+            </label>
+            <label>
+                <input type="radio" name="reason" value="청소년에게 유해한 내용입니다.">
+                청소년에게 유해한 내용입니다.
+            </label>
+            <label>
+                <input type="radio" name="reason" value="욕설/생명경시/혐오/차별적 표현입니다.">
+                욕설/생명경시/혐오/차별적 표현입니다.
+            </label>
+            <label>
+                <input type="radio" name="reason" value="개인정보 노출 게시물입니다.">
+                개인정보 노출 게시물입니다.
+            </label>
+            <label>
+                <input type="radio" name="reason" value="불쾌한 표현이 있습니다.">
+                불쾌한 표현이 있습니다.
+            </label>
+            <label>
+                <input type="radio" name="reason" value="기타">
+                기타
+            </label>
+        </fieldset>
+        <div class="other-reason" style="margin-top: 1rem">
+            <label for="reasonTextarea"></label>
+            <textarea id="reasonTextarea" name="reasonDetail" rows="4" maxlength="255"
+                      placeholder="기타 사유를 입력하세요"></textarea>
+        </div>
+        <button type="submit" id="submitBtn" class="submit-btn">신고하기</button>
+    </form>
+</main>
+<footer>
+    <div class="footer-content">
+        <p>김용현 김창윤 김범수 이석민</p>
+        <p>고객센터: 123-456-7890</p>
+        <p>&copy; 2024 여기YOU. All Rights Reserved.</p>
+        <p>대구광역시 중구 동성로3가 동성로1길 15</p>
+    </div>
+</footer>
+</body>
+</html>

@@ -1,7 +1,7 @@
 package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.entities.BoardPostEntity;
-import com.yhkim.fave.entities.Report;
+import com.yhkim.fave.entities.ReportEntity;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.services.BoardPostService;
 import com.yhkim.fave.services.ReportService;
@@ -47,7 +47,7 @@ public class MyPageController {
         int totalCount = boardPostService.countPostsByUserEmail(principal.getName()); // 사용자의 게시물 수
         PageVo pageVo = new PageVo(page, totalCount); // 페이지 정보 생성
         List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), pageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
-        List<Report> reports = reportService.getReportsByLoggedInUser(); // 사용자의 신고 목록 가져오기 (페이징 처리)
+        List<ReportEntity> reportEntities = reportService.getReportsByLoggedInUser(); // 사용자의 신고 목록 가져오기 (페이징 처리)
         ModelAndView modelAndView = new ModelAndView();// 뷰와 모델을 함께 설정 가능
 
         if (userDetails instanceof UserEntity user) {
@@ -55,7 +55,7 @@ public class MyPageController {
             modelAndView.addObject("nickname", user.getNickname()); // 사용자 닉네임
         }
 
-        modelAndView.addObject("reports", reports);
+        modelAndView.addObject("reports", reportEntities);
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("pageVo", pageVo);
         modelAndView.setViewName("user/profile");

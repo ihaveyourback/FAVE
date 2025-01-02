@@ -1,12 +1,9 @@
 package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.entities.EmailTokenEntity;
-import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.repository.ReportRepository;
 import com.yhkim.fave.results.CommonResult;
 import com.yhkim.fave.results.Result;
-import com.yhkim.fave.results.user.LoginResult;
 import com.yhkim.fave.services.ReportService;
 import com.yhkim.fave.services.UserService;
 import jakarta.mail.MessagingException;
@@ -14,15 +11,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/user")
