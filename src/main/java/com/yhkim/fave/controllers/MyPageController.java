@@ -44,10 +44,17 @@ public class MyPageController {
     public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal,
                                     @RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "1") int reportPage) { // 페이지 번호 (기본값: 1)
-        int totalCount = boardPostService.countPostsByUserEmail(principal.getName()); // 사용자의 게시물 수
-        PageVo pageVo = new PageVo(page, totalCount); // 페이지 정보 생성
-        List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), pageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
+        // 게시글 페이징 정보 생성
+        int totalPostCount = boardPostService.countPostsByUserEmail(principal.getName()); // 사용자의 게시물 수
+        PageVo postPageVo = new PageVo(page, totalPostCount); // 게시글 페이지 정보 생성
+        List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), postPageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
+
+        // 신고 내역 페이징 정보 생성
         Pair<PageVo, List<Report>> reportPair = reportService.getReportsByLoggedInUser(reportPage, 10); // 사용자의 신고 목록 가져오기 (페이징 처리)
+        PageVo reportPageVo = reportPair.getLeft();
+        List<Report> reports = reportPair.getRight();
+
+        // 찜 목록 가져오기
         List<FaveInfoEntity> favoritePosts = userService.getFavoritePostsByUserEmail(principal.getName()); // 사용자의 찜 목록 가져오기
 
         ModelAndView modelAndView = new ModelAndView(); // 뷰와 모델을 함께 설정 가능
@@ -57,11 +64,11 @@ public class MyPageController {
             modelAndView.addObject("nickname", user.getNickname()); // 사용자 닉네임
         }
 
-        modelAndView.addObject("reports", reportPair.getRight());
-        modelAndView.addObject("reportPageVo", reportPair.getLeft());
+        modelAndView.addObject("reports", reports);
+        modelAndView.addObject("reportPageVo", reportPageVo);
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("favoritePosts", favoritePosts); // 찜 목록 추가
-        modelAndView.addObject("pageVo", pageVo);
+        modelAndView.addObject("postPageVo", postPageVo);
         modelAndView.setViewName("user/profile");
         modelAndView.addObject("username", principal.getName()); // 사용자 이름
         return modelAndView;

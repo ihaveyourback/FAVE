@@ -27,6 +27,7 @@ public class ReportService {
     }
 
 
+
     // 로그인한 사용자의 이메일을 기준으로 신고 내역을 가져오는 메서드 (페이징 처리)
     public Pair<PageVo, List<Report>> getReportsByLoggedInUser(int page, int size) {
         String loggedInUserEmail = getLoggedInUserEmail();
