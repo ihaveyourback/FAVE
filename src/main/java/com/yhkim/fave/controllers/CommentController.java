@@ -22,8 +22,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-
-
+    // 댓글 수정 기능
     @RequestMapping(value = "/", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String patchIndex(
@@ -35,8 +34,6 @@ public class CommentController {
         response.put("result", result.name().toLowerCase());
         return response.toString();
     }
-
-
 
     // 댓글 삭제 기능
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,6 +66,7 @@ public class CommentController {
         return ResponseEntity.ok().body(comments);
     }
 
+    // 대댓글 작성 엔드포인트
     @PostMapping("/reply")
     public ResponseEntity<String> replyComment(@RequestParam int parentCommentId, @RequestParam String content) {
         ArticleResult result = commentService.saveReplyComment(parentCommentId, content);

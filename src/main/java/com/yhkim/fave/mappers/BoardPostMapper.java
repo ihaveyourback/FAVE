@@ -33,4 +33,21 @@ public interface BoardPostMapper {
     BoardPostEntity selectBoardPostsByIndex(@Param("index") int index);
 
     int updateBoardPost(BoardPostEntity board);
+
+    // 김창윤 //
+    // 좋아요 추가
+    int addLike(@Param("postId") int postId, @Param("userEmail") String userEmail);
+
+    // 좋아요 삭제
+    int removeLike(@Param("postId") int postId, @Param("userEmail") String userEmail);
+
+    // 좋아요 수 증가
+    int incrementLikeCount(@Param("postId") int postId);
+
+    // 좋아요 수 감소
+    int decrementLikeCount(@Param("postId") int postId);
+
+    int getLikeCount(@Param("postId") int postId);
+
+    boolean isLiked(@Param("postId") int postId, @Param("userEmail") String userEmail);
 }
