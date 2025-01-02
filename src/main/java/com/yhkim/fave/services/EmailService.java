@@ -2,7 +2,8 @@ package com.yhkim.fave.services;
 
 import com.yhkim.fave.dto.MailDto;
 import com.yhkim.fave.entities.SentEmailEntity;
-import com.yhkim.fave.reportrepository.SentEmailRepository;
+
+import com.yhkim.fave.repository.SentEmailRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;

@@ -43,27 +43,30 @@ public class MyPageController {
 
     // 프로필 페이지를 표시하는 메서드
     @GetMapping("/profile")
-    public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal ,
+    public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal,
                                     @RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "1") int reportPage) { // 페이지 번호 (기본값: 1)
         int totalCount = boardPostService.countPostsByUserEmail(principal.getName()); // 사용자의 게시물 수
         PageVo pageVo = new PageVo(page, totalCount); // 페이지 정보 생성
         List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), pageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
         Pair<PageVo, List<ReportEntity>> reportEntities = reportService.getReportsByLoggedInUser(reportPage, 10); // 사용자의 신고 목록 가져오기 (페이징 처리)
-        ModelAndView modelAndView = new ModelAndView();// 뷰와 모델을 함께 설정 가능
+
+        ModelAndView modelAndView = new ModelAndView(); // 뷰와 모델을 함께 설정 가능
 
         if (userDetails instanceof UserEntity user) {
-            modelAndView.addObject("email", user.getEmail());// 사용자 이메일
+            modelAndView.addObject("email", user.getEmail()); // 사용자 이메일
             modelAndView.addObject("nickname", user.getNickname()); // 사용자 닉네임
         }
 
-        modelAndView.addObject("reports", reportEntities);
-        modelAndView.addObject("posts", posts);
-        modelAndView.addObject("pageVo", pageVo);
+        modelAndView.addObject("reports", reportEntities.getRight()); // 신고 내역 리스트 추가
+        modelAndView.addObject("reportPageVo", reportEntities.getLeft()); // 신고 페이징 정보 추가
+        modelAndView.addObject("posts", posts); // 게시물 리스트 추가
+        modelAndView.addObject("pageVo", pageVo); // 게시물 페이징 정보 추가
         modelAndView.setViewName("user/profile");
-        modelAndView.addObject("username", principal.getName()); // 사용자 이름
+        modelAndView.addObject("username", principal.getName()); // 사용자 이름 추가
         return modelAndView;
     }
+
 
     // 회원탈퇴를 처리하는 메서드
     @PostMapping("/secession")

@@ -158,7 +158,7 @@
                `is_suspended` AS `suspended`,
                `is_verified`  AS `verified`,
                `warning`      AS `warning`
-        FROM `fave`.`users`
+       FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
           AND `is_suspended` = false
         ORDER BY `create_at` DESC
@@ -212,8 +212,8 @@
     </select>
     <select id="selectFavoritePostsByUserEmail" resultType="com.yhkim.fave.entities.FaveInfoEntity">
         SELECT fi.*, fi.start_date AS startDate, fi.end_date AS endDate
-        FROM favorites f
-                 JOIN festival_info fi ON f.festival_id = fi.`index`
+        FROM `fave`.`favorites` f
+                 JOIN `fave`.`festival_info` fi ON f.festival_id = fi.`index`
         WHERE f.user_email = #{email}
     </select>
 </mapper>

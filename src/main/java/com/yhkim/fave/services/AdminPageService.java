@@ -26,16 +26,17 @@ public class AdminPageService {
     private final UserMapper userMapper;
     private final ReportsMapper reportsMapper;
     private final FaveInfoMapper faveInfoMapper;
-    private final InquiriesMapper inquiriesMapper;
+    private final InquiriesArticleMapper inquiriesArticleMapper;
+
 
     @Autowired
-    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, UserMapper userMapper, ReportsMapper reportsMapper, FaveInfoMapper faveInfoMapper, InquiriesMapper inquiriesMapper) {
+    public AdminPageService(WriteMapper writeMapper, BoardPostMapper boardPostsMapper, UserMapper userMapper, ReportsMapper reportsMapper, FaveInfoMapper faveInfoMapper, InquiriesArticleMapper inquiriesArticleMapper) {
         this.writeMapper = writeMapper;
         this.boardPostsMapper = boardPostsMapper;
         this.userMapper = userMapper;
         this.reportsMapper = reportsMapper;
         this.faveInfoMapper = faveInfoMapper;
-        this.inquiriesMapper = inquiriesMapper;
+        this.inquiriesArticleMapper = inquiriesArticleMapper;
     }
 
     public Pair<IndexPageVo, UserEntity[]> selectIndexUser(int page) {
@@ -54,16 +55,16 @@ public class AdminPageService {
 
         for (BoardPostEntity boardPost : boardPosts) {
             UserEntity user = this.findUserByEmail(boardPost.getUserEmail());
-            boardPost.setUser(user);
+            boardPost.setUserEmail(user.getEmail());
         }
         return Pair.of(index, boardPosts);
     }
 
     public Pair<IndexPageVo, InquiriesEntity[]> selectAllInquiries(int page) {
         page = Math.max(page, 1);
-        int totalCount = this.inquiriesMapper.selectInquiriesCount();
+        int totalCount = this.inquiriesArticleMapper.selectInquiriesCount();
         IndexPageVo index = new IndexPageVo(page, totalCount);
-        InquiriesEntity[] inquiries = this.inquiriesMapper.selectInquiries(index.countPerPage, index.offsetCount);
+        InquiriesEntity[] inquiries = this.inquiriesArticleMapper.selectInquiries(index.countPerPage, index.offsetCount);
         return Pair.of(index, inquiries);
     }
 
@@ -200,7 +201,7 @@ public class AdminPageService {
 
         for (BoardPostEntity boardPost : boardPosts) {
             UserEntity user = this.findUserByEmail(boardPost.getUserEmail());
-            boardPost.setUser(user);
+            boardPost.setUserEmail(user.getEmail());
         }
         return Pair.of(boardPostPageVo, boardPosts);
     }
@@ -219,7 +220,7 @@ public class AdminPageService {
 
         for (BoardPostEntity boardPost : boardPosts) {
             UserEntity user = this.findUserByEmail(boardPost.getUserEmail());
-            boardPost.setUser(user);
+            boardPost.setUserEmail(user.getEmail());
         }
         return Pair.of(boardPostPageVo, boardPosts);
     }
@@ -295,9 +296,9 @@ public class AdminPageService {
 
     public Pair<ReportsPageVo, InquiriesEntity[]> selectInquiries(int page) {
         page = Math.max(page, 1);
-        int totalCount = this.inquiriesMapper.selectInquiriesCount();
+        int totalCount = this.inquiriesArticleMapper.selectInquiriesCount();
         ReportsPageVo inquiriesPage = new ReportsPageVo(page, totalCount);
-        InquiriesEntity[] inquiries = this.inquiriesMapper.selectInquiries(inquiriesPage.countPerPage, inquiriesPage.offsetCount);
+        InquiriesEntity[] inquiries = this.inquiriesArticleMapper.selectInquiries(inquiriesPage.countPerPage, inquiriesPage.offsetCount);
         return Pair.of(inquiriesPage, inquiries);
     }
 }

@@ -56,3 +56,92 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     xhr.send();
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const likeButton = document.getElementById('likeButton');
+
+    // likeButton이 null인지 확인
+    if (likeButton) {
+        // 페이지 로딩 시 찜 상태 확인
+        checkLikeStatus();
+
+        // 찜 상태 확인 함수
+        async function checkLikeStatus() {
+            const festivalId = likeButton.getAttribute('data-festival-id');
+            const userEmail = likeButton.getAttribute('data-user-email');
+
+            try {
+                if (response.ok) {
+                    const result = await response.json();  // 서버에서 받은 JSON 데이터
+                    const isLiked = result.isLiked;
+
+                    // 버튼 텍스트와 클래스 변경
+                    if (isLiked) {
+                        likeButton.classList.add('liked');
+                        likeButton.textContent = '찜 취소';
+                    } else {
+                        likeButton.classList.remove('liked');
+                        likeButton.textContent = '찜하기';
+                    }
+
+                    // 이미지 변경
+                    const likeImage = document.querySelector('#likeImage'); // 이미지의 ID를 가정
+                    if (isLiked) {
+                        likeImage.src = "https://img.icons8.com/fluency-systems-filled/24/like.png";
+                        likeImage.alt = "like-filled";
+                    } else {
+                        likeImage.src = "https://img.icons8.com/material-outlined/24/like--v1.png";
+                        likeImage.alt = "like-outline";
+                    }
+                } else {
+                    alert('찜 상태 확인 중 오류가 발생했습니다.');
+                }
+            } catch (error) {
+                console.error('찜 상태 확인 중 오류:', error);
+            }
+        }
+
+            // 버튼 클릭 시 찜 상태 변경 처리
+        likeButton.addEventListener('click', async function (e) {
+            e.preventDefault();
+
+            const festivalId = likeButton.getAttribute('data-festival-id');
+            const userEmail = likeButton.getAttribute('data-user-email');
+            const isLiked = likeButton.classList.contains('liked'); // 'liked' 클래스 추가 여부로 상태 확인
+
+            try {
+                // 서버에 찜 상태 처리 요청 (POST/DELETE)
+                const response = await fetch('/fave/read/', {
+                    method: isLiked ? 'DELETE' : 'POST', // 상태에 따라 POST 또는 DELETE 요청
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        festivalId: festivalId,
+                        userEmail: userEmail
+                    }),
+                });
+
+                if (response.ok) {
+                    const result = await response.text();
+                    alert(result);
+
+                    // 버튼 상태 업데이트
+                    if (isLiked) {
+                        likeButton.classList.remove('liked');
+                        likeButton.textContent = '찜하기';
+                    } else {
+                        likeButton.classList.add('liked');
+                        likeButton.textContent = '찜 취소';
+                    }
+                } else {
+                    alert('서버 처리 중 오류가 발생했습니다.');
+                }
+
+            } catch (error) {
+                console.error('찜 상태 처리 중 오류:', error);
+            }
+        });
+    } else {
+        console.error('likeButton 요소를 찾을 수 없습니다.');
+    }
+});

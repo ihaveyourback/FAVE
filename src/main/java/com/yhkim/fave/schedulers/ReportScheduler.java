@@ -2,8 +2,9 @@ package com.yhkim.fave.schedulers;
 
 import com.yhkim.fave.entities.ReportEntity;
 import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.reportrepository.ReportRepository;
-import com.yhkim.fave.reportrepository.UserRepository;
+
+import com.yhkim.fave.repository.ReportRepository;
+import com.yhkim.fave.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
