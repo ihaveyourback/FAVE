@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>축제 잇슈</title>
+    <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
+    <link href="/assets/styles/common_sm.css" rel="stylesheet" type="text/css">
+    <link href="/inquiries/assets/styles/read_sm.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" th:if="${article == null || article.getIsDeleted() != null}">
+        alert('존재하지 않는 게시글입니다. 주소를 다시 확인해 주세요.');
+        history.back();
+
+    </script>
+    <script defer src="/article/assets/scripts/read.js" type="text/javascript"
+            th:if="${article != null && article.getIsDeleted() == null}"></script>
+</head>
+<body th:if="${article != null && article.getIsDeleted() == null}">
+<div th:insert="~{common/common.html :: header_copy}"></div>
+<div id="cover"></div>
+<form id="deleteDialog">
+    <span class="message">정말로 삭제하시겠습니까?</span>
+    <input type="hidden" name="index" th:value="${article.getIndex}">
+    <input name="commentIndex" type="hidden">
+    <input type="hidden" name="mode">
+    <div class="button-container">
+        <button class="--obj-button -button_color" type="submit">확인</button>
+        <button class="--obj-button -button_color" name="cancel" type="button">취소</button>
+    </div>
+</form>
+<main id="main">
+    <div class="container">
+        <div class="post">
+            <div class="title" th:text="${article.getTitle()}">게시글 제목</div>
+            <a class="meta"
+               th:text="'작성자: ' + ${article.getUserNickname()} + ' | 작성일: ' + ${#temporals.format(article.getCreatedAt, 'yyyy-MM-dd')} + ' | 조회수: ' + ${article.getView()}">>작성자:
+                사용자 | 작성일: 2024-12-06 | 조회수: 123</a>
+        </div>
+        <div class="content">
+            <div th:utext="${article.getContent()}">
+                여기에 게시글 내용을 입력하세요. 게시판은 사용자 간의 커뮤니케이션을 위한 중요한 플랫폼입니다.
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="button report" type="button" th:if="${isAdmin}" th:onclick="|location.href='/mail/send?index=${article.getIndex()}'|">
+                답변하기
+            </button>
+
+
+
+
+
+            <div class="button_list">
+                <!--    <a class="page prev"-->
+                <!--       th:if="${pageVo.requestPage > pageVo.movableMinPage}"-->
+                <!--       th:href="@{'/article/read' (page=${pageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}">&lt;</a>-->
+                <a th:href="@{'/inquiries/list'}" target="_self"
+                   class="button_list button back write --obj-button -button_color">목록으로</a>
+                <!--    <a class="page next"-->
+                <!--       th:if="${pageVo.requestPage < pageVo.movableMaxPage}"-->
+                <!--       th:href="@{'/article/read' (page=${pageVo.requestPage + 1}, filter=${filter}, keyword=${keyword})}">&gt;</a>-->
+            </div>
+            <!--            <span class="spring"></span>-->
+            <button name="modify" class="button modify" type="button">수정</button>
+            <button name="delete" class="button delete" type="button">삭제</button>
+        </div>
+<!--        <div class="comments">-->
+<!--            <div class="comment-container">-->
+<!--                <h2 class="title">댓글 (<span id="commentCount">0</span>)</h2>-->
+<!--                <input type="hidden" id="articleIndex" th:value="${article.getIndex()}">-->
+<!--                <ul class="list">-->
+<!--                    <li class="item">-->
+<!--                        <div class="top">-->
+<!--                            <span class="nickname">작성자 자리</span>-->
+<!--                            <span class="spring"></span>-->
+<!--                            <span class="datetime">2024-11-08 11:34</span>-->
+<!--                            <label class="link">-->
+<!--                                <input class="checkbox" name="toggle" type="checkbox">-->
+<!--                            </label>-->
+<!--                        </div>-->
+<!--                        <div class="content">내용자리</div>-->
+<!--                        <div class="action-container">-->
+<!--                            <input checked id="commentNoAction0" name="comment0" type="radio" value="noAction">-->
+<!--                            <label class="action">-->
+<!--                                <input name="comment0" type="radio" value="reply">-->
+<!--                                <span class="text">답글 쓰기</span>-->
+<!--                            </label>-->
+<!--                            <label class="action">-->
+<!--                                <input name="comment0" type="radio" value="modify">-->
+<!--                                <span class="text">수정</span>-->
+<!--                            </label>-->
+<!--                            <button class="action" name="delete" type="button" data-comment-id="12345">삭제</button>-->
+<!--                        </div>-->
+<!--                        <form class="form reply">-->
+<!--                            <label class="label spring">-->
+<!--                                <span class="text">내용</span>-->
+<!--                                <textarea required class="field" maxlength="100" minlength="1"-->
+<!--                                          name="content"></textarea>-->
+<!--                            </label>-->
+<!--                            <div class="button-container">-->
+<!--                                <button class="&#45;&#45;obj-button -blue" type="submit">답글 쓰기</button>-->
+<!--                                <label class="&#45;&#45;obj-button -light" for="commentNoAction0">취소</label>-->
+<!--                            </div>-->
+<!--                        </form>-->
+<!--                        <form class="form modify">-->
+<!--                            <label class="label spring">-->
+<!--                                <span class="text">내용</span>-->
+<!--                                <textarea required class="field" maxlength="100" minlength="1"-->
+<!--                                          name="content"></textarea>-->
+<!--                            </label>-->
+<!--                            <div class="button-container">-->
+<!--                                <button class="&#45;&#45;obj-button -blue" type="submit">댓글 수정</button>-->
+<!--                                <label class="&#45;&#45;obj-button -light" for="commentNoAction0">취소</label>-->
+<!--                            </div>-->
+<!--                        </form>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--            <div class="comment_write">-->
+<!--                <form class="form" id="commentForm" action="/comment/write" method="POST">-->
+<!--                    <label class="label">-->
+<!--                        <span class="text">답변 하기</span>-->
+<!--                        <textarea required minlength="1" maxlength="1000" name="comment" class="content_text"></textarea>-->
+<!--                    </label>-->
+<!--                    <button class="button_write &#45;&#45;obj-button -button_color" type="submit">답글</button>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+</main>
+</body>
+</html>

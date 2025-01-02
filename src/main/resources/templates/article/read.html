@@ -60,6 +60,7 @@
         <div class="button-container">
             <button name="report" class="button report" type="button" onclick="location.href='#'">신고하기</button>
             <div th:if="${email != article.getUserEmail()}" class="button_list_alone">
+
                 <a th:href="@{'/board/list'}" target="_self"
                    class="button_list button back write --obj-button -button_color">목록으로</a>
             </div>

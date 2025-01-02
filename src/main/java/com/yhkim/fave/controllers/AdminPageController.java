@@ -44,7 +44,7 @@ public class AdminPageController {
                                  @RequestParam(value = "inquiriesPage", required = false, defaultValue = "1") int inquiriesPage) {
         Pair<IndexPageVo, UserEntity[]> user = this.adminPageService.selectIndexUser(userPage);
         Pair<IndexPageVo, BoardPostEntity[]> board = this.adminPageService.selectIndexBoard(boardPage);
-        Pair<IndexPageVo, Report[]> reports = this.adminPageService.selectIndexReport(reportPage);
+        Pair<IndexPageVo, ReportEntity[]> reports = this.adminPageService.selectIndexReport(reportPage);
         Pair<IndexPageVo, InquiriesEntity[]> Inquiries = this.adminPageService.selectAllInquiries(inquiriesPage);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("userPage", user.getLeft());
@@ -216,7 +216,7 @@ public class AdminPageController {
     public ModelAndView getReports(@RequestParam(value = "userEmail", required = false) String userEmail,
                                    @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView modelAndView = new ModelAndView();
-        Pair<ReportsPageVo, Report[]> pair = this.adminPageService.selectReports(page);
+        Pair<ReportsPageVo, ReportEntity[]> pair = this.adminPageService.selectReports(page);
         modelAndView.addObject("page", pair.getLeft());
         modelAndView.addObject("reports", pair.getRight());
         modelAndView.setViewName("admin/adminReports");

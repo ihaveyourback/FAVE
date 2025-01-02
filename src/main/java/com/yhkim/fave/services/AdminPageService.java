@@ -6,7 +6,6 @@ import com.yhkim.fave.vos.BoardPostPageVo;
 import com.yhkim.fave.vos.IndexPageVo;
 import com.yhkim.fave.vos.ReportsPageVo;
 import com.yhkim.fave.vos.UserPageVo;
-import jakarta.persistence.Index;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -68,12 +67,12 @@ public class AdminPageService {
         return Pair.of(index, inquiries);
     }
 
-    public Pair<IndexPageVo, Report[]> selectIndexReport(int page) {
+    public Pair<IndexPageVo, ReportEntity[]> selectIndexReport(int page) {
         page = Math.max(page, 1);
         int totalCount = this.reportsMapper.selectReportsCount();
         IndexPageVo index = new IndexPageVo(page, totalCount);
-        Report[] reports = this.reportsMapper.selectReports(index.countPerPage, index.offsetCount);
-        return Pair.of(index, reports);
+        ReportEntity[] reportEntities = this.reportsMapper.selectReports(index.countPerPage, index.offsetCount);
+        return Pair.of(index, reportEntities);
     }
 
     public Boolean write(FaveInfoEntity adminPage, MultipartFile coverFile) {
@@ -242,21 +241,21 @@ public class AdminPageService {
         return this.boardPostsMapper.updateBoardPost(board) > 0;
     }
 
-    public Pair<ReportsPageVo, Report[]> selectReports(int page) {
+    public Pair<ReportsPageVo, ReportEntity[]> selectReports(int page) {
         page = Math.max(page, 1);
 
         int totalCount = this.reportsMapper.selectReportsCount();
         ReportsPageVo reportsPageVo = new ReportsPageVo(page, totalCount);
-        Report[] reports = this.reportsMapper.selectReports(reportsPageVo.countPerPage, reportsPageVo.offsetCount);
-        for (Report report : reports) {
-            UserEntity user = this.findUserByEmail(report.getReportedUserEmail());
-            report.setUser(user);
+        ReportEntity[] reportEntities = this.reportsMapper.selectReports(reportsPageVo.countPerPage, reportsPageVo.offsetCount);
+        for (ReportEntity reportEntity : reportEntities) {
+            UserEntity user = this.findUserByEmail(reportEntity.getReportedUserEmail());
+            reportEntity.setUser(user);
         }
-        return Pair.of(reportsPageVo, reports);
+        return Pair.of(reportsPageVo, reportEntities);
     }
 
     public Boolean updateReport(int index) {
-        Report reports = this.reportsMapper.selectReportByIndex(index);
+        ReportEntity reports = this.reportsMapper.selectReportByIndex(index);
         if (reports == null) {
             return false;
         }

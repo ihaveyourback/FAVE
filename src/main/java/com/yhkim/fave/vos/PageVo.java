@@ -19,4 +19,5 @@ public class PageVo {
         this.displayMaxPage = Math.min(this.displayMinPage + 9, this.movableMaxPage);
         this.offsetCount = (recordsPage - 1) * this.countPerPage;
     }
+
 }

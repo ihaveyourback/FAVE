@@ -165,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-
             // 수정 폼 생성 후 댓글 아래에 삽입
             const $modifyForm = createModifyForm(comment.index, comment.comment, $contentDiv, $actionContainer, $commentItem);
         });
@@ -186,8 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
         $actionContainer.appendChild($modifyButton);
         $actionContainer.appendChild($deleteButton);
         $commentItem.appendChild($actionContainer);
-
-
 
 
         // 답글 작성 폼
@@ -420,7 +417,6 @@ const createCommentItem = (comment) => {
         $commentItem.appendChild($deletedMessage);
         return $commentItem;
     }
-
     const $topDiv = document.createElement('div');
     $topDiv.className = 'top';
 
@@ -483,5 +479,4 @@ const createCommentItem = (comment) => {
 
     return $commentItem;
 };
-
 
