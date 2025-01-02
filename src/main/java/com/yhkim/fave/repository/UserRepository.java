@@ -10,7 +10,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByContact(String contact);
     Optional<UserEntity> findByNickname(String nickname);
     Optional<UserEntity> findByEmail(String email);
-    @Query("SELECT COUNT(u) > 0 FROM UserEntity u WHERE u.isSuspended = true")
+    @Query("SELECT COUNT(u) > 0 FROM UserEntity u WHERE u.suspended = true")
     boolean existsByIsSuspended();
     boolean existsByEmail(String email);
     boolean existsByContact(String contact);

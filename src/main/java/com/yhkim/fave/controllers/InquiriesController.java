@@ -4,7 +4,6 @@ package com.yhkim.fave.controllers;
 import com.yhkim.fave.entities.ImageEntity;
 import com.yhkim.fave.entities.InquiriesArticleEntity;
 import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.reportrepository.UserRepository;
 import com.yhkim.fave.results.article.ArticleResult;
 import com.yhkim.fave.results.article.DeleteArticleResult;
 import com.yhkim.fave.services.InquiriesArticleService;
@@ -31,12 +30,10 @@ import java.time.LocalDateTime;
 public class InquiriesController {
 
     private final InquiriesArticleService inquiriesArticleService;
-    private final UserRepository userRepository;
 
     @Autowired
-    public InquiriesController(InquiriesArticleService inquiriesArticleService, UserRepository userRepository) {
+    public InquiriesController(InquiriesArticleService inquiriesArticleService) {
         this.inquiriesArticleService = inquiriesArticleService;
-        this.userRepository = userRepository;
     }
 
     // 게시글 삭제

@@ -3,10 +3,11 @@ package com.yhkim.fave.controllers;
 //import com.lsm.declaration.detail.CustomUserDetails;
 
 import com.yhkim.fave.entities.ArticleEntity;
+import com.yhkim.fave.entities.BoardCommentEntity;
 import com.yhkim.fave.entities.CommentEntity;
 import com.yhkim.fave.entities.ReportEntity;
-import com.yhkim.fave.reportrepository.BoardCommentRepository;
-import com.yhkim.fave.reportrepository.BoardPostRepository;
+import com.yhkim.fave.repository.BoardCommentRepository;
+import com.yhkim.fave.repository.BoardPostRepository;
 import com.yhkim.fave.results.Result;
 import com.yhkim.fave.services.ArticleService;
 import com.yhkim.fave.services.CommentService;
