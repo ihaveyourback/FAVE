@@ -1,0 +1,489 @@
+@charset "UTF-8";
+
+$primary-color: #c1b5a3;
+$text-color: #ffffff;
+$border-color: #ddd;
+
+#cover {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #212121a0;
+  display: none;
+  position: fixed;
+  z-index: 7;
+
+  &.--visible {
+    display: block;
+  }
+}
+
+#main {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.container {
+  width: 80%;
+  height: 25rem;
+  background: #ffffff;
+  box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+
+  > .post {
+    background-color: lighten($primary-color, 20%);
+    padding: 1.25rem;
+    border-bottom: 0.0625px solid $border-color;
+
+    > .title {
+      font-weight: 500;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    > .meta {
+      font-size: 0.9rem;
+      color: gray;
+    }
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end; // 버튼을 오른쪽 끝에 배치
+    gap: 0.5rem; // 버튼 사이의 간격
+    margin-top: 3rem;
+    margin-right: 0.5rem;
+
+    .report {
+      margin-right: auto;
+      margin-left: 0.8rem;
+    }
+
+    .button_list {
+      margin-right: auto;
+      margin-left: 0.5rem;
+    }
+
+    .button {
+      padding: 0.3rem 0.8rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #ffffff;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.3s ease; // 부드러운 전환 효과
+      text-align: center;
+
+      &.report {
+        background-color: #c1b5a3; // 신고하기 버튼의 색상 설정
+
+        &:hover {
+          background-color: darken(#c1b5a3, 10%);
+        }
+
+        &:active {
+          background-color: darken(#c1b5a3, 15%);
+        }
+      }
+
+
+      &.modify {
+        background-color: #c1b5a3;
+
+        &:hover {
+          background-color: darken(#c1b5a3, 10%);
+        }
+
+        &:active {
+          background-color: darken(#c1b5a3, 15%);
+        }
+      }
+
+      &.delete {
+        background-color: #bdbdbd;
+
+        &:hover {
+          background-color: darken(#bdbdbd, 10%);
+        }
+
+        &:active {
+          background-color: darken(#bdbdbd, 15%);
+        }
+      }
+
+      &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  > .content {
+    min-height: 5rem;
+    padding: 1.25rem;
+    margin-top: 0.9rem;
+    line-height: 1.6rem;
+    font-size: 1rem;
+    border-bottom: 0.0625rem solid $border-color;
+  }
+
+  > .comments {
+    padding: 1.25rem;
+
+    > .comment_title {
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: #000000;
+      margin-bottom: 1rem;
+    }
+
+
+    > .comment {
+      margin-bottom: 0.8rem;
+
+      > .author {
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: #000000;
+      }
+
+      > .text {
+        margin-top: 0.3rem;
+        font-size: 0.9rem;
+        line-height: 1.4rem;
+      }
+    }
+  }
+}
+
+.comment_write {
+  padding: 1.25rem;
+  background-color: #ffffff;
+  border-top: 0.0625rem solid $border-color;
+
+  > .form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    > .label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+
+      > .text {
+        font-weight: 500;
+        font-size: 1rem;
+        color: #000000;
+      }
+
+      textarea {
+        width: 97%;
+        height: 4rem;
+        padding: 0.75rem;
+        font-size: 0.9rem;
+        border: 0.0625rem solid $border-color;
+        border-radius: 0.25rem;
+        outline: none;
+        resize: none;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s, box-shadow 0.3s;
+
+        &:hover {
+          border-color: darken($border-color, 20%);
+        }
+
+        &:focus {
+          border-color: darken($primary-color, 20%);
+        }
+
+        &::placeholder {
+          font-size: 0.9rem;
+          color: lighten(#9c9a9a, 5%);
+        }
+      }
+    }
+
+    > .button_write {
+      width: auto;
+      align-self: flex-end;
+      margin-right: 0.8rem;
+    }
+  }
+
+  //.button_list {
+  //  display: flex;
+  //  align-items: center; /* 수직으로 중앙 정렬 */
+  //  justify-content: center; /* 수평으로 중앙 정렬 */
+  //  gap: 1rem;
+  //  width: 100%;
+  //  margin: 0 auto;
+  //
+  //}
+}
+
+#deleteDialog {
+  top: 50%;
+  left: 50%;
+  background-color: #ffffff;
+  border-radius: 0.5rem; // 둥근 모서리
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2); // 그림자 추가
+  display: none;
+  padding: 2rem; // 내부 여백 증가
+  position: fixed;
+  transform: translate(-50%, -50%);
+  z-index: 8;
+  align-items: stretch;
+  flex-direction: column;
+  gap: 1.5rem; // 요소 사이 여백 확대
+  justify-content: center;
+
+  &.--visible {
+    display: flex;
+  }
+
+  .message {
+    text-align: center; // 중앙 정렬
+    font-size: 1.25rem; // 글자 크기 확대
+    font-weight: 600; // 굵게 강조
+    color: #333333; // 진한 회색
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 0.0625rem solid #e0e0e0; // 구분선 추가
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center; // 버튼 중앙 배치
+    gap: 1rem; // 버튼 간 간격
+
+    .--obj-button {
+      font-size: 1rem; // 버튼 글자 크기 확대
+      padding: 0.5rem 1.5rem; // 버튼 내부 여백 증가
+      border-radius: 0.25rem; // 버튼 모서리 둥글게
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.-button_color {
+        background-color: #c1b5a3; // 기본 색상
+        color: #ffffff;
+
+        &:hover {
+          background-color: darken(#c1b5a3, 10%);
+        }
+
+        &:active {
+          background-color: darken(#c1b5a3, 15%);
+        }
+      }
+
+      &[name="cancel"] {
+        background-color: #bdbdbd; // 취소 버튼 색상 (회색)
+        color: #ffffff;
+
+        &:hover {
+          background-color: darken(#bdbdbd, 10%);
+        }
+
+        &:active {
+          background-color: darken(#bdbdbd, 15%);
+        }
+      }
+    }
+  }
+}
+
+.comment-container {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: flex-start;
+
+  .form {
+    align-items: stretch;
+    display: flex;
+    flex-direction: row;
+    gap: 0.375rem;
+    justify-content: flex-start;
+
+    .label {
+      $border_color: #e0e0e0;
+      $color: #a0a0a0;
+      align-items: stretch;
+      display: flex;
+      flex-direction: column;
+      gap: 0.175rem;
+      justify-content: flex-start;
+
+      &:hover {
+        > .text {
+          color: darken($color, 10%);
+        }
+
+        > .field {
+          border-color: darken($border_color, 10%);
+        }
+      }
+
+      &:focus-within {
+        > .text {
+          color: #387aeb;
+        }
+
+        > .field {
+          border-color: #387aeb;
+        }
+      }
+
+      > .text {
+        color: $color;
+        font-size: 0.7rem;
+      }
+
+      > .field {
+        background-color: #ffffff;
+        border: 0.0625rem solid $border_color;
+        border-radius: 0.25rem;
+        padding: 0.425rem 0.5rem;
+
+        &[name="content"] {
+          flex-grow: 1;
+          resize: none;
+        }
+      }
+    }
+
+    > .writer-wrapper {
+      align-items: stretch;
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+      justify-content: flex-start;
+    }
+
+    > .spring {
+      flex-grow: 1;
+    }
+
+    > .--obj-button {
+      margin-top: 1rem;
+    }
+  }
+
+  > .title {
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+}
+
+.comment-container > .title {
+  padding-bottom: 1.15rem;
+  border-bottom: 0.0625rem solid $border-color;
+}
+
+.comment-container > .list {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: flex-start;
+
+  > .item {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    justify-content: flex-start;
+
+    > .top {
+      border-radius: 0.25rem;
+      color: #000000;
+      font-size: 0.9rem;
+      padding: 0.1rem 0.1rem;
+
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      gap: 0.375rem;
+      justify-content: flex-start;
+
+      > .spring {
+        flex-grow: 1;
+      }
+
+      > .datetime {
+        color: #000000;
+      }
+    }
+
+    .checkbox {
+      display: none;
+    }
+
+    > .content {
+      background-color: #ffffff;
+      border-radius: 0.25rem;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    > .action-container {
+      color: #757575;
+
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      gap: 0.25rem;
+      justify-content: flex-start;
+
+      input {
+        display: none;
+      }
+
+      .action {
+        border-bottom: 0.15rem solid transparent;
+        cursor: pointer;
+        padding-bottom: 0.15rem;
+
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        &:has([type="radio"]:checked) {
+          border-bottom: 0.15rem solid #387aeb;
+          color: #387aeb;
+          font-weight: 500;
+        }
+
+        &:hover {
+          border-bottom: 0.15rem solid #bdbdbd;
+        }
+      }
+    }
+
+    > .action-container:has([type="radio"][value="reply"]:checked) ~ .form.reply,
+    > .action-container:has([type="radio"][value="modify"]:checked) ~ .form.modify {
+      display: flex;
+    }
+
+    > .form {
+      display: none;
+
+      > .button-container {
+        display: grid;
+        gap: 0.375rem;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        margin-top: 1rem;
+      }
+    }
+  }
+}

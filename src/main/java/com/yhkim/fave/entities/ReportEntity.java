@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Report  {
+public class ReportEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,8 @@ public class Report  {
     @Column(name = "status", length = 255)
     private String status;  // 신고 상태
 
-    @Column(name = "current_status", length = 255)
-    private String currentStatus;  // 현재 상태
+    @Column(name = "current_status")
+    private String currentStatus = ReportStatus.PROCESSING.getDescription(); // 기본값 설정
 
     @Column(name = "reason", length = 50)
     private String reason;  // 신고 이유
@@ -54,4 +54,19 @@ public class Report  {
     @JoinColumn(name = "reported_user_email", referencedColumnName = "email", insertable = false, updatable = false)
     private UserEntity reportedUser;
 
+}
+
+enum ReportStatus {
+    PROCESSING("신고 처리 중"),
+    COMPLETED("신고 처리 완료");
+
+    private final String description;
+
+    ReportStatus(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }
