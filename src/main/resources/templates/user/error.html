@@ -8,13 +8,26 @@
     <title>Document</title>
     <script>
         const url = new URL(location.href);
-        if (url.searchParams.get('error') === 'oauth2IdNotFound') {
-            alert('이 이메일은 이미 사용 중이다');
-            if (history.length > 1) {
-                history.back();
-            } else {
-                window.close();
-            }
+        const error = url.searchParams.get('error');
+        // 'error' 값이 'oauth2IdNotFound'인 경우
+        if (error === 'oauth2IdNotFound') {
+            // 경고창을 띄움
+            alert('사용중인 이메일 입니다. 해당 이메일로 비밀번호 찾기를 진행햐아 다시 로그인하여 주십시오.');
+            // 'error' 값이 oauth2_deleted 인 경우
+        } else if (error === 'oauth2_deleted') {
+            // 경고창을 띄움
+            alert('탈퇴된 계정입니다. 자세한 사항은 관리자 문의사항에 남겨주세요.');
+        }
+        else {
+            alert("인증 실패. 다시 시도해 주세요.")
+        }
+        // 브라우저 히스토리가 1개 이상인 경우
+        if (history.length > 1) {
+            // 이전 페이지로 돌아감
+            history.back();
+        } else {
+            // 현재 창을 닫음
+            window.close();
         }
     </script>
 </head>

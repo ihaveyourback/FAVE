@@ -143,18 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     $menu.querySelector(':scope > .item > [rel="register"]').onclick = (e) => {
         e.preventDefault();
         $cover.onclick = () => { //커버(바깥쪽) 누르면 빠져나와야 하니까
@@ -368,3 +356,11 @@ $recoverForm.onsubmit = (e) => {
     }
 };
 
+window.onload = () => {
+    const $content = $main.querySelector(':scope > .content');
+    const $logo = $content.querySelector(':scope > .logo');
+    const $loginForm = $content.querySelector(':scope > .login-form');
+    setTimeout(() => $logo.show(), 100);
+    setTimeout(() => $loginForm.show(), 75);
+    $cover.show();
+};
