@@ -2,6 +2,8 @@ package com.yhkim.fave.services;
 
 import com.yhkim.fave.entities.Report;
 import com.yhkim.fave.repository.ReportRepository;
+import com.yhkim.fave.vos.PageVo;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
@@ -24,14 +26,17 @@ public class ReportService {
         return authentication.getName();  // 인증된 사용자의 이메일을 반환
     }
 
-    // 로그인한 사용자의 이메일을 기준으로 신고 내역을 가져오는 메서드
-    public List<Report> getReportsByLoggedInUser() {
+
+    // 로그인한 사용자의 이메일을 기준으로 신고 내역을 가져오는 메서드 (페이징 처리)
+    public Pair<PageVo, List<Report>> getReportsByLoggedInUser(int page, int size) {
         String loggedInUserEmail = getLoggedInUserEmail();
-        Optional<List<Report>> report = reportRepository.findReportsByUserEmailOrderByReportedAtDesc(loggedInUserEmail);
-        if(report.isPresent()) {
-            return report.get();
-        }
-        return null;
+        List<Report> allReports = reportRepository.findReportsByUserEmailOrderByReportedAtDesc(loggedInUserEmail).orElse(List.of());
+        int totalCount = allReports.size();
+        PageVo pageVo = new PageVo(page, totalCount);
+        List<Report> reports = allReports.stream()
+                .skip(pageVo.offsetCount)
+                .limit(pageVo.countPerPage)
+                .toList();
+        return Pair.of(pageVo, reports);
     }
 }
-
