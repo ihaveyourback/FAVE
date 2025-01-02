@@ -19,4 +19,5 @@ public class ArticleEntity {
     private LocalDateTime updateAt;
     private LocalDateTime deletedAt;
     private int view;
+    private int likesCount;
 }
