@@ -58,24 +58,24 @@
     </div>
     <div class="move" th:if="${articles != null && articles.length > 0}">
         <a class="page first"
-           th:if="${pageVoCy.requestPage > pageVoCy.movableMinPage}"
-           th:href="@{'/board/list' (page=${pageVoCy.movableMinPage}, filter=${filter}, keyword=${keyword})}">&lt;&lt;</a>
+           th:if="${pageVo.requestPage > pageVo.movableMinPage}"
+           th:href="@{'/board/list' (page=${pageVo.movableMinPage}, filter=${filter}, keyword=${keyword})}">&lt;&lt;</a>
         <a class="page prev"
-           th:if="${pageVoCy.requestPage > pageVoCy.movableMinPage}"
-           th:href="@{'/board/list' (page=${pageVoCy.requestPage - 1}, filter=${filter}, keyword=${keyword})}">&lt;</a>
+           th:if="${pageVo.requestPage > pageVo.movableMinPage}"
+           th:href="@{'/board/list' (page=${pageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}">&lt;</a>
         <div class="page-container">
             <a class="page"
-               th:each="page : ${#numbers.sequence(pageVoCy.displayMinPage, pageVoCy.displayMaxPage)}"
+               th:each="page : ${#numbers.sequence(pageVo.displayMinPage, pageVo.displayMaxPage)}"
                th:text="${page}"
                th:href="@{'/board/list' (page=${page}, filter=${filter}, keyword=${keyword})}"
-               th:classappend="${page == pageVoCy.requestPage} ? 'selected'"></a>
+               th:classappend="${page == pageVo.requestPage} ? 'selected'"></a>
         </div>
         <a class="page next"
-           th:if="${pageVoCy.requestPage < pageVoCy.movableMaxPage}"
-           th:href="@{'/board/list' (page=${pageVoCy.requestPage + 1}, filter=${filter}, keyword=${keyword})}">&gt;</a>
+           th:if="${pageVo.requestPage < pageVo.movableMaxPage}"
+           th:href="@{'/board/list' (page=${pageVo.requestPage + 1}, filter=${filter}, keyword=${keyword})}">&gt;</a>
         <a class="page last"
-           th:if="${pageVoCy.requestPage < pageVoCy.movableMaxPage}"
-           th:href="@{'/board/list' (page=${pageVoCy.movableMaxPage}, filter=${filter}, keyword=${keyword})}">&gt;&gt;</a>
+           th:if="${pageVo.requestPage < pageVo.movableMaxPage}"
+           th:href="@{'/board/list' (page=${pageVo.movableMaxPage}, filter=${filter}, keyword=${keyword})}">&gt;&gt;</a>
     </div>
 </main>
 </body>
