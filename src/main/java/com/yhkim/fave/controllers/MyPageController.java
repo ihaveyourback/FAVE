@@ -90,21 +90,24 @@ public class MyPageController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
     }
 
-    // 사용자 정보를 업데이트하는 메서드
     @PostMapping("/update-profile")
     public ResponseEntity<?> updateUserInfo(
-            @AuthenticationPrincipal UserDetails userDetails,// 사용자 정보
-            @RequestBody Map<String, String> payload,// 요청 본문
+            @AuthenticationPrincipal UserDetails userDetails, // 사용자 정보
+            @RequestBody Map<String, String> payload, // 요청 본문
             HttpServletRequest request) { // 사용자 정보 업데이트
-        if (!(userDetails instanceof UserEntity user)) {// 사용자 정보가 없으면
+
+        if (!(userDetails instanceof UserEntity user)) { // 사용자 정보가 없으면
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
                     "message", "사용자 정보가 없습니다. 소셜 로그인은 사용불가능합니다."
             ));
         }
 
-        String newNickname = payload.get("nickname");// 새 닉네임
+        String newNickname = payload.get("nickname"); // 새 닉네임
         String currentPassword = payload.get("currentPassword"); // 현재 비밀번호
-        String newPassword = payload.get("newPassword");// 새 비밀번호
+        String newPassword = payload.get("newPassword"); // 새 비밀번호
+//        System.out.println("닉네임:"+ newNickname);
+//        System.out.println("지금비밀번호:"+ currentPassword);
+//        System.out.println("새비밀번호:"+ newPassword);
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
@@ -121,9 +124,9 @@ public class MyPageController {
         }
 
         // 세션 무효화 및 인증 정보 지우기
-        request.getSession().invalidate();// 세션 무효화
+        request.getSession().invalidate(); // 세션 무효화
         SecurityContextHolder.clearContext(); // 인증 정보 지우기
-
+        System.out.println("응답 메시지: " + Map.of("message", "사용자 정보가 성공적으로 업데이트되었습니다."));
         return ResponseEntity.ok(Map.of("message", "사용자 정보가 성공적으로 업데이트되었습니다. 로그아웃 후 변경된 비밀번호로 다시 로그인 해주세요."));
     }
 }

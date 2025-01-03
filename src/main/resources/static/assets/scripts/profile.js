@@ -63,15 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 사용자 정보 업데이트 폼 제출 이벤트 리스너 추가
     updateForm.addEventListener("submit", (e) => {
         e.preventDefault();
+
         const formData = {
             nickname: document.getElementById('nickname').value,
             currentPassword: document.getElementById('currentPassword').value,
             newPassword: document.getElementById('newPassword').value
         };
-
         fetch('/user/update-profile', {
             method: 'POST',
             headers: {
@@ -79,17 +78,39 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             body: JSON.stringify(formData)
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    // 응답이 정상적이지 않으면, 텍스트 응답으로 서버 오류 확인
+                    return response.text().then(text => {
+                        console.error("서버 오류 응답:", text);  // 서버에서 반환된 텍스트 오류 페이지 확인
+                        throw new Error("서버 오류 응답");
+                    });
+                }
+                return response.json(); // 정상 응답은 JSON으로 처리
+            })
             .then(data => {
-                alert(data.message);
-                if (response.ok) {
-                    window.location.href = "/logout";
+                if (data && data.message) {
+                    alert(data.message);  // 서버 응답 메시지 알림
+                    if (data.message.includes("성공적으로 업데이트")) {
+                        window.location.href = "/logout";  // 업데이트 성공 시 로그아웃 처리
+                    }
+                } else {
+                    alert("예상치 못한 응답이 왔습니다.");
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                // 여기서 발생하는 오류를 좀 더 구체적으로 처리
+                console.error('Error:', error);  // 실제 오류를 확인하기 위해 로깅
+                if (error.message === "서버 오류 응답") {
+                    alert("서버에서 오류가 발생하였습니다. 관리자에게 문의해주세요.");
+                } else {
+                    alert("회원 정보 업데이트 중 오류가 발생하였습니다.");
+                }
             });
+
     });
+
+
 
     // 페이지네이션 링크 클릭 이벤트 리스너 추가
     const paginationLinks = document.querySelectorAll(".pagination a");

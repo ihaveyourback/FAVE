@@ -6,17 +6,17 @@
     <insert id="insertUser" parameterType="com.yhkim.fave.entities.UserEntity" useGeneratedKeys="true" keyProperty="email">
         INSERT INTO `fave`.`users` (`email`, `password`, `nickname`, `contact`, `create_at`, `update_at`,
                                     `deleted_at`, `is_admin`, `is_suspended`, `is_verified`, `warning`, `oauth2_provider`, `oauth2_id`)
-        VALUES (#{email}, #{password}, #{nickname}, #{contact}, #{createAt}, #{updateAt},
-                #{deletedAt}, #{isAdmin}, #{isSuspended}, #{isVerified}, #{warning}, #{oauth2Provider}, #{oauth2Id})
+        VALUES (#{email}, #{password}, #{nickname}, #{contact}, #{createdAt}, #{updatedAt},
+                #{deletedAt}, #{admin}, #{suspended}, #{verified}, #{warning}, #{oauth2Provider}, #{oauth2Id})
     </insert>
     <select id="selectUserByEmail" resultMap="userResultMap">
         SELECT `email`, `password`, `nickname`, `contact`,
                `create_at` AS `createdAt`,
                `update_at` AS `updatedAt`,
                `deleted_at` AS `deletedAt`,
-               `is_admin` AS `isAdmin`,
-               `is_suspended` AS `isSuspended`,
-               `is_verified` AS `isVerified`,
+               `is_admin` AS `admin`,
+               `is_suspended` AS `suspended`,
+               `is_verified` AS `verified`,
                `warning` AS `warning`,
                `oauth2_provider` AS `oauth2Provider`,
                `oauth2_id` AS `oauth2Id`
@@ -48,9 +48,9 @@
                `create_at`    AS `createAt`,
                `update_at`    AS `updateAt`,
                `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `isAdmin`,
-               `is_suspended` AS `isSuspended`,
-               `is_verified`  AS `isVerified`,
+               `is_admin`     AS `admin`,
+               `is_suspended` AS `suspended`,
+               `is_verified`  AS `verified`,
                `warning`      AS `warning`,
                `oauth2_provider` AS `oauth2Provider`,
                `oauth2_id` AS `oauth2Id`
@@ -66,9 +66,9 @@
                `create_at`    AS `createAt`,
                `update_at`    AS `updateAt`,
                `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `isAdmin`,
-               `is_suspended` AS `isSuspended`,
-               `is_verified`  AS `isVerified`,
+               `is_admin`     AS `admin`,
+               `is_suspended` AS `suspended`,
+               `is_verified`  AS `verified`,
                `warning`      AS `warning`,
                `oauth2_provider` AS `oauth2Provider`,
                `oauth2_id` AS `oauth2Id`
@@ -85,9 +85,9 @@
             <if test="createAt != null">`create_at` = #{createAt},</if>
             <if test="updateAt != null">`update_at` = #{updateAt},</if>
             <if test="deletedAt != null">`deleted_at` = #{deletedAt},</if>
-            <if test="isAdmin != null">`is_admin` = #{isAdmin},</if>
-            <if test="isSuspended != null">`is_suspended` = #{isSuspended},</if>
-            <if test="isVerified != null">`is_verified` = #{isVerified},</if>
+            <if test="admin != null">`is_admin` = #{admin},</if>
+            <if test="suspended != null">`is_suspended` = #{suspended},</if>
+            <if test="verified != null">`is_verified` = #{verified},</if>
             <if test="warning != null">`warning` = #{warning},</if>
             <if test="oauth2Provider != null">`oauth2_provider` = #{oauth2Provider},</if>
             <if test="oauth2Id != null">`oauth2_id` = #{oauth2Id},</if>
@@ -106,9 +106,9 @@
                `create_at`    AS `createdAt`,
                `update_at`    AS `updatedAt`,
                `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `isAdmin`,
-               `is_suspended` AS `isSuspended`,
-               `is_verified`  AS `isVerified`,
+               `is_admin`     AS `admin`,
+               `is_suspended` AS `suspended`,
+               `is_verified`  AS `verified`,
                `warning`      AS `warning`
         FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
@@ -125,9 +125,9 @@
                `create_at`    AS `createdAt`,
                `update_at`    AS `updatedAt`,
                `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `isAdmin`,
-               `is_suspended` AS `isSuspended`,
-               `is_verified`  AS `isVerified`,
+               `is_admin`     AS `admin`,
+               `is_suspended` AS `suspended`,
+               `is_verified`  AS `verified`,
                `warning`      AS `warning`
         FROM `fave`.`users`
         WHERE `email` = #{userEmail}
@@ -188,9 +188,9 @@
         `create_at`    AS `createdAt`,
         `update_at`    AS `updatedAt`,
         `deleted_at`   AS `deletedAt`,
-        `is_admin`     AS `isAdmin`,
-        `is_suspended` AS `isSuspended`,
-        `is_verified`  AS `isVerified`,
+        `is_admin`     AS `admin`,
+        `is_suspended` AS `suspended`,
+        `is_verified`  AS `verified`,
         `warning`      AS `warning`
         FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
