@@ -113,7 +113,7 @@
                 </tr>
                 <tr th:each="post : ${posts}">
                     <td th:text="${post.title}">제목</td>
-                    <td th:utext="${#strings.abbreviate(post.content, 10)}">내용</td>                    <td th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:utext="${#strings.abbreviate(post.content, 10)}">내용</td>                    <td th:text="${#temporals.format(post.getCreatedAt(), 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${post.view}">조회수</td>
                 </tr>
                 </tbody>
@@ -153,7 +153,7 @@
                 <tr th:if="${#lists.isEmpty(reportEntities)}">
                     <td colspan="4">신고 내역이 없습니다.</td>
                 </tr>
-                <tr th:each="reportEntity : ${reportEntities}">
+                <tr th:each="reportEntity : ${reports}">
                     <td th:text="${reportEntity.reportedUserEmail}">상대 이메일</td>
                     <td th:text="${reportEntity.reason}">사유</td>
                     <td th:text="${reportEntity.reportedAt}">일자</td>

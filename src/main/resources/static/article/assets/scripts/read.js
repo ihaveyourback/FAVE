@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const articleIndex = document.getElementById('articleIndex').value;
     const loggedInUserEmail = document.body.dataset.loggedInEmail;
 
-    console.log(loggedInUserEmail)
     // 댓글 불러오기
     const loadComments = () => {
         const xhr = new XMLHttpRequest();
