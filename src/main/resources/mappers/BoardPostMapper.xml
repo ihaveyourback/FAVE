@@ -165,6 +165,7 @@
         WHERE `board_id` = #{postId}
           AND `user_email` = #{userEmail}
     </select>
+
     <select id="getLikeCount" resultType="java.lang.Integer">
         SELECT `like_count`
         FROM `fave`.`board_posts`
