@@ -91,27 +91,33 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     });
 
-    // 페이지네이션 링크 클릭 이벤트 리스너 추가
-    const paginationLinks = document.querySelectorAll(".pagination a");
-    paginationLinks.forEach(link => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            const url = link.getAttribute("href");
-            fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    document.querySelector("#posts").innerHTML = doc.querySelector("#posts").innerHTML;
-                    document.querySelector(".pagination").innerHTML = doc.querySelector(".pagination").innerHTML;
-                    history.pushState(null, '', url); // URL 업데이트
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+// 페이지네이션 링크 클릭 이벤트 리스너 추가
+    const addPaginationEventListeners = () => {
+        const paginationLinks = document.querySelectorAll(".pagination a");
+        paginationLinks.forEach(link => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                const url = link.getAttribute("href");
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        document.querySelector("#posts").innerHTML = doc.querySelector("#posts").innerHTML;
+                        document.querySelector("#reports").innerHTML = doc.querySelector("#reports").innerHTML;
+                        document.querySelector("#favorites").innerHTML = doc.querySelector("#favorites").innerHTML;
+                        addPaginationEventListeners(); // 새로운 페이지네이션 링크에 이벤트 리스너 추가
+                        history.pushState(null, '', url); // URL 업데이트
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
         });
-    });
+    };
 
+    // 초기 페이지네이션 이벤트 리스너 추가
+    addPaginationEventListeners();
 
     // 마지막으로 선택된 섹션 로드
     loadLastSelectedSection();
