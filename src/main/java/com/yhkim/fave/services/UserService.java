@@ -388,10 +388,8 @@ public class UserService {
     }
 
 
-    public List<FaveInfoEntity> getFavoritePostsByUserEmail(String email) {
-        System.out.println(email);
-        return userMapper.selectFavoritePostsByUserEmail(email); // 사용자 이메일로 즐겨찾기 게시물 조회
-    }
+
+
     public Pair<PageVo, List<FaveInfoEntity>> getFavoritePostsByUserEmailWithPagination(String email, int page, int size) {
         int totalCount = userMapper.selectFavoritePostsByUserEmail(email).size();
         PageVo pageVo = new PageVo(page, totalCount);
