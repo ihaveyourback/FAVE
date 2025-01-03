@@ -16,58 +16,11 @@
     <script defer type="text/javascript" src="/assets/scripts/profile.js"></script>
 </head>
 <body>
-<header class="header">
-    <ul class="menu">
-        <!-- 로고 -->
-        <li class="item">
-            <a th:href="@{'/'}">
-                <img alt="Fave" src="/assets/images/header-logo.png" class="logo">
-            </a>
-        </li>
-        <!-- 검색 폼 -->
-        <li class="stretch">
-            <form class="form">
-                <label class="keyword-label">
-                    <input autocomplete="off"
-                           class="input"
-                           name="keyword"
-                           placeholder="새로운 잇슈 검색!"
-                           spellcheck="false"
-                           type="search"/>
-                </label>
-                <button class="submit-button" type="submit">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="0.9">
-                            <path d="M15.8999 14.5L19.0862 17.7187" stroke="currentColor" stroke-width="1.8"
-                                  stroke-linecap="round" stroke-linejoin="round"></path>
-                            <circle cx="11.4302" cy="10.4819" r="5.35" stroke="currentColor"
-                                    stroke-width="1.8"></circle>
-                        </g>
-                    </svg>
-                </button>
-            </form>
-        </li>
-        <!-- 사용자 닉네임 표시 -->
-        <li class="name" sec:authorize="isAuthenticated()" th:text="|안녕하세요, ${#authentication.principal.nickname} 님!|"></li>
-        <!-- 로그아웃 버튼 -->
-        <li id="logoutBtnWrapper" sec:authorize="isAuthenticated()"> <!-- 로그인한 사용자 -->
-            <a id="logoutBtn" class="--obj-button -color-primary" th:href="@{/logout}">로그아웃</a>
-        </li>
-    </ul>
-</header>
+<div th:insert="~{home/index.main.html :: header}"></div>
 <div class="cover" id="cover"></div>
 <main>
-    <b><br><br><br><br></b>
+    <br> <br> <br> <br> <br> <br> <br>
 </main>
-
-<nav class="main-nav">
-    <ul class="ul">
-        <li><a href="#">지역별</a></li>
-        <li><a href="#">2024 전국 축제</a></li>
-        <li><a href="#">자유 게시판</a></li>
-        <li><a href="#">지도</a></li>
-    </ul>
-</nav>
 
 <main class="main-content">
     <aside class="sidebar">
@@ -79,7 +32,7 @@
                 <button class="sidebar__button" data-target="posts">내 게시글</button>
             </li>
             <li class="sidebar__item">
-                <button class="sidebar__button" data-target="reportEntities">신고 내역</button>
+                <button class="sidebar__button" data-target="reports">신고 내역</button>
             </li>
             <li class="sidebar__item">
                 <button class="sidebar__button" data-target="edit-info">내 정보 수정</button>
@@ -91,9 +44,29 @@
     </aside>
 
     <section class="content">
-        <div id="favorites" class="content__section" style="display: none;">
+        <div id="favorites" class="content__section">
             <h2>찜 목록</h2>
-            <p>여기에 사용자가 찜한 게시글이 표시됩니다.</p>
+            <table class="favorites-table">
+                <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>위치</th>
+                    <th>축제 일정</th>
+                    <th>조회수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(favoritePosts)}">
+                    <td colspan="4">찜한 게시글이 없습니다.</td>
+                </tr>
+                <tr th:each="post : ${favoritePosts}">
+                    <td><a th:href="@{'/fave/read/?index=' + ${post.index}}" th:text="${post.title}">제목</a></td>
+                    <td th:text="${post.location}">위치</td>
+                    <td th:text="${#temporals.format(post.startDate, 'yyyy-MM-dd')} + ' ~ ' + ${#temporals.format(post.endDate, 'yyyy-MM-dd')}">축제 일정</td>
+                    <td th:text="${post.view}">조회수</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
         <div id="posts" class="content__section">
@@ -113,34 +86,36 @@
                 </tr>
                 <tr th:each="post : ${posts}">
                     <td th:text="${post.title}">제목</td>
-                    <td th:utext="${#strings.abbreviate(post.content, 10)}">내용</td>                    <td th:text="${#temporals.format(post.getCreatedAt(), 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:utext="${#strings.abbreviate(post.content, 10)}">내용</td>
+                    <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${post.view}">조회수</td>
                 </tr>
                 </tbody>
             </table>
             <div class="pagination">
                 <!-- 현재 페이지가 1보다 크면 첫 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage > pageVo.movableMinPage}"
+                <a th:if="${postPageVo.recordsPage > postPageVo.movableMinPage}"
                    th:href="@{'/user/profile?page=1'}">&laquo;&laquo;</a>
                 <!-- 현재 페이지가 1보다 크면 이전 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage > pageVo.movableMinPage}"
-                   th:href="@{'/user/profile?page=' + ${pageVo.recordsPage - 1}}">&laquo;</a>
+                <a th:if="${postPageVo.recordsPage > postPageVo.movableMinPage}"
+                   th:href="@{'/user/profile?page=' + ${postPageVo.recordsPage - 1}}">&laquo;</a>
                 <!-- 표시할 페이지 번호들을 순회하며 페이지 번호 버튼을 생성 -->
-                <a th:each="page : ${#numbers.sequence(pageVo.displayMinPage, pageVo.displayMaxPage)}"
+                <a th:each="page : ${#numbers.sequence(postPageVo.displayMinPage, postPageVo.displayMaxPage)}"
                    th:href="@{'/user/profile?page=' + ${page}}"
                    th:text="${page}"
-                   th:classappend="${page == pageVo.recordsPage} ? 'active' : ''"></a>
+                   th:classappend="${page == postPageVo.recordsPage} ? 'active' : ''"></a>
                 <!-- 현재 페이지가 마지막 페이지보다 작으면 다음 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage < pageVo.movableMaxPage}"
-                   th:href="@{'/user/profile?page=' + ${pageVo.recordsPage + 1}}">&raquo;</a>
+                <a th:if="${postPageVo.recordsPage < postPageVo.movableMaxPage}"
+                   th:href="@{'/user/profile?page=' + ${postPageVo.recordsPage + 1}}">&raquo;</a>
                 <!-- 현재 페이지가 마지막 페이지보다 작으면 마지막 페이지로 이동하는 버튼을 표시 -->
-                <a th:if="${pageVo.recordsPage < pageVo.movableMaxPage}"
-                   th:href="@{'/user/profile?page=' + ${pageVo.movableMaxPage}}">&raquo;&raquo;</a>
+                <a th:if="${postPageVo.recordsPage < postPageVo.movableMaxPage}"
+                   th:href="@{'/user/profile?page=' + ${postPageVo.movableMaxPage}}">&raquo;&raquo;</a>
             </div>
         </div>
-        <div id="reportEntities" class="content__section">
+
+        <div id="reports" class="content__section">
             <h2>신고 내역</h2>
-            <table class="reportEntities-table">
+            <table class="reports-table">
                 <thead>
                 <tr>
                     <th>신고 대상</th>
@@ -150,19 +125,37 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${#lists.isEmpty(reportEntities)}">
+                <tr th:if="${#lists.isEmpty(reports)}">
                     <td colspan="4">신고 내역이 없습니다.</td>
                 </tr>
-                <tr th:each="reportEntity : ${reports}">
-                    <td th:text="${reportEntity.reportedUserEmail}">상대 이메일</td>
-                    <td th:text="${reportEntity.reason}">사유</td>
-                    <td th:text="${reportEntity.reportedAt}">일자</td>
-                    <td th:text="${reportEntity.status}">상태</td>
+                <tr th:each="report : ${reports}">
+                    <td th:text="${report.reportedUserEmail}">상대 이메일</td>
+                    <td th:text="${report.reason}">사유</td>
+                    <td th:text="${report.reportedAt}">일자</td>
+                    <td th:text="${report.status}">상태</td>
                 </tr>
                 </tbody>
             </table>
+            <div class="pagination">
+                <!-- 현재 페이지가 1보다 크면 첫 페이지로 이동하는 버튼을 표시 -->
+                <a th:if="${reportPageVo.recordsPage > reportPageVo.movableMinPage}"
+                   th:href="@{'/user/profile?reportPage=1'}">&laquo;&laquo;</a>
+                <!-- 현재 페이지가 1보다 크면 이전 페이지로 이동하는 버튼을 표시 -->
+                <a th:if="${reportPageVo.recordsPage > reportPageVo.movableMinPage}"
+                   th:href="@{'/user/profile?reportPage=' + ${reportPageVo.recordsPage - 1}}">&laquo;</a>
+                <!-- 표시할 페이지 번호들을 순회하며 페이지 번호 버튼을 생성 -->
+                <a th:each="page : ${#numbers.sequence(reportPageVo.displayMinPage, reportPageVo.displayMaxPage)}"
+                   th:href="@{'/user/profile?reportPage=' + ${page}}"
+                   th:text="${page}"
+                   th:classappend="${page == reportPageVo.recordsPage} ? 'active' : ''"></a>
+                <!-- 현재 페이지가 마지막 페이지보다 작으면 다음 페이지로 이동하는 버튼을 표시 -->
+                <a th:if="${reportPageVo.recordsPage < reportPageVo.movableMaxPage}"
+                   th:href="@{'/user/profile?reportPage=' + ${reportPageVo.recordsPage + 1}}">&raquo;</a>
+                <!-- 현재 페이지가 마지막 페이지보다 작으면 마지막 페이지로 이동하는 버튼을 표시 -->
+                <a th:if="${reportPageVo.recordsPage < reportPageVo.movableMaxPage}"
+                   th:href="@{'/user/profile?reportPage=' + ${reportPageVo.movableMaxPage}}">&raquo;&raquo;</a>
+            </div>
         </div>
-
         <div id="edit-info" class="content__section">
             <form id="updateForm" class="edit-form">
                 <label for="nickname">새로운 닉네임:</label>
@@ -174,7 +167,7 @@
                 <label for="newPassword">새 비밀번호:</label>
                 <input type="password" id="newPassword" name="newPassword" required autocomplete="new-password">
 
-                <button class="button button--submit"  type="submit">변경</button>
+                <button class="button button--submit" type="submit">변경</button>
             </form>
         </div>
 
@@ -183,8 +176,7 @@
             <p>계정을 탈퇴하시겠습니까? 탈퇴 시 모든 정보가 삭제되며, 복구할 수 없습니다.</p>
             <form id="deactivateForm" class="deactivate-form">
                 <label class="deactivate-form__label">
-                    <input type="password" class="deactivate-form__input" name="currentPassword" placeholder="현재 비밀번호"
-                           required>
+                    <input type="password" class="deactivate-form__input" name="currentPassword" placeholder="현재 비밀번호">
                 </label>
                 <button type="submit" class="button button--submit">회원탈퇴</button>
             </form>
