@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메일 보내기</title>
+    <link rel="stylesheet" href="/inquiries/assets/styles/email.css">
+</head>
+<body>
+<header class="top-header">
+    <div class="header-logo">
+        <img src="/assets/images/header-logo.png" alt="로고">
+    </div>
+    <br>
+</header>
+<form method="post" action="/mail/send">
+    <h1>메일 보내기</h1>
+    <table>
+        <tr>
+            <td>유저 이메일</td>
+            <td>
+                <input type="text" name="address" placeholder="이메일 주소를 입력하세요" th:value="${article.getUserEmail()}">
+            </td>
+        </tr>
+        <input type="hidden" name="post_id" th:value="${article.getIndex()}">
+        <tr>
+            <td>유저 닉네임</td>
+            <td>
+                <input type="text" name="nickname" placeholder="닉네임을 입력하세요" th:value="${article.getUserNickname()}">
+            </td>
+        </tr>
+        <tr>
+            <td>제목</td>
+            <td>
+                <input type="text" name="title" placeholder="제목 입력해 주세요." th:value="${article.getTitle()}">
+            </td>
+        </tr>
+        <tr>
+            <td>내용</td>
+            <td>
+                <textarea name="content" rows="4" placeholder="보낼 내용을 입력하세요"></textarea>
+            </td>
+        </tr>
+    </table>
+    <button type="submit">발송</button>
+</form>
+</body>
+</html>

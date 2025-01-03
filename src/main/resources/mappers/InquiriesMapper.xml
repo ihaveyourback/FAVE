@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yhkim.fave.mappers.InquiriesMapper">
+<mapper namespace="com.yhkim.fave.mappers.InquiriesArticleMapper">
 
 <!--김범수-->
-    <select id="selectInquiries" resultType="com.yhkim.fave.entities.InquiriesEntity">
+    <select id="selectInquiries" resultType="com.yhkim.fave.entities.InquiriesArticleEntity">
         SELECT `index`         AS `index`,
                `title`         AS `title`,
                `content`       AS `content`,
