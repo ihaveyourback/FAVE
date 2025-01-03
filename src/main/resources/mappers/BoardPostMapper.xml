@@ -131,4 +131,32 @@
         SET `deleted_at` = #{deletedAt}
         WHERE `index` = #{index}
     </update>
+
+<!--    김창윤-->
+
+    <insert id="addLike">
+        INSERT INTO `fave`.`board_likes` (`board_id`, `user_email`)
+        VALUES (#{postId}, #{userEmail})
+    </insert>
+
+    <!-- 좋아요 삭제 -->
+    <delete id="removeLike">
+        DELETE FROM `fave`.`board_likes`
+        WHERE `board_id` = #{postId} AND `user_email` = #{userEmail}
+    </delete>
+
+    <!-- 좋아요 수 증가 -->
+    <update id="incrementLikeCount">
+        UPDATE `fave`.`board_posts`
+        SET like_count = like_count + 1
+        WHERE `index` = #{postId}
+    </update>
+
+    <!-- 좋아요 수 감소 -->
+    <update id="decrementLikeCount">
+        UPDATE `fave`.`board_posts`
+        SET like_count = like_count - 1
+        WHERE `index` = #{postId}
+    </update>
+
 </mapper>

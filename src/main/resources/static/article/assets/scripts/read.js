@@ -72,7 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const $commentCount = document.getElementById('commentCount');
     const $commentForm = document.getElementById('commentForm');
     const articleIndex = document.getElementById('articleIndex').value;
+    const loggedInUserEmail = document.body.dataset.loggedInEmail;
 
+    console.log(loggedInUserEmail)
     // 댓글 불러오기
     const loadComments = () => {
         const xhr = new XMLHttpRequest();
@@ -157,9 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
         $modifyButton.className = 'action';
         $modifyButton.textContent = '수정';
         $modifyButton.addEventListener('click', () => {
-            closeOpenForms();
-            $replyForm.style.display = 'none';
-            // 수정폼 생성 후 답글폼 닫기
+            // 작성자가 아니면 알림을 띄운다
+            if (comment.userEmail !== loggedInUserEmail) {
+                alert('내가 작성한 댓글이 아닙니다.');
+                return;
+            }
 
             // 수정 폼 생성 후 댓글 아래에 삽입
             const $modifyForm = createModifyForm(comment.index, comment.comment, $contentDiv, $actionContainer, $commentItem);
@@ -168,39 +172,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const $deleteButton = document.createElement('button');
         $deleteButton.className = 'action';
         $deleteButton.textContent = '삭제';
-        $deleteButton.addEventListener('click', () => deleteComment(comment.index));
-
-        const $reportButton = document.createElement('button');
-        $reportButton.className = 'action report';
-        $reportButton.name = 'report';
-        $reportButton.type = 'button';
-        $reportButton.textContent = '신고';
-
-// 클릭 시 동작
-        $reportButton.addEventListener('click', () => {
-            if (comment) {
-                // 댓글 신고 URL로 이동, comment.index와 article.index를 사용
-                location.href = `/report/page?index=${comment.postId}&commentIndex=${comment.index}`;
+        $deleteButton.addEventListener('click', () => {
+            // 작성자가 아니면 알림을 띄운다
+            if (comment.userEmail !== loggedInUserEmail) {
+                alert('내가 작성한 댓글이 아닙니다.');
+                return;
             }
-            // } else {
-            //     // 게시글 신고 URL로 이동, article.index만 사용
-            //     location.href = `/report/article?index=${article.index}`;
-            // }
+            deleteComment(comment.index);
         });
-
-
-// 댓글 신고 버튼 클릭 이벤트 추가
-        $reportButton.addEventListener('click', () => {
-            reportComment(comment.index);
-        });
-
 
         $actionContainer.appendChild($replyButton);
         $actionContainer.appendChild($modifyButton);
         $actionContainer.appendChild($deleteButton);
-        $actionContainer.appendChild($reportButton)
         $commentItem.appendChild($actionContainer);
-        $commentList.appendChild($commentItem);
 
 
         // 답글 작성 폼
@@ -433,7 +417,6 @@ const createCommentItem = (comment) => {
         $commentItem.appendChild($deletedMessage);
         return $commentItem;
     }
-
     const $topDiv = document.createElement('div');
     $topDiv.className = 'top';
 
@@ -496,3 +479,4 @@ const createCommentItem = (comment) => {
 
     return $commentItem;
 };
+

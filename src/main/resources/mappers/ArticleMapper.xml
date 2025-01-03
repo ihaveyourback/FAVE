@@ -21,45 +21,13 @@
                `create_at` AS `createdAt`,
                `update_at` AS `updateAt`,
                `deleted_at` AS `deletedAt`,
-               `view` AS `view`
+               `view` AS `view`,
+               `like_count` AS `likesCount`
         FROM `fave`.`board_posts`
         WHERE `index` = #{index}
         LIMIT 1
     </select>
 
-<!--    <select id="selectArticles" resultType="com.cykim.teamproject.entities.ArticleEntity">-->
-<!--        SELECT `index` AS `index`,-->
-<!--               `title` AS `title`,-->
-<!--               `content` AS `content`,-->
-<!--               `user_email` AS `userEmail`,-->
-<!--               `user_nickname` AS `userNickname`,-->
-<!--               `create_at` AS `createdAt`,-->
-<!--               `update_at` AS `updateAt`,-->
-<!--               `deleted_at` AS `deletedAt`,-->
-<!--               `view` AS `view`-->
-<!--        FROM `fave`.`board_posts`-->
-<!--        WHERE `deleted_at` IS NULL-->
-<!--        ORDER BY `index` DESC-->
-<!--    </select>-->
-
-<!--    <select id="selectArticlesByPaging" resultType="com.cykim.teamproject.entities.ArticleEntity">-->
-<!--        SELECT `index` AS `index`,-->
-<!--               `title` AS `title`,-->
-<!--               `content` AS `content`,-->
-<!--               `user_email` AS `userEmail`,-->
-<!--               `user_nickname` AS `userNickname`,-->
-<!--               `create_at` AS `createdAt`,-->
-<!--               `update_at` AS `updateAt`,-->
-<!--               `deleted_at` AS `deletedAt`,-->
-<!--               `view` AS `view`-->
-<!--        FROM `fave`.`board_posts`-->
-<!--        WHERE `deleted_at` IS NULL-->
-<!--        ORDER BY `index` DESC-->
-<!--        LIMIT #{offsetCount}, #{countPerPage}-->
-<!--    </select>-->
-
-<!--    mm-->
-    <!-- selectArticles 쿼리 수정 -->
     <select id="selectArticles" resultType="com.yhkim.fave.entities.ArticleEntity">
         SELECT `index` AS `index`,
                `title` AS `title`,
@@ -70,6 +38,7 @@
                `update_at` AS `updateAt`,
                `deleted_at` AS `deletedAt`,
                `view` AS `view`,
+               `like_count` AS `likesCount`,
                (SELECT COUNT(*) FROM `fave`.`board_comments` WHERE `post_id` = `fave`.`board_posts`.`index` AND `is_deleted` IS NULL) AS `comment_count`
         FROM `fave`.`board_posts`
         WHERE `deleted_at` IS NULL
@@ -87,6 +56,7 @@
                `update_at` AS `updateAt`,
                `deleted_at` AS `deletedAt`,
                `view` AS `view`,
+               `like_count` AS `likesCount`,
                (SELECT COUNT(*) FROM `fave`.`board_comments` WHERE `post_id` = `fave`.`board_posts`.`index` AND `is_deleted` IS NULL) AS `commentCount`
         FROM `fave`.`board_posts`
         WHERE `deleted_at` IS NULL
@@ -94,7 +64,7 @@
         LIMIT #{offsetCount}, #{countPerPage}
     </select>
 
-<!--,-->
+    <!--,-->
     <select id="getTotalArticlesCount" resultType="int">
         SELECT COUNT(0)
         FROM `fave`.`board_posts`
@@ -111,10 +81,11 @@
         `update_at` AS `updateAt`,
         `deleted_at` AS `deletedAt`,
         `view` AS `view`,
+        `like_count` AS `likesCount`,
         (SELECT COUNT(*)
-         FROM `fave`.`board_comments`
-         WHERE `post_id` = `fave`.`board_posts`.`index`
-           AND `is_deleted` IS FALSE) AS `commentCount`
+        FROM `fave`.`board_comments`
+        WHERE `post_id` = `fave`.`board_posts`.`index`
+        AND `is_deleted` IS FALSE) AS `commentCount`
         FROM `fave`.`board_posts`
         WHERE `deleted_at` IS NULL
         <if test="filter != null and filter == 'all' and keyword != null and !keyword.isEmpty()">

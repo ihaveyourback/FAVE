@@ -2,6 +2,7 @@ package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.entities.ArticleEntity;
 import com.yhkim.fave.entities.ImageEntity;
+import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.results.article.ArticleResult;
 import com.yhkim.fave.results.article.DeleteArticleResult;
 import com.yhkim.fave.services.ArticleService;
@@ -10,6 +11,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping(value = "/article")
@@ -31,7 +35,7 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    // 게시글 삭제
+    // 게시글 삭제 처리
     @RequestMapping(value = "/read", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteRead(@RequestParam(value = "index", required = false, defaultValue = "0") int index) {
@@ -73,6 +77,7 @@ public class ArticleController {
         return response.toString(); // JSON 형식으로 응답
     }
 
+    // 이미지 조회 처리
     @RequestMapping(value = "/image", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<byte[]> getImage(@RequestParam(value = "index", required = false, defaultValue = "0") int index) {
@@ -86,7 +91,7 @@ public class ArticleController {
                 .contentType(MediaType.parseMediaType(image.getContentType()))
                 .body(image.getData());
     }
-
+    // 이미지 업로드 처리
     @RequestMapping(value = "/image", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postImage(@RequestParam(value = "upload") MultipartFile file) throws IOException {
@@ -103,13 +108,25 @@ public class ArticleController {
         return response.toString(); // JSON 형식으로 응답
     }
 
+    // 게시글 읽기 요청 처리
     @RequestMapping(value = "/read", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getRead(HttpServletResponse response,
-                                @RequestParam(value = "index", required = false) int index) {
+                                @RequestParam(value = "index", required = false) int index,
+                                @AuthenticationPrincipal UserDetails userDetails){
         ArticleEntity article = articleService.getArticleByIndex(index);
         ModelAndView modelAndView = new ModelAndView();
         if (article != null) {
             articleService.increaseArticleView(article);
+        }
+
+        // 로그인한 사용자 정보를 뷰에 전달
+        if (userDetails instanceof UserEntity user) {
+            modelAndView.addObject("user", user); // user 객체 생성
+            modelAndView.addObject("email", user.getEmail());
+            modelAndView.addObject("now", LocalDateTime.now());
+            modelAndView.addObject("isAdmin", user.isAdmin());
+            modelAndView.addObject("nickname", user.getUsername());
+            modelAndView.addObject("name", user.getNickname());
         }
         modelAndView.setViewName("article/read");
         modelAndView.addObject("article", article);
@@ -117,6 +134,7 @@ public class ArticleController {
         return modelAndView;
     }
 
+    // 게시글 작성 페이지 요청 처리
     @RequestMapping(value = "/write", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getWrite() {
         ModelAndView modelAndView = new ModelAndView();
@@ -124,14 +142,10 @@ public class ArticleController {
         return modelAndView;
     }
 
+    // 게시글 작성 처리
     @RequestMapping(value = "/write", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postWrite(ArticleEntity articleEntity) {
-
-//        System.out.println("Received Title: " + articleEntity.getTitle());
-//        System.out.println("Received Content: " + articleEntity.getContent());
-//        System.out.println("Received UserEmail: " + articleEntity.getUserEmail());
-//        System.out.println("Received UserNickname: " + articleEntity.getUserNickname());
 
         JSONObject response = new JSONObject();
         ArticleResult articleResult = this.articleService.write(articleEntity);
