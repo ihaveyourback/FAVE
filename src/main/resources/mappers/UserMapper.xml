@@ -104,9 +104,7 @@
                `is_admin`     AS `admin`,
                `is_suspended` AS `suspended`,
                `is_verified`  AS `verified`,
-               `warning`      AS `warning`,
-               `oauth2_provider` AS `oauth2Provider`,
-               `oauth2_id` AS `oauth2Id`
+               `warning`      AS `warning`
         FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
           AND `is_suspended` = false
@@ -123,9 +121,7 @@
                `is_admin`     AS `admin`,
                `is_suspended` AS `suspended`,
                `is_verified`  AS `verified`,
-               `warning`      AS `warning`,
-               `oauth2_provider` AS `oauth2Provider`,
-               `oauth2_id` AS `oauth2Id`
+               `warning`      AS `warning`
         FROM `fave`.`users`
         WHERE `email` = #{userEmail}
     </select>
@@ -151,10 +147,8 @@
                `is_admin`     AS `admin`,
                `is_suspended` AS `suspended`,
                `is_verified`  AS `verified`,
-               `warning`      AS `warning`,
-               `oauth2_provider` AS `oauth2Provider`,
-               `oauth2_id` AS `oauth2Id`
-        FROM `fave`.`users`
+               `warning`      AS `warning`
+       FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
           AND `is_suspended` = false
         ORDER BY `create_at` DESC
@@ -187,9 +181,7 @@
         `is_admin`     AS `admin`,
         `is_suspended` AS `suspended`,
         `is_verified`  AS `verified`,
-        `warning`      AS `warning`,
-        `oauth2_provider` AS `oauth2Provider`,
-        `oauth2_id` AS `oauth2Id`
+        `warning`      AS `warning`
         FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
         AND `is_suspended` = false
@@ -210,8 +202,8 @@
     </select>
     <select id="selectFavoritePostsByUserEmail" resultType="com.yhkim.fave.entities.FaveInfoEntity">
         SELECT fi.*, fi.start_date AS startDate, fi.end_date AS endDate
-        FROM favorites f
-                 JOIN festival_info fi ON f.festival_id = fi.`index`
+        FROM `fave`.`favorites` f
+                 JOIN `fave`.`festival_info` fi ON f.festival_id = fi.`index`
         WHERE f.user_email = #{email}
     </select>
     <select id="selectFavoritePostsByUserEmailWithPagination" resultType="com.yhkim.fave.entities.FaveInfoEntity">

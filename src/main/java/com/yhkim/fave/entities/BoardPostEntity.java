@@ -40,6 +40,10 @@ public class BoardPostEntity {
     @Column(name = "view")
     private int view;
 
+    @Column(name = "like_count")
+    private int like;
+
+
     @Transient
     private UserEntity user;
 }

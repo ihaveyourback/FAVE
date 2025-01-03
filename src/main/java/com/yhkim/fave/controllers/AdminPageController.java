@@ -45,6 +45,9 @@ public class AdminPageController {
         Pair<IndexPageVo, UserEntity[]> user = this.adminPageService.selectIndexUser(userPage);
         Pair<IndexPageVo, BoardPostEntity[]> board = this.adminPageService.selectIndexBoard(boardPage);
         Pair<IndexPageVo, ReportEntity[]> reports = this.adminPageService.selectIndexReport(reportPage);
+        System.out.println("유저페이지:"+userPage);
+        System.out.println("보드페이지:"+boardPage);
+        System.out.println("리폿페이지:"+reportPage);
         Pair<IndexPageVo, InquiriesEntity[]> Inquiries = this.adminPageService.selectAllInquiries(inquiriesPage);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("userPage", user.getLeft());
