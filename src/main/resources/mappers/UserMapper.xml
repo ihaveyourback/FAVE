@@ -216,4 +216,13 @@
                  JOIN festival_info fi ON f.festival_id = fi.`index`
         WHERE f.user_email = #{email}
     </select>
+
+    <select id="selectFavoritePostsByUserEmailWithPagination" resultType="com.yhkim.fave.entities.FaveInfoEntity">
+        SELECT fi.*, fi.start_date AS startDate, fi.end_date AS endDate
+        FROM favorites f
+                 JOIN festival_info fi ON f.festival_id = fi.`index`
+        WHERE f.user_email = #{email}
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+
 </mapper>

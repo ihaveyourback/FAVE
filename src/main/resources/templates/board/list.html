@@ -20,8 +20,9 @@
 <!--            <th scope="col">번호</th>-->
             <th class="spring" scope="col">제목</th>
             <th scope="col">작성자</th>
-            <th scope="col">조회수</th>
             <th scope="col">작성일</th>
+            <th scope="col">조회수</th>
+            <th scope="col">좋아요</th>
         </tr>
         </thead>
         <tbody>
@@ -36,7 +37,8 @@
             </td>
             <td th:text="${article.getUserNickname()}">작성자입니다</td>
             <td th:text="${#temporals.format(article.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">작성일입니다.</td>
-            <td th:text="${article.getView()}">조회수입니다</td>
+            <td style="text-align: center" th:text="${article.getView()}">조회수입니다</td>
+            <td style="text-align: center" th:text="${article.getLikesCount()}">좋아요입니다</td>
         </tr>
         </tbody>
     </table>
