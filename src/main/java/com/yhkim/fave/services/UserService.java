@@ -14,9 +14,11 @@ import com.yhkim.fave.results.user.RegisterResult;
 import com.yhkim.fave.results.user.ResolveRecoverPasswordResulit;
 import com.yhkim.fave.results.user.ValidateEmailTokenResult;
 import com.yhkim.fave.utils.CryptoUtils;
+import com.yhkim.fave.vos.PageVo;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -390,4 +392,11 @@ public class UserService {
         System.out.println(email);
         return userMapper.selectFavoritePostsByUserEmail(email); // 사용자 이메일로 즐겨찾기 게시물 조회
     }
+    public Pair<PageVo, List<FaveInfoEntity>> getFavoritePostsByUserEmailWithPagination(String email, int page, int size) {
+        int totalCount = userMapper.selectFavoritePostsByUserEmail(email).size();
+        PageVo pageVo = new PageVo(page, totalCount);
+        List<FaveInfoEntity> favoritePosts = userMapper.selectFavoritePostsByUserEmailWithPagination(email, size, pageVo.offsetCount);
+        return Pair.of(pageVo, favoritePosts);
+    }
+
 }

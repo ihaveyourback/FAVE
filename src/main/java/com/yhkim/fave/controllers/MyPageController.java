@@ -43,7 +43,8 @@ public class MyPageController {
     @GetMapping("/profile")
     public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal,
                                     @RequestParam(defaultValue = "1") int page,
-                                    @RequestParam(defaultValue = "1") int reportPage) { // 페이지 번호 (기본값: 1)
+                                    @RequestParam(defaultValue = "1") int reportPage,
+                                    @RequestParam(defaultValue = "1") int favoritePage) { // 페이지 번호 (기본값: 1)
         // 게시글 페이징 정보 생성
         int totalPostCount = boardPostService.countPostsByUserEmail(principal.getName()); // 사용자의 게시물 수
         PageVo postPageVo = new PageVo(page, totalPostCount); // 게시글 페이지 정보 생성
@@ -54,8 +55,10 @@ public class MyPageController {
         PageVo reportPageVo = reportPair.getLeft();
         List<ReportEntity> reports = reportPair.getRight();
 
-        // 찜 목록 가져오기
-        List<FaveInfoEntity> favoritePosts = userService.getFavoritePostsByUserEmail(principal.getName()); // 사용자의 찜 목록 가져오기
+        // 찜 목록 페이징 정보 생성
+        Pair<PageVo, List<FaveInfoEntity>> favoritePair = userService.getFavoritePostsByUserEmailWithPagination(principal.getName(), favoritePage, 10);
+        PageVo favoritePageVo = favoritePair.getLeft();
+        List<FaveInfoEntity> favoritePosts = favoritePair.getRight();
 
         ModelAndView modelAndView = new ModelAndView(); // 뷰와 모델을 함께 설정 가능
 
@@ -64,15 +67,18 @@ public class MyPageController {
             modelAndView.addObject("nickname", user.getNickname()); // 사용자 닉네임
         }
 
+        modelAndView.addObject("favoritePosts", favoritePosts);
+        modelAndView.addObject("favoritePageVo", favoritePageVo);
         modelAndView.addObject("reports", reports);
-        modelAndView.addObject("reportPageVo", reportPageVo);
         modelAndView.addObject("posts", posts);
-        modelAndView.addObject("favoritePosts", favoritePosts); // 찜 목록 추가
-        modelAndView.addObject("postPageVo", postPageVo);
-        modelAndView.setViewName("user/profile");
+        modelAndView.addObject("reportPageVo", reportPageVo); // 신고 내역 페이지 정보 추가
+        modelAndView.addObject("postPageVo", postPageVo); // 게시글 페이지 정보 추가
+
         modelAndView.addObject("username", principal.getName()); // 사용자 이름
+        modelAndView.setViewName("user/profile");
         return modelAndView;
     }
+
 
     // 회원탈퇴 메서드
     @PostMapping("/secession")

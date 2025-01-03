@@ -67,6 +67,20 @@
                 </tr>
                 </tbody>
             </table>
+            <div class="pagination">
+                <a th:if="${favoritePageVo.recordsPage > favoritePageVo.movableMinPage}"
+                   th:href="@{'/user/profile?favoritePage=1'}">&laquo;&laquo;</a>
+                <a th:if="${favoritePageVo.recordsPage > favoritePageVo.movableMinPage}"
+                   th:href="@{'/user/profile?favoritePage=' + ${favoritePageVo.recordsPage - 1}}">&laquo;</a>
+                <a th:each="page : ${#numbers.sequence(favoritePageVo.displayMinPage, favoritePageVo.displayMaxPage)}"
+                   th:href="@{'/user/profile?favoritePage=' + ${page}}"
+                   th:text="${page}"
+                   th:classappend="${page == favoritePageVo.recordsPage} ? 'active' : ''"></a>
+                <a th:if="${favoritePageVo.recordsPage < favoritePageVo.movableMaxPage}"
+                   th:href="@{'/user/profile?favoritePage=' + ${favoritePageVo.recordsPage + 1}}">&raquo;</a>
+                <a th:if="${favoritePageVo.recordsPage < favoritePageVo.movableMaxPage}"
+                   th:href="@{'/user/profile?favoritePage=' + ${favoritePageVo.movableMaxPage}}">&raquo;&raquo;</a>
+            </div>
         </div>
 
         <div id="posts" class="content__section">
