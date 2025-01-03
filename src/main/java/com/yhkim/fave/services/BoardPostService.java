@@ -21,11 +21,11 @@ public class BoardPostService {
     }
 
     public List<BoardPostEntity> getPostsByUserEmail(String userEmail, PageVo pageVo) {
-        return boardPostMapper.selectPostsByUserEmail(userEmail, pageVo);
+        return boardPostMapper.selectPostsByUserEmail(userEmail, pageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
     }
 
     public int countPostsByUserEmail(String userEmail) {
-        return boardPostMapper.countPostsByUserEmail(userEmail);
+        return boardPostMapper.countPostsByUserEmail(userEmail); // 사용자의 게시물 수
     }
 
 

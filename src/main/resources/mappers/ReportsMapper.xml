@@ -14,13 +14,13 @@
                `reason`              AS `reason`,
                `reason_detail`       AS `reasonDetail`,
                `reported_at`         AS `reportedAt`
-        FROM `fave`.`reportEntities`
+        FROM `fave`.`reports`
         WHERE `current_status` = '신고 처리 중'
         LIMIT #{limitCount} OFFSET #{offsetCount}
     </select>
     <select id="selectReportsCount" resultType="java.lang.Integer">
         SELECT COUNT(0)
-        FROM `fave`.`reportEntities`
+        FROM `fave`.`reports`
     </select>
     <select id="selectReportByIndex" resultType="com.yhkim.fave.entities.ReportEntity">
         SELECT `index`               AS `index`,
@@ -33,12 +33,12 @@
                `reason`              AS `reason`,
                `reason_detail`       AS `reasonDetail`,
                `reported_at`         AS `reportedAt`
-        FROM `fave`.`reportEntities`
+        FROM `fave`.`reports`
         WHERE `index` = #{index}
         LIMIT 1
     </select>
     <update id="updateReport">
-        UPDATE `fave`.`reportEntities`
+        UPDATE `fave`.`reports`
         SET `current_status` = #{currentStatus}
         WHERE `index` = #{index}
     </update>

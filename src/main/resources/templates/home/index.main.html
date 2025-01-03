@@ -25,17 +25,24 @@
 
 </head>
 <body>
-<header class="header"  th:fragment="header">
+<header class="header" th:fragment="header">
     <ul class="menu">
         <!-- 로고 -->
         <li class="item">
             <a th:href="@{/}">
-            <img alt="Fave" src="/assets/images/header-logo.png">
+                <img alt="Fave" src="/assets/images/header-logo.png">
             </a>
         </li>
         <!-- 검색 폼 -->
         <li class="stretch">
             <form class="form" action="/fave/search" method="get">
+                <label class="label">
+                    <select class="field" name="filter">
+                        <option selected value="all" th:selected="${filter != null && filter.equals('all')}">제목 + 내용
+                        </option>
+                        <option value="title" th:selected="${filter != null && filter.equals('title')}">제목</option>
+                    </select>
+                </label>
                 <label class="keyword-label">
                     <input autocomplete="off"
                            class="input"
@@ -44,13 +51,7 @@
                            spellcheck="false"
                            type="text" th:value="${keyword}">
                 </label>
-                <label class="label">
-                    <select class="field" name="filter">
-                        <option selected value="all" th:selected="${filter != null && filter.equals('all')}">제목 + 내용</option>
-                        <option value="title" th:selected="${filter != null && filter.equals('title')}">제목</option>
-                    </select>
-                </label>
-                <button class="submit-button" type="submit"></button>
+                <button class="submit-button" type="submit">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g opacity="0.9">
                             <path d="M15.8999 14.5L19.0862 17.7187" stroke="currentColor" stroke-width="1.8"
@@ -59,6 +60,7 @@
                                     stroke-width="1.8"></circle>
                         </g>
                     </svg>
+                </button>
             </form>
         </li>
         <li id="UserLinkWrapper" sec:authorize="isAuthenticated() and !hasAuthority('ROLE_ADMIN')">
@@ -70,7 +72,8 @@
         <li id="loginBtnWrapper" sec:authorize="!isAuthenticated()"> <!-- 비로그인 사용자 -->
             <button id="loginBtn" class="--obj-button -color-primary" type="button">로그인</button>
         </li>
-        <li class="name" sec:authorize="isAuthenticated()" th:text="|안녕하세요, ${#authentication.principal.nickname} 님!|"></li> <!-- 로그인한 사용자 -->
+        <li class="name" sec:authorize="isAuthenticated()"
+            th:text="|안녕하세요, ${#authentication.principal.nickname} 님!|"></li> <!-- 로그인한 사용자 -->
         <li id="logoutBtnWrapper" sec:authorize="isAuthenticated()"> <!-- 로그인한 사용자 -->
             <a id="logoutBtn" class="--obj-button -color-primary" th:href="@{/logout}">로그아웃</a>
         </li>
@@ -80,7 +83,7 @@
         <ul class="ul">
             <li><a href="/fave/">올해 축제</a></li>
             <li><a href="/board/list">자유 게시판</a></li>
-           <li><a href="/inquiries/list">Q&A</a></li>
+            <li><a href="/inquiries/list">Q&A</a></li>
         </ul>
     </nav>
 </header>
@@ -102,7 +105,7 @@
         <div class="empty" th:if="${fave == null || fave.length == 0}">
             <span>해당 축제는 없습니다.</span>
         </div>
-        <div class="grid" th:each="fave : ${fave}" >
+        <div class="grid" th:each="fave : ${fave}">
             <a th:href="@{'/fave/read/' (index=${fave.getIndex() })}">
                 <img class="img" th:src="@{'/fave/image' (index=${fave.getIndex()})}" alt="">
             </a>

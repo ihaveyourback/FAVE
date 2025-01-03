@@ -59,8 +59,9 @@
 .header .menu .stretch .form {
   display: flex;
   width: 100%;
-  max-width: 30rem;
+  max-width: 33rem;
   color: #ffffff;
+  gap: 0.4rem;
 }
 .header .menu .stretch .form .keyword-label {
   display: flex;
@@ -98,6 +99,17 @@
 }
 .header .menu .stretch .form .keyword-label .submit-button svg:hover {
   fill: #584f47;
+}
+.header .menu .stretch .form > .label {
+  display: flex;
+  align-items: center;
+}
+.header .menu .stretch .form > .label > .field > option {
+  color: #1A1A24;
+}
+.header .menu .stretch .form > .submit-button {
+  display: flex;
+  align-items: center;
 }
 .header .nav {
   width: 100%;

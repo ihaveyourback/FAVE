@@ -15,7 +15,7 @@
 <th:block th:replace="~{admin/common.html :: mainHeader}"></th:block>
 <th:block th:replace="~{admin/common.html :: mainNav}"></th:block>
 <main id="main">
-    <div class="content" rel="reportEntities">
+    <div class="content" rel="reports">
         <table class="table">
             <thead class="thead">
             <tr class="header-tr">
@@ -31,22 +31,22 @@
             </tr>
             </thead>
             <tbody class="tbody">
-            <tr class="null" th:if="${reportEntities == null || reportEntities.length == 0}">
+            <tr class="null" th:if="${reports == null || reports.length == 0}">
                 <td colspan="11">신고 내역이 없습니다.</td>
             </tr>
-            <tr th:each="reportEntities : ${reportEntities}" th:if="${reportEntities != null}" class="tbody-tr">
-                <td th:text="${reportEntities.getIndex()}"></td>
-                <td th:text="${reportEntities.getUserEmail()}"></td>
-                <td th:text="${reportEntities.getReportedUserEmail}"></td>
-                <td th:text="${reportEntities.getReason()}"></td>
-                <td th:text="${reportEntities.getReasonDetail()}"></td>
-                <td th:text="${reportEntities.getStatus()}">/td>
-                <td th:text="${reportEntities.getCurrentStatus()}"></td>
-                <td th:text="${#temporals.format(reportEntities.getReportedAt(), 'yyyy-MM-dd')}">2024-01-01</td>
+            <tr th:each="reports : ${reports}" th:if="${reports != null}" class="tbody-tr">
+                <td th:text="${reports.getIndex()}"></td>
+                <td th:text="${reports.getUserEmail()}"></td>
+                <td th:text="${reports.getReportedUserEmail}"></td>
+                <td th:text="${reports.getReason()}"></td>
+                <td th:text="${reports.getReasonDetail()}"></td>
+                <td th:text="${reports.getStatus()}">/td>
+                <td th:text="${reports.getCurrentStatus()}"></td>
+                <td th:text="${#temporals.format(reports.getReportedAt(), 'yyyy-MM-dd')}">2024-01-01</td>
                 <td>
-                    <input type="hidden" name="getReportUserEmail" th:value="${reportEntities.getReportedUserEmail}">
-                    <input type="hidden" name="warning" th:value="${reportEntities.getUser().getWarning()}">
-                    <input type="hidden" name="index" th:value="${reportEntities.getIndex()}">
+                    <input type="hidden" name="getReportUserEmail" th:value="${reports.getReportedUserEmail}">
+                    <input type="hidden" name="warning" th:value="${reports.getUser().getWarning()}">
+                    <input type="hidden" name="index" th:value="${reports.getIndex()}">
                     <button class="user-button warning-button">경고</button>
                     <button class="user-button deleted-button">정지</button>
                 </td>
@@ -55,7 +55,7 @@
                 <td colspan="11">
                     <a th:each="page : ${#numbers.sequence(page.displayMinPage, page.displayMaxPage)}"
                        th:text="${page}"
-                       th:href="@{'/admin/reportEntities/' (page=${page})}"></a>
+                       th:href="@{'/admin/reports/' (page=${page})}"></a>
                 </td>
             </tr>
             </tbody>
