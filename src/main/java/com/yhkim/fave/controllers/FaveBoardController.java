@@ -25,14 +25,15 @@ import java.util.Optional;
 public class FaveBoardController {
 
     private final FaveService faveService;
-    private final FavoriteRepository favoriteRepository;
     private final FavoriteService favoriteService;
+    private final FavoriteRepository favoriteRepository;
 
     @Autowired
-    public FaveBoardController(FaveService faveService, FavoriteRepository favoriteRepository, FavoriteService favoriteService) {
+    public FaveBoardController(FaveService faveService, FavoriteService favoriteService, FavoriteRepository favoriteRepository) {
         this.faveService = faveService;
-        this.favoriteRepository = favoriteRepository;
         this.favoriteService = favoriteService;
+        this.favoriteRepository = favoriteRepository;
+
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -55,7 +56,6 @@ public class FaveBoardController {
         // 찜 상태 확인
         Optional<FavoritesEntity> existingLike = favoriteRepository.findByUserEmailAndFestivalId(userEmail, index);
         boolean isLiked = existingLike.isPresent(); // 찜한 상태 여부
-        System.out.println("isLiked 상태: " + existingLike.isPresent()); // 디버깅용 로그
 
         // 찜 상태를 모델에 추가
         ModelAndView modelAndView = new ModelAndView();
@@ -82,18 +82,24 @@ public class FaveBoardController {
 
 
 
-    @RequestMapping(value = "/read/" ,method = RequestMethod.POST)
+    @RequestMapping(value = "/read/", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> handleLike(@RequestBody FavoritesDto favoritesDto) {
+    public ResponseEntity<Map<String, String>> handleLike(@RequestBody FavoritesDto favoritesDto) {
         favoriteService.saveSpotLike(favoritesDto);
-        return ResponseEntity.ok("찜 상태가 변경되었습니다.");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "찜 상태가 변경되었습니다.");
+        return ResponseEntity.ok(response);
     }
+
     // 찜 취소하기 처리 (DELETE)
     @DeleteMapping("/read/")
-    public ResponseEntity<String> cancelSpotLike(@RequestBody FavoritesDto favoritesDto) {
+    public ResponseEntity<Map<String, String>> cancelSpotLike(@RequestBody FavoritesDto favoritesDto) {
         favoriteService.removeSpotLike(favoritesDto);
-        return ResponseEntity.ok("찜이 취소되었습니다.");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "찜이 취소되었습니다.");
+        return ResponseEntity.ok(response);
     }
+
 
     @RequestMapping(value = "image", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getImage(@RequestParam(value = "index", required = false, defaultValue = "0") int index) {
@@ -118,17 +124,17 @@ public class FaveBoardController {
         response.put("address", fave.getLocation());
         return ResponseEntity.ok(response.toString());
     }
-
-
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public ModelAndView searchBoard(@RequestParam(value = "keyword", required = false) String keyword,
-                                    @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                    @RequestParam(value = "filter", required = false, defaultValue = "all") String filter) {
-        ModelAndView modelAndView = new ModelAndView();
-        Pair<FaveBoardVo, FaveInfoEntity[]> pair = this.faveService.searchFaveInfo(page, filter, keyword);
-        modelAndView.addObject("page", pair.getLeft());
-        modelAndView.addObject("fave", pair.getRight());
-        modelAndView.setViewName("board/faveBoard");
-        return modelAndView;
-    }
 }
+//
+//    @RequestMapping(value = "/search", method = RequestMethod.GET)
+//    public ModelAndView searchBoard(@RequestParam(value = "keyword", required = false) String keyword,
+//                                    @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+//                                    @RequestParam(value = "filter", required = false, defaultValue = "all") String filter) {
+//        ModelAndView modelAndView = new ModelAndView();
+//        Pair<FaveBoardVo, FaveInfoEntity[]> pair = this.faveService.searchFaveInfo(page, filter, keyword);
+//        modelAndView.addObject("page", pair.getLeft());
+//        modelAndView.addObject("fave", pair.getRight());
+//        modelAndView.setViewName("board/faveBoard");
+//        return modelAndView;
+//    }
+

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 #main {
   align-items: center;
   display: flex;
@@ -20,6 +21,26 @@
   display: flex;
   flex-direction: column;
 }
+#main > .container > .post .meta-like-container {
+  display: flex;
+  flex-direction: column; /* 텍스트는 세로로 정렬 */
+  align-items: flex-start; /* 텍스트 왼쪽 정렬 */
+  position: relative; /* 아이콘을 오른쪽 아래로 배치하기 위해 부모 요소에 relative 추가 */
+  gap: 5px; /* 텍스트 간 간격 */
+  margin-top: 1rem;
+}
+#main > .container > .post .meta-like-container .meta {
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+}
+#main > .container > .post .likeButton {
+  position: absolute; /* 아이콘을 절대 위치로 설정 */
+  right: 0; /* 오른쪽으로 정렬 */
+  bottom: 0; /* 아래쪽으로 정렬 */
+  display: inline-flex; /* 버튼처럼 이미지만 차지 */
+  align-items: center; /* 이미지 세로 정렬 */
+  justify-content: center; /* 이미지 가로 정렬 */
+  cursor: pointer;
+}
 #main > .container > .post > .title {
   font-weight: 500;
   font-size: 1.5rem;
@@ -32,7 +53,6 @@
 #main > .container > .content {
   min-height: 5rem;
   padding: 1.25rem;
-  margin-top: 0.9rem;
   line-height: 1.6rem;
   font-size: 1rem;
   border-bottom: 0.0625rem solid #ddd;
