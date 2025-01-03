@@ -58,18 +58,8 @@
             </div>
         </div>
         <div class="button-container">
-            <button
-                    name="report"
-                    data-pageIndex="${pageIndex}"
-                    class="button report"
-                    type="button"
-                    th:onclick="|location.href='/report/page?index=${article.getIndex()}'|">
-                신고하기
-            </button>
-            <div class="button_list">
-                <!--    <a class="page prev"-->
-                <!--       th:if="${pageVo.requestPage > pageVo.movableMinPage}"-->
-                <!--       th:href="@{'/article/read' (page=${pageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}">&lt;</a>-->
+            <button name="report" class="button report" type="button" th:onclick="|location.href='/report/page?index=${article.getIndex()}'|">신고하기</button>
+            <div th:if="${email != article.getUserEmail()}" class="button_list_alone">
                 <a th:href="@{'/board/list'}" target="_self"
                    class="button_list button back write --obj-button -button_color">목록으로</a>
             </div>

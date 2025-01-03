@@ -57,7 +57,7 @@ public class MyPageController {
             modelAndView.addObject("nickname", user.getNickname()); // 사용자 닉네임
         }
 
-        modelAndView.addObject("reports", reportEntities);
+        modelAndView.addObject("reports", reportEntities.getRight());
         modelAndView.addObject("posts", posts);
         modelAndView.addObject("pageVo", pageVo);
         modelAndView.setViewName("user/profile");
