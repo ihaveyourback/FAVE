@@ -6,17 +6,17 @@
     <insert id="insertUser" parameterType="com.yhkim.fave.entities.UserEntity" useGeneratedKeys="true" keyProperty="email">
         INSERT INTO `fave`.`users` (`email`, `password`, `nickname`, `contact`, `create_at`, `update_at`,
                                     `deleted_at`, `is_admin`, `is_suspended`, `is_verified`, `warning`, `oauth2_provider`, `oauth2_id`)
-        VALUES (#{email}, #{password}, #{nickname}, #{contact}, #{createAt}, #{updateAt},
-                #{deletedAt}, #{isAdmin}, #{isSuspended}, #{isVerified}, #{warning}, #{oauth2Provider}, #{oauth2Id})
+        VALUES (#{email}, #{password}, #{nickname}, #{contact}, #{createdAt}, #{updatedAt},
+                #{deletedAt}, #{admin}, #{suspended}, #{verified}, #{warning}, #{oauth2Provider}, #{oauth2Id})
     </insert>
     <select id="selectUserByEmail" resultMap="userResultMap">
         SELECT `email`, `password`, `nickname`, `contact`,
                `create_at` AS `createdAt`,
                `update_at` AS `updatedAt`,
                `deleted_at` AS `deletedAt`,
-               `is_admin` AS `isAdmin`,
-               `is_suspended` AS `isSuspended`,
-               `is_verified` AS `isVerified`,
+               `is_admin` AS `admin`,
+               `is_suspended` AS `suspended`,
+               `is_verified` AS `verified`,
                `warning` AS `warning`,
                `oauth2_provider` AS `oauth2Provider`,
                `oauth2_id` AS `oauth2Id`
@@ -39,117 +39,10 @@
         <result property="oauth2Provider" column="oauth2_provider"/>
         <result property="oauth2Id" column="oauth2_id"/>
     </resultMap>
-
     <select id="selectUserByContact" resultMap="userResultMap">
         SELECT `email`        AS `email`,
                `password`     AS `password`,
                `nickname`     AS `nickname`,
-               `contact`      AS `contact`,
-               `create_at`    AS `createAt`,
-               `update_at`    AS `updateAt`,
-               `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `isAdmin`,
-               `is_suspended` AS `isSuspended`,
-               `is_verified`  AS `isVerified`,
-               `warning`      AS `warning`,
-               `oauth2_provider` AS `oauth2Provider`,
-               `oauth2_id` AS `oauth2Id`
-        FROM `fave`.`users`
-        WHERE `contact` = #{contact}
-        LIMIT 1
-    </select>
-    <select id="selectUserByNickname" resultType="com.yhkim.fave.entities.UserEntity">
-        SELECT `email`        AS `email`,
-               `password`     AS `password`,
-               `nickname`     AS `nickname`,
-               `contact`      AS `contact`,
-               `create_at`    AS `createAt`,
-               `update_at`    AS `updateAt`,
-               `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `isAdmin`,
-               `is_suspended` AS `isSuspended`,
-               `is_verified`  AS `isVerified`,
-               `warning`      AS `warning`,
-               `oauth2_provider` AS `oauth2Provider`,
-               `oauth2_id` AS `oauth2Id`
-        FROM `fave`.`users`
-        WHERE `nickname` = #{nickname}
-        LIMIT 1
-    </select>
-
-    <update id="updateUser" parameterType="com.yhkim.fave.entities.UserEntity">
-        UPDATE `fave`.`users`
-        <set>
-            <if test="password != null">`password` = #{password},</if>
-            <if test="nickname != null">`nickname` = #{nickname},</if>
-            <if test="createAt != null">`create_at` = #{createAt},</if>
-            <if test="updateAt != null">`update_at` = #{updateAt},</if>
-            <if test="deletedAt != null">`deleted_at` = #{deletedAt},</if>
-            <if test="isAdmin != null">`is_admin` = #{isAdmin},</if>
-            <if test="isSuspended != null">`is_suspended` = #{isSuspended},</if>
-            <if test="isVerified != null">`is_verified` = #{isVerified},</if>
-            <if test="warning != null">`warning` = #{warning},</if>
-            <if test="oauth2Provider != null">`oauth2_provider` = #{oauth2Provider},</if>
-            <if test="oauth2Id != null">`oauth2_id` = #{oauth2Id},</if>
-        </set>
-        WHERE `email` = #{email}
-        LIMIT 1
-    </update>
-
-    <!--  user 테이블에 있는 데이터 불러오기 -->
-    <select id="selectAllUser" parameterType="com.yhkim.fave.entities.UserEntity"
-            resultType="com.yhkim.fave.entities.UserEntity">
-        SELECT `email`        AS `email`,
-               `password`     AS `password`,
-               `nickname`     AS `nickName`,
-               `contact`      AS `contact`,
-               `create_at`    AS `createdAt`,
-               `update_at`    AS `updatedAt`,
-               `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `isAdmin`,
-               `is_suspended` AS `isSuspended`,
-               `is_verified`  AS `isVerified`,
-               `warning`      AS `warning`
-        FROM `fave`.`users`
-        WHERE `deleted_at` IS NULL
-          AND `is_suspended` = false
-        ORDER BY `create_at` DESC
-    </select>
-    <!-- userEmail 이 동일한 데이터 불러오기 -->
-    <!-- 경고 횟수 , 탈퇴 처리 업데이트 랑 연결-->
-    <select id="selectUserByEmailAdmin" resultType="com.yhkim.fave.entities.UserEntity">
-        SELECT `email`        AS `email`,
-               `password`     AS `password`,
-               `nickname`     AS `nickName`,
-               `contact`      AS `contact`,
-               `create_at`    AS `createdAt`,
-               `update_at`    AS `updatedAt`,
-               `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `isAdmin`,
-               `is_suspended` AS `isSuspended`,
-               `is_verified`  AS `isVerified`,
-               `warning`      AS `warning`
-        FROM `fave`.`users`
-        WHERE `email` = #{userEmail}
-    </select>
-    <!--  경고 횟수 업데이트 , 이메일 탈퇴 처리  -->
-    <update id="updateWarning" parameterType="com.yhkim.fave.entities.UserEntity">
-        UPDATE `fave`.`users`
-        SET `deleted_at` = #{deletedAt},
-            `is_suspended` = #{suspended},
-            `warning`    = #{warning}
-        WHERE `email` = #{email}
-    </update>
-    <!--  user 테이블 의 정보 개수  -->
-    <select id="selectUserCount" resultType="java.lang.Integer">
-        SELECT COUNT(0)
-        FROM `fave`.`users`
-    </select>
-    <!--    회원 관리 페이지 페이징  -->
-    <select id="selectUserPage">
-        SELECT `email`        AS `email`,
-               `password`     AS `password`,
-               `nickname`     AS `nickName`,
                `contact`      AS `contact`,
                `create_at`    AS `createdAt`,
                `update_at`    AS `updatedAt`,
@@ -157,7 +50,110 @@
                `is_admin`     AS `admin`,
                `is_suspended` AS `suspended`,
                `is_verified`  AS `verified`,
-               `warning`      AS `warning`
+               `warning`      AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id` AS `oauth2Id`
+        FROM `fave`.`users`
+        WHERE `contact` = #{contact}
+        LIMIT 1
+    </select>
+    <select id="selectUserByNickname" resultMap="userResultMap">
+        SELECT `email`        AS `email`,
+               `password`     AS `password`,
+               `nickname`     AS `nickname`,
+               `contact`      AS `contact`,
+               `create_at`    AS `createdAt`,
+               `update_at`    AS `updatedAt`,
+               `deleted_at`   AS `deletedAt`,
+               `is_admin`     AS `admin`,
+               `is_suspended` AS `suspended`,
+               `is_verified`  AS `verified`,
+               `warning`      AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id` AS `oauth2Id`
+        FROM `fave`.`users`
+        WHERE `nickname` = #{nickname}
+        LIMIT 1
+    </select>
+    <update id="updateUser" parameterType="com.yhkim.fave.entities.UserEntity">
+        UPDATE `fave`.`users`
+        <set>
+            <if test="password != null">`password` = #{password},</if>
+            <if test="nickname != null">`nickname` = #{nickname},</if>
+            <if test="createdAt != null">`create_at` = #{createdAt},</if>
+            <if test="updatedAt != null">`update_at` = #{updatedAt},</if>
+            <if test="deletedAt != null">`deleted_at` = #{deletedAt},</if>
+            <if test="admin != null">`is_admin` = #{admin},</if>
+            <if test="suspended != null">`is_suspended` = #{suspended},</if>
+            <if test="verified != null">`is_verified` = #{verified},</if>
+            <if test="warning != null">`warning` = #{warning},</if>
+            <if test="oauth2Provider != null">`oauth2_provider` = #{oauth2Provider},</if>
+            <if test="oauth2Id != null">`oauth2_id` = #{oauth2Id},</if>
+        </set>
+        WHERE `email` = #{email}
+    </update>
+    <select id="selectAllUser" parameterType="com.yhkim.fave.entities.UserEntity"
+            resultType="com.yhkim.fave.entities.UserEntity">
+        SELECT `email`        AS `email`,
+               `password`     AS `password`,
+               `nickname`     AS `nickname`,
+               `contact`      AS `contact`,
+               `create_at`    AS `createdAt`,
+               `update_at`    AS `updatedAt`,
+               `deleted_at`   AS `deletedAt`,
+               `is_admin`     AS `admin`,
+               `is_suspended` AS `suspended`,
+               `is_verified`  AS `verified`,
+               `warning`      AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id` AS `oauth2Id`
+        FROM `fave`.`users`
+        WHERE `deleted_at` IS NULL
+          AND `is_suspended` = false
+        ORDER BY `create_at` DESC
+    </select>
+    <select id="selectUserByEmailAdmin" resultType="com.yhkim.fave.entities.UserEntity">
+        SELECT `email`        AS `email`,
+               `password`     AS `password`,
+               `nickname`     AS `nickname`,
+               `contact`      AS `contact`,
+               `create_at`    AS `createdAt`,
+               `update_at`    AS `updatedAt`,
+               `deleted_at`   AS `deletedAt`,
+               `is_admin`     AS `admin`,
+               `is_suspended` AS `suspended`,
+               `is_verified`  AS `verified`,
+               `warning`      AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id` AS `oauth2Id`
+        FROM `fave`.`users`
+        WHERE `email` = #{userEmail}
+    </select>
+    <update id="updateWarning" parameterType="com.yhkim.fave.entities.UserEntity">
+        UPDATE `fave`.`users`
+        SET `deleted_at` = #{deletedAt},
+            `is_suspended` = #{suspended},
+            `warning`    = #{warning}
+        WHERE `email` = #{email}
+    </update>
+    <select id="selectUserCount" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `fave`.`users`
+    </select>
+    <select id="selectUserPage">
+        SELECT `email`        AS `email`,
+               `password`     AS `password`,
+               `nickname`     AS `nickname`,
+               `contact`      AS `contact`,
+               `create_at`    AS `createdAt`,
+               `update_at`    AS `updatedAt`,
+               `deleted_at`   AS `deletedAt`,
+               `is_admin`     AS `admin`,
+               `is_suspended` AS `suspended`,
+               `is_verified`  AS `verified`,
+               `warning`      AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id` AS `oauth2Id`
         FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
           AND `is_suspended` = false
@@ -183,15 +179,17 @@
     <select id="selectUserBySearch" resultType="com.yhkim.fave.entities.UserEntity" parameterType="com.yhkim.fave.entities.UserEntity">
         SELECT `email`        AS `email`,
         `password`     AS `password`,
-        `nickname`     AS `nickName`,
+        `nickname`     AS `nickname`,
         `contact`      AS `contact`,
         `create_at`    AS `createdAt`,
         `update_at`    AS `updatedAt`,
         `deleted_at`   AS `deletedAt`,
-        `is_admin`     AS `isAdmin`,
-        `is_suspended` AS `isSuspended`,
-        `is_verified`  AS `isVerified`,
-        `warning`      AS `warning`
+        `is_admin`     AS `admin`,
+        `is_suspended` AS `suspended`,
+        `is_verified`  AS `verified`,
+        `warning`      AS `warning`,
+        `oauth2_provider` AS `oauth2Provider`,
+        `oauth2_id` AS `oauth2Id`
         FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
         AND `is_suspended` = false
@@ -216,7 +214,6 @@
                  JOIN festival_info fi ON f.festival_id = fi.`index`
         WHERE f.user_email = #{email}
     </select>
-
     <select id="selectFavoritePostsByUserEmailWithPagination" resultType="com.yhkim.fave.entities.FaveInfoEntity">
         SELECT fi.*, fi.start_date AS startDate, fi.end_date AS endDate
         FROM favorites f
@@ -224,5 +221,4 @@
         WHERE f.user_email = #{email}
         LIMIT #{limitCount} OFFSET #{offsetCount}
     </select>
-
 </mapper>

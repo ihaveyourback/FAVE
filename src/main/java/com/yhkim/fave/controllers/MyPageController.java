@@ -82,26 +82,18 @@ public class MyPageController {
 
     // 회원탈퇴 메서드
     @PostMapping("/secession")
-    public ResponseEntity<?> secession(@AuthenticationPrincipal Object principal, @RequestBody Map<String, String> payload) {
-        if (principal == null) {
+    public ResponseEntity<?> secession(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Map<String, String> payload) {
+        if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
         }
 
-        PrincipalDetails principalDetails;
-        if (principal instanceof PrincipalDetails) {
-            principalDetails = (PrincipalDetails) principal;
-        } else if (principal instanceof CustomOAuth2User) {
-            CustomOAuth2User oauthUser = (CustomOAuth2User) principal;
-            UserEntity user = new UserEntity();
-            user.setEmail(oauthUser.getEmail());
-            user.setNickname(oauthUser.getNickname());
-            user.setOauth2Provider(oauthUser.getProvider());
-            principalDetails = new PrincipalDetails(user, oauthUser.getAttributes());
+        UserEntity user;
+        if (userDetails instanceof UserEntity) {
+            user = (UserEntity) userDetails;
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
         }
 
-        UserEntity user = principalDetails.getUser();
         if (!user.isSocialLogin()) {
             String currentPassword = payload.get("currentPassword");
             if (!passwordEncoder.matches(currentPassword, user.getPassword())) {

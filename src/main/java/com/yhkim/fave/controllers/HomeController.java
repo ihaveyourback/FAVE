@@ -46,7 +46,6 @@ public class HomeController {
         modelAndView.addObject("page", pair.getLeft());
         modelAndView.addObject("fave", pair.getRight());
 
-
         System.out.println(session.getAttribute("errorMessage"));
 
         modelAndView.setViewName("home/index.main");
@@ -60,6 +59,7 @@ public class HomeController {
     @ResponseBody // JSON 반환
     public Map<String, String> login(@AuthenticationPrincipal UserDetails userDetails) {
         Map<String, String> response = new HashMap<>();
+
         if (userDetails != null) {
             response.put("result", "success");
         } else {

@@ -32,6 +32,7 @@ public class SecurityConfig {
     @Lazy
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
+    @Lazy
     @Autowired
     private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     @Lazy
@@ -57,13 +58,13 @@ public class SecurityConfig {
                                 .requestMatchers("/assets/**").permitAll()
                                 .requestMatchers("/board/**").permitAll()
                                 .requestMatchers("/fave/**").permitAll()
-                                .requestMatchers("/profile/**").authenticated()
-                                .requestMatchers("/user/secession").authenticated()
-                                .requestMatchers("/user/**").permitAll()
-                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/api/**").permitAll()
-                                .requestMatchers("/api/login").permitAll()
-                                .requestMatchers("/inquiries/**").permitAll()
+                                .requestMatchers("/profile/**").authenticated() // 프로필 페이지 접근 허용
+                                .requestMatchers("/user/secession").authenticated() // 회원 탈퇴 페이지 접근 허용
+                                .requestMatchers("/user/**").permitAll() // 사용자 페이지 접근 허용
+                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // 관리자 페이지 접근 허용
+                                .requestMatchers("/api/**").permitAll() // API 접근 허용
+                                .requestMatchers("/api/login").permitAll() // 로그인 API 접근 허용
+                                .requestMatchers("/inquiries/**").permitAll() // 문의하기 페이지 접근 허용
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
