@@ -290,8 +290,9 @@ public class UserService {
         }
 
         // 이메일 인증 링크 생성 (validationLink를 생성 후 사용)
-        String emailValidationLink = String.format("http://localhost:8080/user/validate-email-token?email=%s&key=%s",
-                emailToken.getUserEmail(), emailToken.getKey());
+        String emailValidationLink = String.format("http://localhost:8080/user/validate-email-token?userEmail=%s&key=%s",
+                emailToken.getUserEmail(),
+                emailToken.getKey());
 
         // Thymeleaf 템플릿을 사용하여 이메일 내용 생성
         Context context = new Context();
@@ -358,7 +359,6 @@ public class UserService {
     }
 
 
-
     @Transactional
     public boolean updateNickname(String email, String newNickname) {   // 닉네임 업데이트 메서드
         // 새로운 닉네임이 이미 사용 중인지 확인
@@ -390,8 +390,6 @@ public class UserService {
     }
 
 
-
-
     public Pair<PageVo, List<FaveInfoEntity>> getFavoritePostsByUserEmailWithPagination(String email, int page, int size) {
         // 사용자가 찜한 게시물 목록을 페이징 처리하여 가져오는 메서드
         int totalCount = userMapper.selectFavoritePostsByUserEmail(email).size();
@@ -399,7 +397,7 @@ public class UserService {
         PageVo pageVo = new PageVo(page, totalCount);
         // 사용자 이메일로 찜한 게시물 목록을 페이징 처리하여 가져오기
         List<FaveInfoEntity> favoritePosts = userMapper.selectFavoritePostsByUserEmailWithPagination(email, size, pageVo.offsetCount);
-            // 페이지 정보와 게시물 목록을 Pair 객체로 묶어 반환
+        // 페이지 정보와 게시물 목록을 Pair 객체로 묶어 반환
         return Pair.of(pageVo, favoritePosts);
     }
 

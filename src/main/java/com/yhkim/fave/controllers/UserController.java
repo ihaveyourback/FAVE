@@ -176,9 +176,7 @@ public class UserController {
         // 디버그 로그
         System.out.println("Received userEmail: " + userEmail);
         System.out.println("Received key: " + key);
-
         Result result = userService.validateEmailToken(userEmail, key);
-
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("result", result.nameToLower()); // 결과를 템플릿에 바인딩
         modelAndView.setViewName("user/validateEmailToken");
