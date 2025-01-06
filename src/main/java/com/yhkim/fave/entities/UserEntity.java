@@ -47,8 +47,6 @@ public class UserEntity implements UserDetails, OAuth2User {
     @Column(name = "is_admin")
     private boolean admin;
 
-    // suspended 속성에 대한 getter 메서드 추가
-    @Getter
     @Column(name = "is_suspended", nullable = false)
     private boolean suspended = false;
 
@@ -137,4 +135,7 @@ public class UserEntity implements UserDetails, OAuth2User {
         return email;
     } // 이름을 가져오는 메서드
 
+    public boolean isSuspended() {
+        return suspended;
+    } // suspended 속성에 대한 getter 메서드 추가
 }

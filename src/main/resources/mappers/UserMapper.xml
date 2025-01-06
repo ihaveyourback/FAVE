@@ -106,7 +106,9 @@
                `is_admin`     AS `admin`,
                `is_suspended` AS `suspended`,
                `is_verified`  AS `verified`,
-               `warning`      AS `warning`
+               `warning`      AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id` AS `oauth2Id`
         FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
           AND `is_suspended` = false
@@ -123,7 +125,9 @@
                `is_admin`     AS `admin`,
                `is_suspended` AS `suspended`,
                `is_verified`  AS `verified`,
-               `warning`      AS `warning`
+               `warning`      AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id` AS `oauth2Id`
         FROM `fave`.`users`
         WHERE `email` = #{userEmail}
     </select>
@@ -149,8 +153,10 @@
                `is_admin`     AS `admin`,
                `is_suspended` AS `suspended`,
                `is_verified`  AS `verified`,
-               `warning`      AS `warning`
-       FROM `fave`.`users`
+               `warning`      AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id` AS `oauth2Id`
+        FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
           AND `is_suspended` = false
         ORDER BY `create_at` DESC
@@ -183,7 +189,9 @@
         `is_admin`     AS `admin`,
         `is_suspended` AS `suspended`,
         `is_verified`  AS `verified`,
-        `warning`      AS `warning`
+        `warning`      AS `warning`,
+        `oauth2_provider` AS `oauth2Provider`,
+        `oauth2_id` AS `oauth2Id`
         FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
         AND `is_suspended` = false

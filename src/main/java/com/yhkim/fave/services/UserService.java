@@ -371,8 +371,8 @@ public class UserService {
         user.setNickname(newNickname);
         // 업데이트 시간 설정
         user.setUpdatedAt(LocalDateTime.now());
-        user.setVerified(true);
         // 사용자 정보 업데이트 후 성공 여부 반환
+        user.setVerified(true); // verified 필드를 true로 설정
         return userMapper.updateUser(user) > 0;
     }
 
@@ -384,7 +384,8 @@ public class UserService {
         user.setPassword(encoder.encode(newPassword));
         // 업데이트 시간 설정
         user.setUpdatedAt(LocalDateTime.now());
-        user.setVerified(true);
+        // 사용자 정보 업데이트
+        user.setVerified(true); // verified 필드를 true로 설정
         userMapper.updateUser(user);
     }
 
@@ -392,9 +393,13 @@ public class UserService {
 
 
     public Pair<PageVo, List<FaveInfoEntity>> getFavoritePostsByUserEmailWithPagination(String email, int page, int size) {
+        // 사용자가 찜한 게시물 목록을 페이징 처리하여 가져오는 메서드
         int totalCount = userMapper.selectFavoritePostsByUserEmail(email).size();
+        // 전체 게시물 수와 페이지 정보를 이용하여 페이지 정보 생성
         PageVo pageVo = new PageVo(page, totalCount);
+        // 사용자 이메일로 찜한 게시물 목록을 페이징 처리하여 가져오기
         List<FaveInfoEntity> favoritePosts = userMapper.selectFavoritePostsByUserEmailWithPagination(email, size, pageVo.offsetCount);
+            // 페이지 정보와 게시물 목록을 Pair 객체로 묶어 반환
         return Pair.of(pageVo, favoritePosts);
     }
 
