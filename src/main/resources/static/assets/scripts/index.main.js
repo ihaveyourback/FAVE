@@ -243,7 +243,7 @@ $registerForm.onsubmit = (e) => {
             }]
         });
     };
-    xhr.open('POST', './user/');
+    xhr.open('POST', '/user/');
     xhr.send(formData);
     Loading.show(0);
 };

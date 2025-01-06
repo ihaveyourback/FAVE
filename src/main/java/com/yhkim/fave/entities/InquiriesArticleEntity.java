@@ -20,6 +20,7 @@ public class InquiriesArticleEntity {
     private LocalDateTime isDeleted;
     private int view;
     private String isResolved = InquiriesStatus.PROCESSING.getDescription();
+
 }
 enum InquiriesStatus {
     PROCESSING("답변 대기"),

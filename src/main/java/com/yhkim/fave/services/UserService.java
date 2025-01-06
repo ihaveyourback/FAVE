@@ -371,6 +371,7 @@ public class UserService {
         user.setNickname(newNickname);
         // 업데이트 시간 설정
         user.setUpdatedAt(LocalDateTime.now());
+        user.setVerified(true);
         // 사용자 정보 업데이트 후 성공 여부 반환
         return userMapper.updateUser(user) > 0;
     }
@@ -383,7 +384,7 @@ public class UserService {
         user.setPassword(encoder.encode(newPassword));
         // 업데이트 시간 설정
         user.setUpdatedAt(LocalDateTime.now());
-        // 사용자 정보 업데이트
+        user.setVerified(true);
         userMapper.updateUser(user);
     }
 

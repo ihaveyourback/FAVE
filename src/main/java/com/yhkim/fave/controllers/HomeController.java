@@ -41,6 +41,7 @@ public class HomeController {
         if (userDetails instanceof UserEntity user) {// 사용자 정보가 UserEntity 객체인 경우
             modelAndView.addObject("user", user); // user 객체 생성
             modelAndView.addObject("isAdmin", user.isAdmin()); // 관리자 여부를 가져옴
+            modelAndView.addObject("email", user.getEmail());
         }
         Pair<FaveBoardVo, FaveInfoEntity[]> pair = this.faveService.selectFaveInfo(page);
         modelAndView.addObject("page", pair.getLeft());
