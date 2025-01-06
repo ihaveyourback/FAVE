@@ -35,6 +35,9 @@
 #main > .content[rel=user] .table tr.user-container td {
   border-bottom: 1px solid #a6a6a6;
 }
+#main > .content[rel=user] .table .page-container td {
+  padding: 0.425rem;
+}
 #main > .content[rel=user] .table .page-container td a {
   margin-right: 0.5rem;
 }

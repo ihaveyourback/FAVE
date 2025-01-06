@@ -30,7 +30,7 @@
             <tr class="tbody-tr" th:each="fave : ${fave}">
                 <td th:text="${fave.getIndex()}"></td>
                 <td><a th:text="${fave.getTitle()}"
-                       th:href="@{'/fave/read/' (index=${fave.getIndex()})}"></a></td>
+                       th:href="@{'/fave/read/' (index=${fave.getIndex()}, userEmail=${fave.getUserEmail})}"></a></td>
                 <td th:text="${fave.getView()}"></td>
                 <td th:text="${#temporals.format(fave.getCreatedAt, 'yyyy-MM-dd') }"></td>
                 <td class="button-td">

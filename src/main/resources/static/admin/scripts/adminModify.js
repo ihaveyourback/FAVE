@@ -265,6 +265,7 @@ ClassicEditor.create($mainForm['description'], editorConfig).then((editor) => {
             const response = JSON.parse(xhr.responseText);
             if (response['result'] === 'true') {
                 alert('작성 성공');
+                history.back();
             } else {
                 alert('작성 실패');
                 history.back();

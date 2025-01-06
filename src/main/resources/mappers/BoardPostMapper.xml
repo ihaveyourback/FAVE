@@ -57,7 +57,7 @@
                `content`       AS `content`,
                `user_email`    AS `userEmail`,
                `user_nickname` AS `userNickName`,
-               `create_at`     AS `createAt`,
+               `create_at`     AS `createdAt`,
                `update_at`     AS `updatedAt`,
                `deleted_at`    AS `deletedAt`,
                `view`          AS `view`,
