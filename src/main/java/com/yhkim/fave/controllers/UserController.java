@@ -171,18 +171,19 @@ public class UserController {
      *
      */
     @RequestMapping(value = "/validate-email-token", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getValidateEmailToken(@RequestParam("email") String email, @RequestParam("key") String key) {
+    public ModelAndView getValidateEmailToken(@RequestParam("userEmail") String userEmail, @RequestParam("key") String key) {
         // 디버그 로그
-        System.out.println("Received email: " + email);
+        System.out.println("Received userEmail: " + userEmail);
         System.out.println("Received key: " + key);
 
-        Result result = userService.validateEmailToken(email, key);
+        Result result = userService.validateEmailToken(userEmail, key);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("result", result.nameToLower()); // 결과를 템플릿에 바인딩
         modelAndView.setViewName("user/validateEmailToken");
         return modelAndView;
     }
+
 
     @GetMapping(value = "/error")
     public ModelAndView getError() {
