@@ -1,6 +1,7 @@
 package com.yhkim.fave.mappers;
 
 import com.yhkim.fave.entities.InquiriesArticleEntity;
+import com.yhkim.fave.entities.InquiriesEntity;
 import com.yhkim.fave.vos.InquiriesArticleVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -10,6 +11,8 @@ public interface InquiriesArticleMapper {
     int insertArticle(InquiriesArticleEntity inquiries);
 
     int updateArticle(InquiriesArticleEntity inquiries);
+
+    void updateStatus(InquiriesArticleEntity inquiriesArticleEntity);
 
     InquiriesArticleEntity selectArticleByIndex(@Param("index") int index);
 
@@ -27,4 +30,9 @@ public interface InquiriesArticleMapper {
             @Param("keyword") String keyword,
             @Param("limitCount") int limitCount,
             @Param("offsetCount") int offsetCount);
+
+    int selectInquiriesCount();
+
+    InquiriesEntity[] selectInquiries(@Param(value = "limitCount") int limitCount,
+                                      @Param(value = "offsetCount") int offsetCount);
 }

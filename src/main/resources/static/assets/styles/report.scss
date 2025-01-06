@@ -1,0 +1,152 @@
+/* 기본 스타일 */
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fcfbfa;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;  /* 세로 스크롤을 허용 */
+  overflow-x: hidden; /* 가로 스크롤은 숨기기 */
+}
+
+.head-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input-group span {
+  font-size: 14px;
+  color: #555;
+}
+
+.input-group input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.input-group input:focus {
+  border-color: #C1B5A3;
+  outline: none;
+}
+
+/* 상단 헤더 스타일 */
+.top-header {
+  background-color: #C1B5A3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.header-logo img {
+  max-height: 6rem;
+  height: auto;
+  width: auto;
+}
+
+/* 신고 폼 스타일 */
+.report-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-top: 6rem;
+}
+
+.report-container h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.report-container h2 {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+.reason-group label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+}
+
+.reason-group input[type="radio"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.other-reason textarea {
+  margin-top: 0.3rem;
+  border-radius: 0.3rem;
+  width: 100%;
+  box-sizing: border-box;
+  height: 7rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  resize: none;
+  font-size: 14px;
+}
+
+.submit-btn {
+  background-color: #C1B5A3;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: darken(#C1B5A3, 10%);
+  }
+
+  &:active {
+    background-color: darken(#C1B5A3, 20%);
+  }
+}
+
+/* footer 스타일 */
+footer {
+
+  background: #C1B5A3;
+  text-align: center;
+  margin-top: 17rem;
+  width: 100%;
+  height: 11rem;
+  padding: 20px;
+  color: black;
+
+
+}
+
+footer p {
+  margin: 5px 0;
+}

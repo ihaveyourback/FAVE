@@ -25,7 +25,7 @@
     <select id="selectReportByIndex" resultType="com.yhkim.fave.entities.ReportEntity">
         SELECT `index`               AS `index`,
                `user_email`          AS `userEmail`,
-               `reported_user_email` AS `reportUserEmail`,
+               `reported_user_email` AS `reportedUserEmail`,
                `reported_post_id`    AS `reportedPostId`,
                `reported_comment_id` AS `reportedCommentId`,
                `status`              AS `status`,

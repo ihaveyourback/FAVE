@@ -358,9 +358,7 @@ $recoverForm.onsubmit = (e) => {
 
 window.onload = () => {
     const $content = $main.querySelector(':scope > .content');
-    const $logo = $content.querySelector(':scope > .logo');
     const $loginForm = $content.querySelector(':scope > .login-form');
-    setTimeout(() => $logo.show(), 100);
     setTimeout(() => $loginForm.show(), 75);
     $cover.show();
 };

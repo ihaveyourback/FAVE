@@ -14,6 +14,7 @@
 
     <script defer type="text/javascript" src="/assets/scripts/common.js"></script>
     <script defer type="text/javascript" src="/assets/scripts/profile.js"></script>
+<!--    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>-->
 </head>
 <body>
 <div th:insert="~{home/index.main.html :: header}"></div>
@@ -100,8 +101,6 @@
                 </tr>
                 <tr th:each="post : ${posts}">
                     <td th:text="${post.title}">제목</td>
-                    <td th:utext="${#strings.abbreviate(post.content, 10)}">내용</td>
-                    <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${post.view}">조회수</td>
                 </tr>
                 </tbody>
@@ -142,11 +141,6 @@
                 <tr th:if="${#lists.isEmpty(reports)}">
                     <td colspan="4">신고 내역이 없습니다.</td>
                 </tr>
-                <tr th:each="report : ${reports}">
-                    <td th:text="${report.reportedUserEmail}">상대 이메일</td>
-                    <td th:text="${report.reason}">사유</td>
-                    <td th:text="${report.reportedAt}">일자</td>
-                    <td th:text="${report.status}">상태</td>
                 </tr>
                 </tbody>
             </table>

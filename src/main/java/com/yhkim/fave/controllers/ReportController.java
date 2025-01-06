@@ -49,17 +49,16 @@ public class ReportController {
         this.boardPostRepository = boardPostRepository;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView CommentButton() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("report/main");
-        return modelAndView;
-    }
+//    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+//    public ModelAndView CommentButton() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("report/main");
+//        return modelAndView;
+//    }
 
     @RequestMapping(value = "/page", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView CommentReport(@AuthenticationPrincipal UserDetails userDetails,
-                                      @RequestParam(value = "index", required = false) Integer index,
-                                      @RequestParam(value = "commentIndex", required = false)Integer commentIndex){
+    public ModelAndView getReport(@RequestParam(value = "index", required = false) Integer index,
+                                  @RequestParam(value = "commentIndex", required = false)Integer commentIndex){
         ModelAndView modelAndView = new ModelAndView();
 
         if(Objects.isNull(index) && Objects.isNull(commentIndex)){
@@ -67,9 +66,7 @@ public class ReportController {
 //            modelAndView.setViewName("report/main");
             // 오류 창으로 보내요
         }
-//        if (userDetails instanceof CustomUserDetails user) {
-//            modelAndView.addObject("email", user.getEmail());
-//        }
+
         ArticleEntity article = articleService.getArticleByIndex(index);
         List<BoardCommentEntity> comments = boardCommentRepository.findByCommentIndex(commentIndex);
 //        CommentEntity[] comments= commentService.getCommentsByPostId(article.getIndex());
@@ -83,7 +80,7 @@ public class ReportController {
     @ResponseBody
     public ResponseEntity<String> createReport(
             @AuthenticationPrincipal UserDetails user,
-            ReportEntity report, CommentEntity comment,
+            ReportEntity report,CommentEntity comment,
             @RequestParam(value = "index", required = false) Integer index
     ) {
         if (index == null) {

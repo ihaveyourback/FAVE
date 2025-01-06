@@ -79,7 +79,7 @@ public class ArticleService {
         // 클라이언트가 전달한 데이터로 게시글 수정
         dbArticle.setTitle(article.getTitle());
         dbArticle.setContent(article.getContent());
-        dbArticle.setUpdateAt(LocalDateTime.now()); // 수정 시간 갱신
+        dbArticle.setUpdatedAt(LocalDateTime.now()); // 수정 시간 갱신
 
         // 게시글 업데이트 결과 반환
         return this.articleMapper.updateArticle(dbArticle) > 0;

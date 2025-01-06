@@ -56,3 +56,83 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     xhr.send();
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const likeButton = document.getElementById('likeButton');
+    const likeImage = likeButton?.querySelector('img'); // 버튼 내부 이미지 가져오기
+
+    if (likeButton && likeImage) {
+        const festivalId = likeButton.getAttribute('data-festival-id');
+        const userEmail = likeButton.getAttribute('data-user-email');
+
+        // 초기 상태 확인 함수
+        async function checkLikeStatus() {
+            try {
+                const response = await fetch(`/fave/read/status?index=${festivalId}&userEmail=${userEmail}`);
+                if (response.ok) {
+                    const result = await response.json();
+                    const isLiked = result.isLiked;
+
+                    // 초기 상태에 따라 이미지 업데이트
+                    if (isLiked) {
+                        likeImage.src = "https://img.icons8.com/fluency-systems-filled/48/like.png";
+                        likeImage.alt = "like-filled";
+                    } else {
+                        likeImage.src = "https://img.icons8.com/material-outlined/48/like--v1.png";
+                        likeImage.alt = "like-outline";
+                    }
+                } else {
+                    console.error('초기 찜 상태 확인 중 오류가 발생했습니다.');
+                }
+            } catch (error) {
+                console.error('초기 찜 상태 확인 중 오류:', error);
+            }
+        }
+
+        // 버튼 클릭 시 상태 변경 처리
+        likeButton.addEventListener('click', async (e) => {
+            e.preventDefault(); // 기본 동작 방지
+
+            const isLiked = likeImage.src.includes('fluency-systems-filled'); // 현재 이미지로 찜 상태 확인
+            const method = isLiked ? 'DELETE' : 'POST'; // 요청 타입 결정
+            const endpoint = '/fave/read/';
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        festivalId: festivalId,
+                        userEmail: userEmail,
+                    }),
+                });
+
+                if (response.ok) {
+                    const result = await response.json(); // JSON 형식으로 응답 받기
+                    const message = result.message; // 서버에서 전송한 메시지
+                    alert(message); // 메시지 알림 표시
+
+                    // 상태 변경 성공 시 이미지 업데이트
+                    if (isLiked) {
+                        likeImage.src = "https://img.icons8.com/material-outlined/48/like--v1.png";
+                        likeImage.alt = "like-outline";
+                    } else {
+                        likeImage.src = "https://img.icons8.com/fluency-systems-filled/48/like.png";
+                        likeImage.alt = "like-filled";
+                    }
+                } else {
+                    alert('찜 상태 변경 중 오류가 발생했습니다.');
+                }
+            } catch (error) {
+                console.error('찜 상태 변경 중 오류:', error);
+            }
+        });
+
+        // 초기 상태 확인 호출
+        checkLikeStatus();
+    } else {
+        console.error('likeButton 또는 이미지 요소를 찾을 수 없습니다.');
+    }
+});
+

@@ -179,11 +179,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             deleteComment(comment.index);
         });
+        const $reportButton = document.createElement('button');
+        $reportButton.className = 'action report';
+        $reportButton.name = 'report';
+        $reportButton.type = 'button';
+        $reportButton.textContent = '신고';
+
+// 클릭 시 동작
+        $reportButton.addEventListener('click', () => {
+            if (comment) {
+                // 댓글 신고 URL로 이동, comment.index와 article.index를 사용
+                location.href = `/report/page?index=${comment.postId}&commentIndex=${comment.index}`;
+            }
+            // } else {
+            //     // 게시글 신고 URL로 이동, article.index만 사용
+            //     location.href = `/report/article?index=${article.index}`;
+            // }
+        });
+
+
+// 댓글 신고 버튼 클릭 이벤트 추가
+        $reportButton.addEventListener('click', () => {
+            reportComment(comment.index);
+        });
 
         $actionContainer.appendChild($replyButton);
         $actionContainer.appendChild($modifyButton);
         $actionContainer.appendChild($deleteButton);
+        $actionContainer.appendChild($reportButton)
         $commentItem.appendChild($actionContainer);
+        $commentList.appendChild($commentItem);
+
 
 
         // 답글 작성 폼
