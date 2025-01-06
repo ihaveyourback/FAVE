@@ -16,6 +16,7 @@ public class ReportEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "`index`")
     private Integer index;
 
     @Column(name = "user_email", nullable = false, length = 50)

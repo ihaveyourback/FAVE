@@ -16,7 +16,7 @@ public class ArticleEntity {
     private String userEmail;
     private String userNickname;
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
     private int view;
     private int likesCount;

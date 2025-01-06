@@ -9,7 +9,7 @@
             keyProperty="index"
             parameterType="com.yhkim.fave.entities.ArticleEntity">
         INSERT INTO `fave`.`board_posts` (`title`, `content`, `user_email`, `user_nickname`, `create_at`, `update_at`, `deleted_at`, `view`)
-        VALUES (#{title}, #{content}, #{userEmail}, #{userNickname}, #{createdAt}, #{updateAt}, #{deletedAt}, #{view})
+        VALUES (#{title}, #{content}, #{userEmail}, #{userNickname}, #{createdAt}, #{updatedAt}, #{deletedAt}, #{view})
     </insert>
 
     <select id="selectArticleByIndex" resultType="com.yhkim.fave.entities.ArticleEntity">
@@ -19,7 +19,7 @@
                `user_email` AS `userEmail`,
                `user_nickname` AS `userNickname`,
                `create_at` AS `createdAt`,
-               `update_at` AS `updateAt`,
+               `update_at` AS `updatedAt`,
                `deleted_at` AS `deletedAt`,
                `view` AS `view`,
                `like_count` AS `likesCount`
@@ -35,7 +35,7 @@
                `user_email` AS `userEmail`,
                `user_nickname` AS `userNickname`,
                `create_at` AS `createdAt`,
-               `update_at` AS `updateAt`,
+               `update_at` AS `updatedAt`,
                `deleted_at` AS `deletedAt`,
                `view` AS `view`,
                `like_count` AS `likesCount`,
@@ -53,7 +53,7 @@
                `user_email` AS `userEmail`,
                `user_nickname` AS `userNickname`,
                `create_at` AS `createdAt`,
-               `update_at` AS `updateAt`,
+               `update_at` AS `updatedAt`,
                `deleted_at` AS `deletedAt`,
                `view` AS `view`,
                `like_count` AS `likesCount`,
@@ -78,7 +78,7 @@
         `user_email` AS `userEmail`,
         `user_nickname` AS `userNickname`,
         `create_at` AS `createdAt`,
-        `update_at` AS `updateAt`,
+        `update_at` AS `updatedAt`,
         `deleted_at` AS `deletedAt`,
         `view` AS `view`,
         `like_count` AS `likesCount`,
@@ -124,7 +124,7 @@
             `title` = #{title},
             `content` = #{content},
             `create_at` = #{createdAt},
-            `update_at` = #{updateAt},
+            `update_at` = #{updatedAt},
             `deleted_at` = #{deletedAt},
             `view` = #{view}
         WHERE `index` = #{index}

@@ -18,11 +18,11 @@ import java.util.*;
 @Builder
 @Table(schema = "fave", name = "users")
 @ToString
-@EqualsAndHashCode(of = {"email"})
+@EqualsAndHashCode
 public class UserEntity implements UserDetails, OAuth2User {
 
     @Id
-    @Column(nullable = false, length = 50)
+    @Column(name = "`email`", nullable = false, length = 50)
     private String email;
 
     @Column(nullable = false, length = 100)

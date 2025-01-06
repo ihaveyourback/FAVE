@@ -12,6 +12,8 @@ public interface InquiriesArticleMapper {
 
     int updateArticle(InquiriesArticleEntity inquiries);
 
+    void updateStatus(InquiriesArticleEntity inquiriesArticleEntity);
+
     InquiriesArticleEntity selectArticleByIndex(@Param("index") int index);
 
     InquiriesArticleEntity[] selectArticles();

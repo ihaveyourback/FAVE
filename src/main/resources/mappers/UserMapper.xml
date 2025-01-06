@@ -82,8 +82,9 @@
         <set>
             <if test="password != null">`password` = #{password},</if>
             <if test="nickname != null">`nickname` = #{nickname},</if>
-            <if test="createAt != null">`create_at` = #{createAt},</if>
-            <if test="updateAt != null">`update_at` = #{updateAt},</if>
+            <if test="contact != null">`contact` = #{contact},</if>
+            <if test="createdAt != null">`create_at` = #{createdAt},</if>
+            <if test="updatedAt != null">`update_at` = #{updatedAt},</if>
             <if test="deletedAt != null">`deleted_at` = #{deletedAt},</if>
             <if test="admin != null">`is_admin` = #{admin},</if>
             <if test="suspended != null">`is_suspended` = #{suspended},</if>
@@ -93,8 +94,8 @@
             <if test="oauth2Id != null">`oauth2_id` = #{oauth2Id},</if>
         </set>
         WHERE `email` = #{email}
-        LIMIT 1
     </update>
+
 
     <!--  user 테이블에 있는 데이터 불러오기 -->
     <select id="selectAllUser" parameterType="com.yhkim.fave.entities.UserEntity"

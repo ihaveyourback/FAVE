@@ -1,8 +1,10 @@
 package com.yhkim.fave.services;
 
 import com.yhkim.fave.dto.MailDto;
+import com.yhkim.fave.entities.InquiriesArticleEntity;
 import com.yhkim.fave.entities.SentEmailEntity;
 
+import com.yhkim.fave.mappers.InquiriesArticleMapper;
 import com.yhkim.fave.repository.SentEmailRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +18,14 @@ import java.time.LocalDateTime;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final SentEmailRepository sentEmailRepository;
+    private final InquiriesArticleMapper inquiriesArticleMapper;
+
 
     @Autowired
-    public EmailService(JavaMailSender mailSender, SentEmailRepository sentEmailRepository) {
+    public EmailService(JavaMailSender mailSender, SentEmailRepository sentEmailRepository, InquiriesArticleMapper inquiriesArticleMapper) {
         this.mailSender = mailSender;
         this.sentEmailRepository = sentEmailRepository;
+        this.inquiriesArticleMapper = inquiriesArticleMapper;
     }
 
     @Transactional
@@ -40,8 +45,13 @@ public class EmailService {
         sent.setUserEmail(mailDto.getAddress());  // 변경: MailDto에서 받은 주소를 저장
         sent.setResponseAt(LocalDateTime.now());
         sentEmailRepository.save(sent); // 데이터베이스에 저장
-
         mailSender.send(message);
+        InquiriesArticleEntity inquiriesArticleEntity = new InquiriesArticleEntity();
+        inquiriesArticleEntity.setIsResolved("답변 완료");
+        inquiriesArticleEntity.setIndex(sent.getPostId());
+
+        // 매퍼 호출
+        inquiriesArticleMapper.updateStatus(inquiriesArticleEntity);
     }
 }
 

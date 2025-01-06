@@ -102,6 +102,10 @@
   margin-right: auto;
   margin-left: 0.5rem;
 }
+.container .button-container .button_list_alone {
+  justify-content: center;
+  margin-right: 0.4rem;
+}
 .container .button-container .button {
   padding: 0.3rem 0.8rem;
   font-size: 0.7rem;
