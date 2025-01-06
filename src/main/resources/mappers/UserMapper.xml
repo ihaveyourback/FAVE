@@ -6,8 +6,8 @@
     <insert id="insertUser" parameterType="com.yhkim.fave.entities.UserEntity" useGeneratedKeys="true" keyProperty="email">
         INSERT INTO `fave`.`users` (`email`, `password`, `nickname`, `contact`, `create_at`, `update_at`,
                                     `deleted_at`, `is_admin`, `is_suspended`, `is_verified`, `warning`, `oauth2_provider`, `oauth2_id`)
-        VALUES (#{email}, #{password}, #{nickname}, #{contact}, #{createAt}, #{updateAt},
-                #{deletedAt}, #{isAdmin}, #{isSuspended}, #{isVerified}, #{warning}, #{oauth2Provider}, #{oauth2Id})
+        VALUES (#{email}, #{password}, #{nickname}, #{contact}, #{createdAt}, #{updatedAt},
+                #{deletedAt}, #{admin}, #{suspended}, #{verified}, #{warning}, #{oauth2Provider}, #{oauth2Id})
     </insert>
     <select id="selectUserByEmail" resultMap="userResultMap">
         SELECT `email`, `password`, `nickname`, `contact`,
