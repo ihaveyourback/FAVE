@@ -83,7 +83,36 @@ public class UserController {
         return response.toString();
     }
 
+    /**
+     * 회원가입 요청 처리
+     *
+     * @param request HttpServletRequest 객체
+     * @param user    UserEntity 객체
+     * @return JSON 응답 문자열
+     * @throws MessagingException 메시징 예외
+     */
+    @RequestMapping(value = "/register/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String postIndex(HttpServletRequest request, UserEntity user) throws MessagingException {
+        try {
+            System.out.println("Register method started with user: " + user);
+            Result result = this.userService.register(request, user);
+            System.out.println("Register result: " + result);
 
+            JSONObject response = new JSONObject();
+            response.put(Result.NAME, result.nameToLower());
+            return response.toString();
+        } catch (Exception e) {
+            // 예외 로그 출력
+            System.out.println("Exception occurred: " + e.getMessage());
+            e.printStackTrace();
+
+            JSONObject response = new JSONObject();
+            response.put("result", "failure");
+            response.put("message", e.getMessage());
+            return response.toString();
+        }
+    }
 
 
     /**
