@@ -154,7 +154,6 @@ public class MyPageController {
         }
     }
 
-
     // 사용자 정보를 업데이트하는 메서드
     @PostMapping("/update-profile")
     public ResponseEntity<?> updateUserInfo(
