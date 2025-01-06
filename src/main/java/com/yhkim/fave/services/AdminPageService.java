@@ -6,6 +6,7 @@ import com.yhkim.fave.vos.BoardPostPageVo;
 import com.yhkim.fave.vos.IndexPageVo;
 import com.yhkim.fave.vos.ReportsPageVo;
 import com.yhkim.fave.vos.UserPageVo;
+import jakarta.persistence.Index;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,7 +56,7 @@ public class AdminPageService {
 
         for (BoardPostEntity boardPost : boardPosts) {
             UserEntity user = this.findUserByEmail(boardPost.getUserEmail());
-            boardPost.setUserEmail(user.getEmail());
+            boardPost.setUser(user);
         }
         return Pair.of(index, boardPosts);
     }
@@ -72,8 +73,8 @@ public class AdminPageService {
         page = Math.max(page, 1);
         int totalCount = this.reportsMapper.selectReportsCount();
         IndexPageVo index = new IndexPageVo(page, totalCount);
-        ReportEntity[] reportEntities = this.reportsMapper.selectReports(index.countPerPage, index.offsetCount);
-        return Pair.of(index, reportEntities);
+        ReportEntity[] reports = this.reportsMapper.selectReports(index.countPerPage, index.offsetCount);
+        return Pair.of(index, reports);
     }
 
     public Boolean write(FaveInfoEntity adminPage, MultipartFile coverFile) {
@@ -201,7 +202,7 @@ public class AdminPageService {
 
         for (BoardPostEntity boardPost : boardPosts) {
             UserEntity user = this.findUserByEmail(boardPost.getUserEmail());
-            boardPost.setUserEmail(user.getEmail());
+            boardPost.setUser(user);
         }
         return Pair.of(boardPostPageVo, boardPosts);
     }
@@ -220,7 +221,7 @@ public class AdminPageService {
 
         for (BoardPostEntity boardPost : boardPosts) {
             UserEntity user = this.findUserByEmail(boardPost.getUserEmail());
-            boardPost.setUserEmail(user.getEmail());
+            boardPost.setUser(user);
         }
         return Pair.of(boardPostPageVo, boardPosts);
     }
@@ -230,13 +231,13 @@ public class AdminPageService {
             return null;
         }
         return this.userMapper.selectUserByEmailAdmin(userEmail);
-        
+
     }
 
     public boolean deleteBoardPost(int index) {
         BoardPostEntity board = this.boardPostsMapper.selectBoardPostsByIndex(index);
         if (board == null) {
-             return false;
+            return false;
         }
         board.setDeletedAt(LocalDateTime.now());
         return this.boardPostsMapper.updateBoardPost(board) > 0;
@@ -247,12 +248,12 @@ public class AdminPageService {
 
         int totalCount = this.reportsMapper.selectReportsCount();
         ReportsPageVo reportsPageVo = new ReportsPageVo(page, totalCount);
-        ReportEntity[] reportEntities = this.reportsMapper.selectReports(reportsPageVo.countPerPage, reportsPageVo.offsetCount);
-        for (ReportEntity reportEntity : reportEntities) {
-            UserEntity user = this.findUserByEmail(reportEntity.getReportedUserEmail());
-            reportEntity.setUser(user);
+        ReportEntity[] reports = this.reportsMapper.selectReports(reportsPageVo.countPerPage, reportsPageVo.offsetCount);
+        for (ReportEntity report : reports) {
+            UserEntity user = this.findUserByEmail(report.getReportedUserEmail());
+            report.setUser(user);
         }
-        return Pair.of(reportsPageVo, reportEntities);
+        return Pair.of(reportsPageVo, reports);
     }
 
     public Boolean updateReport(int index) {

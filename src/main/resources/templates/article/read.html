@@ -58,18 +58,8 @@
             </div>
         </div>
         <div class="button-container">
-            <button
-                    name="report"
-                    data-pageIndex="${pageIndex}"
-                    class="button report"
-                    type="button"
-                    th:onclick="|location.href='/report/page?index=${article.getIndex()}'|">
-                신고하기
-            </button>
-            <div class="button_list">
-                <!--    <a class="page prev"-->
-                <!--       th:if="${pageVo.requestPage > pageVo.movableMinPage}"-->
-                <!--       th:href="@{'/article/read' (page=${pageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}">&lt;</a>-->
+            <button name="report" class="button report" type="button" th:onclick="|location.href='/report/page?index=${article.getIndex()}'|">신고하기</button>
+            <div th:if="${email != article.getUserEmail()}" class="button_list_alone">
                 <a th:href="@{'/board/list'}" target="_self"
                    class="button_list button back write --obj-button -button_color">목록으로</a>
             </div>
@@ -89,60 +79,8 @@
                 <ul class="list">
                     <li class="item">
                         <div class="top">
-                            <!--                            <span class="nickname">작성자 자리</span>-->
-                            <!--                            <span class="spring"></span>-->
-                            <!--                            <span class="datetime">2024-11-08 11:34</span>-->
-                            <!--                            <label class="link">-->
-                            <!--                                <input class="checkbox" name="toggle" type="checkbox">-->
-                            <!--                            </label>-->
                         </div>
                         <div class="content">내용자리</div>
-                        <!--                        <div class="action-container">-->
-                        <!--                            <input checked id="commentNoAction0" name="comment0" type="radio" value="noAction">-->
-                        <!--                            <label class="action">-->
-                        <!--                                <input name="comment0" type="radio" value="reply">-->
-                        <!--                                <span class="text">답글 쓰기</span>-->
-                        <!--                            </label>-->
-                        <!--                            <label class="action">-->
-                        <!--                                <input name="comment0" type="radio" value="modify">-->
-                        <!--                                <span class="text">수정</span>-->
-                        <!--                            </label>-->
-                        <!--                            <button class="action" name="delete" type="button">삭제</button>-->
-                        <!--                        </div>-->
-                        <!--                        <div class="action-container">-->
-                        <!--                            <input checked id="commentNoAction0" name="comment0" type="radio" value="noAction">-->
-                        <!--                            <label class="action">-->
-                        <!--                                <input name="comment0" type="radio" value="reply">-->
-                        <!--                                <span class="text">답글 쓰기</span>-->
-                        <!--                            </label>-->
-                        <!--                            <div th:if="${email == article.getUserEmail()}">-->
-                        <!--                                <label class="action">-->
-                        <!--                                    <input name="comment0" type="radio" value="modify">-->
-                        <!--                                    <span class="text">수정</span>-->
-                        <!--                                </label>-->
-                        <!--                                <button class="action" name="delete" type="button">삭제</button>-->
-                        <!--                            </div>-->
-                        <!--                        </div>-->
-                        <!--                        <form class="form reply">-->
-                        <!--                            <label class="label spring">-->
-                        <!--                                <span class="text">내용</span>-->
-                        <!--                                <textarea required class="field" maxlength="100" minlength="1" name="content"></textarea>-->
-                        <!--                            </label>-->
-                        <!--                            <div class="button-container">-->
-                        <!--                                <button class="&#45;&#45;obj-button -button_color" type="submit">답글 쓰기</button>-->
-                        <!--                                <label class="&#45;&#45;obj-button -light" for="commentNoAction0">취소</label>-->
-                        <!--                            </div>-->
-                        <!--                        </form>-->
-                        <!--                        <form class="form modify">-->
-                        <!--                            <label class="label spring">-->
-                        <!--                                <span class="text">내용</span>-->
-                        <!--                                <textarea required class="field" maxlength="100" minlength="1" name="content"></textarea>-->
-                        <!--                            </label>-->
-                        <!--                            <div class="button-container">-->
-                        <!--                                <button class="&#45;&#45;obj-button -button_color" type="submit">댓글 수정</button>-->
-                        <!--                                <label class="&#45;&#45;obj-button -light" for="commentNoAction0">취소</label>-->
-                        <!--                            </div>-->
-                        <!--                        </form>-->
                     </li>
                 </ul>
             </div>

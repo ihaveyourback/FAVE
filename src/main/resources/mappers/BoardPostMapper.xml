@@ -159,4 +159,17 @@
         WHERE `index` = #{postId}
     </update>
 
+    <select id="isLiked" resultType="java.lang.Boolean">
+        SELECT COUNT(*) > 0
+        FROM `fave`.`board_likes`
+        WHERE `board_id` = #{postId}
+          AND `user_email` = #{userEmail}
+    </select>
+
+    <select id="getLikeCount" resultType="java.lang.Integer">
+        SELECT `like_count`
+        FROM `fave`.`board_posts`
+        WHERE `index` = #{postId}
+    </select>
+
 </mapper>

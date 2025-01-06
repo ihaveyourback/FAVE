@@ -39,4 +39,7 @@ public interface UserMapper {
 
     List<FaveInfoEntity> selectFavoritePostsByUserEmail(String email);
 
+    List<FaveInfoEntity> selectFavoritePostsByUserEmailWithPagination(@Param("email") String email,
+                                                                      @Param("limitCount") int limitCount,
+                                                                      @Param("offsetCount") int offsetCount);
 }
