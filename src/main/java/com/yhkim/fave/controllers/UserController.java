@@ -43,7 +43,6 @@ public class UserController {
     }
 
 
-
     @PostMapping("/")
     @ResponseBody
     public String loginUser(@RequestParam String email, @RequestParam String password) {
