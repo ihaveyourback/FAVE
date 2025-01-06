@@ -9,10 +9,23 @@
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
     <link rel="stylesheet" type="text/css" href="/board/assets/styles/list.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/common_cy.css">
+
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
+    <script defer type="text/javascript" src="/assets/scripts/common.js"></script>
+    <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
 </head>
 <body>
-<div th:insert="~{common/common.html :: header_copy}"></div>
+<div th:insert="~{home/index.main.html :: header}"></div>
+
 <main id="main">
+    <!-- Cover Screen -->
+    <div class="cover" id="cover"></div>
+    <br>
+    <br>
+    <br>
+
     <h1 class="title" onclick="location.href='/board/list'" style="cursor: pointer">자유게시판</h1>
     <table class="article-table">
         <thead>
@@ -80,5 +93,14 @@
            th:href="@{'/board/list' (page=${pageVo.movableMaxPage}, filter=${filter}, keyword=${keyword})}">&gt;&gt;</a>
     </div>
 </main>
+
+<footer>
+    <div class="footer-content">
+        <p>김용현 김창윤 김범수 이석민</p>
+        <p>고객센터: 123-456-7890</p>
+        <p>&copy; 2024 축제잇슈. All Rights Reserved.</p>
+        <p>대구광역시 중구 동성로3가 동성로1길 15</p>
+    </div>
+</footer>
 </body>
 </html>
