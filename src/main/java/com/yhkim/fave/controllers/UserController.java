@@ -43,24 +43,6 @@ public class UserController {
     }
 
 
-    /**
-     * 회원가입 요청 처리
-     *
-     * @param request HttpServletRequest 객체
-     * @param user    UserEntity 객체
-     * @return JSON 응답 문자열
-     * @throws MessagingException 메시징 예외
-     */
-    @RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String postIndex(HttpServletRequest request, UserEntity user) throws MessagingException {
-        Result result = this.userService.register(request, user);
-        JSONObject response = new JSONObject();
-        response.put(Result.NAME, result.nameToLower());
-        return response.toString();
-    }
-
-
 
     @PostMapping("/")
     @ResponseBody
@@ -190,18 +172,19 @@ public class UserController {
      *
      */
     @RequestMapping(value = "/validate-email-token", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getValidateEmailToken(@RequestParam("email") String email, @RequestParam("key") String key) {
+    public ModelAndView getValidateEmailToken(@RequestParam("userEmail") String userEmail, @RequestParam("key") String key) {
         // 디버그 로그
-        System.out.println("Received email: " + email);
+        System.out.println("Received userEmail: " + userEmail);
         System.out.println("Received key: " + key);
 
-        Result result = userService.validateEmailToken(email, key);
+        Result result = userService.validateEmailToken(userEmail, key);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("result", result.nameToLower()); // 결과를 템플릿에 바인딩
         modelAndView.setViewName("user/validateEmailToken");
         return modelAndView;
     }
+
 
     @GetMapping(value = "/error")
     public ModelAndView getError() {

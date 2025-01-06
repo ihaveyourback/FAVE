@@ -79,6 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             Loading.hide();
+            console.log("XHR status:", xhr.status);
+            console.log("XHR response:", xhr.responseText);
 
             if (xhr.status >= 200 && xhr.status < 300) {
                 const response = JSON.parse(xhr.responseText);

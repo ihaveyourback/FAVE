@@ -52,6 +52,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
         response.setCharacterEncoding("UTF-8");
         response.setStatus(statusCode);
-        response.getWriter().write("{\"error\": \"" + failureReason + "\"}");
+        response.getWriter().write("{\"result\": \"" + failureReason + "\"}");
     }
 }

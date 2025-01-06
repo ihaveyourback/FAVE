@@ -1,8 +1,6 @@
 package com.yhkim.fave.controllers;
 
-import com.yhkim.fave.entities.BoardPostEntity;
-import com.yhkim.fave.entities.ReportEntity;
-import com.yhkim.fave.entities.UserEntity;
+import com.yhkim.fave.entities.*;
 import com.yhkim.fave.services.BoardPostService;
 import com.yhkim.fave.services.ReportService;
 import com.yhkim.fave.services.UserService;
@@ -12,6 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,11 +44,22 @@ public class MyPageController {
     @GetMapping("/profile")
     public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal,
                                     @RequestParam(defaultValue = "1") int page,
-                                    @RequestParam(defaultValue = "1") int reportPage) { // 페이지 번호 (기본값: 1)
-        int totalCount = boardPostService.countPostsByUserEmail(principal.getName()); // 사용자의 게시물 수
-        PageVo pageVo = new PageVo(page, totalCount); // 페이지 정보 생성
-        List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), pageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
-        Pair<PageVo, List<ReportEntity>> reportEntities = reportService.getReportsByLoggedInUser(reportPage, 10); // 사용자의 신고 목록 가져오기 (페이징 처리)
+                                    @RequestParam(defaultValue = "1") int reportPage,
+                                    @RequestParam(defaultValue = "1") int favoritePage) { // 페이지 번호 (기본값: 1)
+        // 게시글 페이징 정보 생성
+        int totalPostCount = boardPostService.countPostsByUserEmail(principal.getName()); // 사용자의 게시물 수
+        PageVo postPageVo = new PageVo(page, totalPostCount); // 게시글 페이지 정보 생성
+        List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), postPageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
+
+        // 신고 내역 페이징 정보 생성
+        Pair<PageVo, List<ReportEntity>> reportPair = reportService.getReportsByLoggedInUser(reportPage, 10); // 사용자의 신고 목록 가져오기 (페이징 처리)
+        PageVo reportPageVo = reportPair.getLeft();
+        List<ReportEntity> reports = reportPair.getRight();
+
+        // 찜 목록 페이징 정보 생성
+        Pair<PageVo, List<FaveInfoEntity>> favoritePair = userService.getFavoritePostsByUserEmailWithPagination(principal.getName(), favoritePage, 10);
+        PageVo favoritePageVo = favoritePair.getLeft();
+        List<FaveInfoEntity> favoritePosts = favoritePair.getRight();
 
         ModelAndView modelAndView = new ModelAndView(); // 뷰와 모델을 함께 설정 가능
 
@@ -58,44 +68,99 @@ public class MyPageController {
             modelAndView.addObject("nickname", user.getNickname()); // 사용자 닉네임
         }
 
-        modelAndView.addObject("reports", reportEntities.getRight()); // 신고 내역 리스트 추가
-        modelAndView.addObject("reportPageVo", reportEntities.getLeft()); // 신고 페이징 정보 추가
-        modelAndView.addObject("posts", posts); // 게시물 리스트 추가
-        modelAndView.addObject("pageVo", pageVo); // 게시물 페이징 정보 추가
+        modelAndView.addObject("favoritePosts", favoritePosts);
+        modelAndView.addObject("favoritePageVo", favoritePageVo);
+        modelAndView.addObject("reports", reports);
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("reportPageVo", reportPageVo); // 신고 내역 페이지 정보 추가
+        modelAndView.addObject("postPageVo", postPageVo); // 게시글 페이지 정보 추가
+
+        modelAndView.addObject("username", principal.getName()); // 사용자 이름
         modelAndView.setViewName("user/profile");
-        modelAndView.addObject("username", principal.getName()); // 사용자 이름 추가
         return modelAndView;
     }
 
-
-    // 회원탈퇴를 처리하는 메서드
+//회원탈퇴 메서드
     @PostMapping("/secession")
-    public ResponseEntity<?> secession(@AuthenticationPrincipal UserDetails userDetails,// 사용자 정보
-                                       @RequestBody Map<String, String> payload) {// 요청 본문
-        if (userDetails instanceof UserEntity user) {// 사용자 정보가 있으면
-            String email = user.getEmail(); // 사용자 이메일
-            String currentPassword = payload.get("currentPassword");// 현재 비밀번호
+    public ResponseEntity<?> secession(@AuthenticationPrincipal Object principal, @RequestBody Map<String, String> payload) {
+        if (principal == null) {
+            System.out.println("Principal is null");  // principal이 null인 경우
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
+        }
 
-            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {// 현재 비밀번호가 일치하지 않으면
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
+        // 디버깅을 위한 로깅 - principal 객체의 실제 타입 출력
+        System.out.println("Principal type: " + principal.getClass().getName());
+
+        PrincipalDetails principalDetails = null;
+
+        // principal이 PrincipalDetails의 인스턴스인 경우
+        if (principal instanceof PrincipalDetails) {
+            principalDetails = (PrincipalDetails) principal;
+        }
+        // principal이 UsernamePasswordAuthenticationToken인 경우
+        else if (principal instanceof UsernamePasswordAuthenticationToken) {
+            Object authPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+            if (authPrincipal instanceof PrincipalDetails) {
+                principalDetails = (PrincipalDetails) authPrincipal;
             }
-
-            boolean isDeleted = userService.deactivateAccount(email);// 회원탈퇴 처리
-            if (isDeleted) {// 회원탈퇴가 완료되면
-                return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "회원탈퇴 처리 중 오류가 발생했습니다. 다시 시도해 주세요."));
+            // authPrincipal이 UserEntity의 인스턴스인 경우
+            else if (authPrincipal instanceof UserEntity) {
+                UserEntity userEntity = (UserEntity) authPrincipal;
+                principalDetails = new PrincipalDetails(userEntity, userEntity.getAttributes());
             }
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
+        // principal이 CustomOAuth2User인 경우
+        else if (principal instanceof CustomOAuth2User) {
+            CustomOAuth2User oauthUser = (CustomOAuth2User) principal;
+            UserEntity user = new UserEntity();
+            user.setEmail(oauthUser.getEmail());
+            user.setNickname(oauthUser.getNickname());
+            user.setOauth2Provider(oauthUser.getProvider());
+            principalDetails = new PrincipalDetails(user, oauthUser.getAttributes());
+        }
+        // principal이 UserEntity인 경우
+        else if (principal instanceof UserEntity) {
+            UserEntity userEntity = (UserEntity) principal;
+            principalDetails = new PrincipalDetails(userEntity, userEntity.getAttributes());
+        }
+        // principal이 위의 어떤 타입에도 해당하지 않는 경우
+        else {
+            System.out.println("Principal is not an instance of PrincipalDetails, UserEntity, or CustomOAuth2User");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
+        }
+
+        // principalDetails 객체 생성 실패 시 처리
+        if (principalDetails == null) {
+            System.out.println("Unable to create PrincipalDetails");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
+        }
+
+        UserEntity user = principalDetails.getUser();  // 사용자 정보 가져오기
+
+        // 소셜 로그인이 아닌 경우 현재 비밀번호 일치 여부 확인
+        if (!user.isSocialLogin()) {
+            String currentPassword = payload.get("currentPassword");
+            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
+            }
+        }
+
+        String email = user.getEmail();  // 사용자 이메일 가져오기
+        boolean isDeleted = userService.deactivateAccount(email);  // 계정 비활성화
+        if (isDeleted) {
+            return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));  // 회원탈퇴 성공 메시지 반환
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "회원탈퇴 처리 중 오류가 발생했습니다. 다시 시도해 주세요."));  // 오류 메시지 반환
+        }
     }
 
+
+    // 사용자 정보를 업데이트하는 메서드
     @PostMapping("/update-profile")
     public ResponseEntity<?> updateUserInfo(
             @AuthenticationPrincipal UserDetails userDetails, // 사용자 정보
             @RequestBody Map<String, String> payload, // 요청 본문
             HttpServletRequest request) { // 사용자 정보 업데이트
-
         if (!(userDetails instanceof UserEntity user)) { // 사용자 정보가 없으면
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
                     "message", "사용자 정보가 없습니다. 소셜 로그인은 사용불가능합니다."
@@ -105,9 +170,6 @@ public class MyPageController {
         String newNickname = payload.get("nickname"); // 새 닉네임
         String currentPassword = payload.get("currentPassword"); // 현재 비밀번호
         String newPassword = payload.get("newPassword"); // 새 비밀번호
-//        System.out.println("닉네임:"+ newNickname);
-//        System.out.println("지금비밀번호:"+ currentPassword);
-//        System.out.println("새비밀번호:"+ newPassword);
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
@@ -126,7 +188,7 @@ public class MyPageController {
         // 세션 무효화 및 인증 정보 지우기
         request.getSession().invalidate(); // 세션 무효화
         SecurityContextHolder.clearContext(); // 인증 정보 지우기
-        System.out.println("응답 메시지: " + Map.of("message", "사용자 정보가 성공적으로 업데이트되었습니다."));
+
         return ResponseEntity.ok(Map.of("message", "사용자 정보가 성공적으로 업데이트되었습니다. 로그아웃 후 변경된 비밀번호로 다시 로그인 해주세요."));
     }
 }
