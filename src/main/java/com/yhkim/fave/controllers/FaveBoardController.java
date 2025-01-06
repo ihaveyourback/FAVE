@@ -37,7 +37,7 @@ public class FaveBoardController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView getBoard(@RequestParam(value = "page", required = false, defaultValue = "1")int page) {
+    public ModelAndView getBoard(@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         ModelAndView modelAndView = new ModelAndView();
         Pair<FaveBoardVo, FaveInfoEntity[]> pair = this.faveService.selectFaveInfo(page);
         modelAndView.addObject("page", pair.getLeft());
@@ -65,6 +65,7 @@ public class FaveBoardController {
 
         return modelAndView;
     }
+
     @RequestMapping(value = "/read/status", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Boolean>> getLikeStatus(@RequestParam(value = "index") int index,
@@ -81,11 +82,12 @@ public class FaveBoardController {
     }
 
 
-
     @RequestMapping(value = "/read/", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String, String>> handleLike(@RequestBody FavoritesDto favoritesDto) {
         favoriteService.saveSpotLike(favoritesDto);
+        System.out.println("Received userEmail: " + favoritesDto.getUserEmail());
+        System.out.println("Received festivalId: " + favoritesDto.getFestivalId());
         Map<String, String> response = new HashMap<>();
         response.put("message", "찜 상태가 변경되었습니다.");
         return ResponseEntity.ok(response);

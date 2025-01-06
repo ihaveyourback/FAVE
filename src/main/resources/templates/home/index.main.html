@@ -14,10 +14,8 @@
     <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
     <link rel="stylesheet" href="/board/styles/faveBoard.css">
-    <link rel="stylesheet" href="/admin/styles/common.css">
     <script src="/board/scripts/faveBoard.js"></script>
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
-    <link rel="stylesheet" type="text/css" href="/board/styles/common_cy.css">
 
     <script type="text/javascript" src="/assets/scripts/common.js"></script>
     <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
@@ -115,7 +113,7 @@
 </main>
 
 <main id="main">
-    <div class="content">
+    <div class="content" th:fragment="login">
         <form novalidate class="login-form" id="loginForm" th:action="@{/api/login}" method="post">
             <h2 class="title">
                 로그인</h2>
@@ -138,14 +136,21 @@
             </label>
             <input type="hidden" name="_csrf" th:value="${_csrf?.token}"/>
             <button class="--obj-button -color-primary">로그인</button>
-
-            <a href="/oauth2/authorization/google" class="btn btn-sm btn-danger active" role="button">Google Login</a>
-            <br>
-            <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver Login</a>
-            <br>
-            <a href="/oauth2/authorization/kakao" class="btn btn-third active" role="button">Kakao Login</a>
-
             <button class="--obj-button -color-light-gray" name="cancel" type="button">취소</button>
+            <div class="sns-login">
+                <span class="sns-login-title">SNS 로그인</span>
+                <div class="sns-login-buttons">
+                    <a href="/oauth2/authorization/google" class="btn btn-sm btn-danger active" role="button">
+                        <img src="/assets/images/Google.png" alt="Google">
+                    </a>
+                    <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">
+                        <img src="/assets/images/Naver.png" alt="Naver">
+                    </a>
+                    <a href="/oauth2/authorization/kakao" class="btn btn-third active" role="button">
+                        <img src="/assets/images/Kakao.png" alt="Kakao">
+                    </a>
+                </div>
+            </div>
             <ul class="menu">
                 <li class="item">
                     <span class="text">아직 계정이 없으신가요?</span>
@@ -236,7 +241,7 @@
 
 
 <footer>
-    <div class="footer-content">
+    <div class="footer-content" >
         <p>김용현 김창윤 김범수 이석민</p>
         <p>고객센터: 123-456-7890</p>
         <p>&copy; 2024 여기YOU. All Rights Reserved.</p>

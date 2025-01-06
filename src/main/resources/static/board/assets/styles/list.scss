@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+
 #main {
   align-items: stretch;
   display: flex;
@@ -7,6 +8,7 @@
   gap: 1rem;
   justify-content: flex-start;
   margin: 1rem 10rem;
+  color: #1c1d1e;
 
   > .article-table {
     border-spacing: 0;

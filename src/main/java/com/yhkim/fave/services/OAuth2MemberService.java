@@ -66,7 +66,6 @@ public class OAuth2MemberService extends DefaultOAuth2UserService { // OAuth2Use
     } // OAuth2User 객체 반환
 
 
-
     private void createUser(String email, String provider, String providerId, String nickname, String contact) {
         // 새로운 사용자 생성
         UserEntity userEntity = UserEntity.builder() // 사용자 엔티티 빌더
