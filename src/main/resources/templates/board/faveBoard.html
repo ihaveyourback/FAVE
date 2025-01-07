@@ -5,12 +5,12 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <link rel="stylesheet" href="/board/styles/faveBoard.css">
     <link rel="stylesheet" href="/admin/styles/common.css">
     <script src="/board/scripts/faveBoard.js"></script>
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
     <link rel="stylesheet" type="text/css" href="/board/styles/common_cy.css">
-
 
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
@@ -18,22 +18,33 @@
     <script type="text/javascript" src="/assets/scripts/common.js"></script>
     <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
 
-    <title>Document</title>
+    <title>올해축제</title>
 </head>
 <body>
+
 <div th:insert="~{home/index.main.html :: header}"></div>
 <br><br><br><br>
 
 <main id="main">
     <div class="grid-container">
         <div class="grid" th:each="fave : ${fave}">
-            <a th:href="@{'/fave/read/?index=' + ${fave.index} + '&userEmail=' + ${#authentication.principal.email}}">
+            <!-- 로그인 사용자 -->
+            <a th:if="${#authorization.expression('isAuthenticated()')}"
+               th:href="@{'/fave/read/?index=' + ${fave.index} + '&userEmail=' + ${#authentication.principal.email}}">
                 <img class="img"
                      th:src="@{'/fave/image?index=' + ${fave.index}}"
                      alt="">
             </a>
-            <span th:text="${fave.getTitle()}"></span>
 
+            <!-- 비로그인 사용자 -->
+            <a th:unless="${#authorization.expression('isAuthenticated()')}"
+               th:href="@{'/fave/read/?index=' + ${fave.index}}">
+                <img class="img"
+                     th:src="@{'/fave/image?index=' + ${fave.index}}"
+                     alt="">
+            </a>
+
+            <span th:text="${fave.getTitle()}"></span>
         </div>
     </div>
 
@@ -41,31 +52,9 @@
         <a class="page"
            th:each="page : ${#numbers.sequence(page.displayMinPage, page.displayMaxPage)}"
            th:text="${page}"
-           th:href="@{'/fave/' (page=${page})}"></a>
+           th:href="@{/fave(page=${page})}"></a> <!-- URL 수정 -->
     </div>
 </main>
-
-<!--<table>-->
-<!--    <thead class="thead">-->
-<!--    <tr class="board-title">-->
-<!--        <th>번호</th>-->
-<!--        <th>제목</th>-->
-<!--        <th>축제일정</th>-->
-<!--        <th>작성일</th>-->
-<!--        <th>조회수</th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody class="tbody">-->
-<!--    <tr class="board-list" th:each="fave : ${fave}">-->
-<!--        <td th:text="${fave.getIndex()}"></td>-->
-<!--        <td><a th:text="${fave.getTitle()}" th:href="@{'/read/' (index=${fave.getIndex()})}"></a></td>-->
-<!--        <td th:text="${fave.getStartDate() + ' ~ ' + fave.getEndDate()}"></td>-->
-<!--        <td th:text="${#temporals.format(fave.getCreatedAt(), 'yyyy-MM-dd')}"></td>-->
-<!--        <td th:text="${fave.getView()}"></td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
-
 
 </body>
 </html>

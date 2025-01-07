@@ -57,6 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers("/assets/**").permitAll()
                                 .requestMatchers("/board/**").permitAll()
                                 .requestMatchers("/fave/**").permitAll()
+                                .requestMatchers("/fave/read/**").authenticated() // 찜 상세 조회는 로그인 필요
                                 .requestMatchers("/profile/**").authenticated()
                                 .requestMatchers("/user/secession").authenticated()
                                 .requestMatchers("/user/**").permitAll()
