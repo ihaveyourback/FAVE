@@ -1,6 +1,7 @@
 package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.entities.ArticleEntity;
+import com.yhkim.fave.entities.CustomOAuth2User;
 import com.yhkim.fave.entities.ImageEntity;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.results.article.ArticleResult;
@@ -11,13 +12,12 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -155,4 +155,7 @@ public class ArticleController {
         }
         return response.toString();
     }
+
+
+
 }

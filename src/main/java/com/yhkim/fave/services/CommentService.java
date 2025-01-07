@@ -1,6 +1,7 @@
 package com.yhkim.fave.services;
 
 import com.yhkim.fave.entities.CommentEntity;
+import com.yhkim.fave.entities.CustomOAuth2User;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.mappers.CommentMapper;
 import com.yhkim.fave.results.article.ArticleResult;
@@ -19,6 +20,188 @@ public class CommentService {
     public CommentService(CommentMapper commentMapper) {
         this.commentMapper = commentMapper;
     }
+
+    // 댓글 작성
+//    public ArticleResult writeComment(CommentEntity comment) {
+//        if (comment == null ||
+//                comment.getComment() == null || comment.getComment().isEmpty() || comment.getComment().length() > 1000) {
+//            System.out.println("Comment validation failed");
+//            return ArticleResult.FAILURE;
+//        }
+//        System.out.println("Starting authentication check...");
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userEmail = null;
+//        String userNickname = null;
+//
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            Object principal = authentication.getPrincipal();
+//            if (principal instanceof UserEntity) {
+//                UserEntity userEntity = (UserEntity) principal;
+//                userEmail = userEntity.getEmail();
+//                userNickname = userEntity.getNickname();
+//            }
+//        }
+//
+//        System.out.println("userEmail: " + userEmail);
+//        System.out.println("userNickname: " + userNickname);
+//
+//        if (userEmail == null) {
+//            System.out.println("Authentication failed. Returning FAILURE.");
+//            return ArticleResult.FAILURE;
+//        }
+//
+//        comment.setCreatedAt(LocalDateTime.now());
+//        comment.setUserEmail(userEmail);
+//        comment.setUserNickname(userNickname != null ? userNickname : "익명");
+//
+//        int result = commentMapper.insertComment(comment);
+//
+//        return result > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
+//    }
+    //댓글 작성 용현
+    public ArticleResult writeComment(CommentEntity comment, Authentication authentication) {
+        // 댓글 유효성 검사
+        if (comment == null || comment.getComment() == null || comment.getComment().isEmpty() || comment.getComment().length() > 1000) {
+            System.out.println("Comment validation failed. Comment is null or empty or too long.");
+            return ArticleResult.FAILURE;
+        }
+        System.out.println("Comment validation passed.");
+
+        // 인증 정보 가져오기
+        String userEmail = null;
+        String userNickname = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+
+            // 일반 로그인 처리 (UserEntity)
+            if (principal instanceof UserEntity) {
+                UserEntity userEntity = (UserEntity) principal;
+                userEmail = userEntity.getEmail();
+                userNickname = userEntity.getNickname();
+                System.out.println("Authenticated user (UserEntity): userEmail = " + userEmail + ", userNickname = " + userNickname);
+            }
+            // 소셜 로그인 처리 (CustomOAuth2User)
+            else if (principal instanceof CustomOAuth2User) {
+                CustomOAuth2User oauth2User = (CustomOAuth2User) principal;
+                userEmail = oauth2User.getEmail();
+                userNickname = oauth2User.getNickname();
+                System.out.println("Authenticated user (CustomOAuth2User): userEmail = " + userEmail + ", userNickname = " + userNickname);
+            }
+        } else {
+            System.out.println("Authentication is not authenticated.");
+        }
+
+        // 인증 실패 처리
+        if (userEmail == null) {
+            return ArticleResult.FAILURE;
+        }
+
+        // 댓글 정보 세팅
+        comment.setCreatedAt(LocalDateTime.now());
+        comment.setUserEmail(userEmail);
+
+        // 사용자 닉네임이 없으면 "익명"으로 설정
+        if (userNickname == null) {
+            userNickname = "익명";
+        }
+        comment.setUserNickname(userNickname);
+
+        // 댓글 삽입
+        int result = commentMapper.insertComment(comment);
+        System.out.println("Insert comment result: " + result);
+
+        return result > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
+    }
+
+
+    // 대댓글 작성
+//    public ArticleResult saveReplyComment(int parentCommentId, String content) {
+//        if (parentCommentId < 1 || content == null || content.isEmpty() || content.length() > 100) {
+//            return ArticleResult.FAILURE;
+//        }
+//        CommentEntity parentComment = this.commentMapper.selectCommentByIndex(parentCommentId);
+//        if (parentComment == null || parentComment.getIsDeleted() != null) {
+//            return ArticleResult.FAILURE;
+//        }
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userEmail = null;
+//        String userNickname = null;
+//
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            Object principal = authentication.getPrincipal();
+//            if (principal instanceof UserEntity) {
+//                UserEntity userEntity = (UserEntity) principal;
+//                userEmail = userEntity.getEmail();
+//                userNickname = userEntity.getNickname();
+//            }
+//        }
+//
+//        if (userEmail == null) {
+//            return ArticleResult.FAILURE;
+//        }
+//
+//        CommentEntity replyComment = new CommentEntity();
+//        replyComment.setPostId(parentComment.getPostId());
+//        replyComment.setCommentId(parentCommentId);
+//        replyComment.setComment(content);
+//        replyComment.setCreatedAt(LocalDateTime.now());
+//        replyComment.setUpdateAt(null);
+//        replyComment.setIsDeleted(null);
+//        replyComment.setUserEmail(userEmail);
+//        replyComment.setUserNickname(userNickname != null ? userNickname : "익명");
+//
+//        return this.commentMapper.insertComment(replyComment) > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
+//    }
+
+    public ArticleResult saveReplyComment(int parentCommentId, String content) {
+        // 입력 검증
+        if (parentCommentId < 1 || content == null || content.isEmpty() || content.length() > 100) {
+            return ArticleResult.FAILURE; // 유효하지 않은 입력
+        }
+
+        // 부모 댓글 조회
+        CommentEntity parentComment = this.commentMapper.selectCommentByIndex(parentCommentId);
+        if (parentComment == null || parentComment.getIsDeleted() != null) {
+            return ArticleResult.FAILURE; // 부모 댓글이 없거나 삭제됨
+        }
+
+        // 사용자 정보 추출
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = null;
+        String userNickname = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserEntity) {
+                UserEntity userEntity = (UserEntity) principal;
+                userEmail = userEntity.getEmail();
+                userNickname = userEntity.getNickname();
+            }
+        }
+
+        // 사용자 인증 확인
+        if (userEmail == null) {
+            return ArticleResult.FAILURE; // 인증된 사용자만 가능
+        }
+
+        // 대댓글 생성
+        CommentEntity replyComment = new CommentEntity();
+        replyComment.setPostId(parentComment.getPostId());
+        replyComment.setCommentId(parentCommentId);
+        replyComment.setComment(content);
+        replyComment.setCreatedAt(LocalDateTime.now());
+        replyComment.setUpdateAt(null);
+        replyComment.setIsDeleted(null);
+        replyComment.setUserEmail(userEmail);
+        replyComment.setUserNickname(userNickname != null ? userNickname : "익명");
+
+        // 댓글 저장
+        return this.commentMapper.insertComment(replyComment) > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
+    }
+
+
+
 
     // 댓글 수정 기능
     public ModifyCommentResult modifyComment(int index, String content) {
@@ -111,6 +294,17 @@ public class CommentService {
         return updateCount;
     }
 
+
+
+
+
+
+
+
+
+
+
+
     // 댓글 불러오기 기능
     public CommentEntity[] getCommentsByPostId(int articleIndex) {
         if (articleIndex < 1) {
@@ -123,83 +317,6 @@ public class CommentService {
         return commentEntities;
     }
 
-    // 댓글 작성
-    public ArticleResult writeComment(CommentEntity comment) {
-        if (comment == null ||
-                comment.getComment() == null || comment.getComment().isEmpty() || comment.getComment().length() > 1000) {
-            System.out.println("Comment validation failed");
-            return ArticleResult.FAILURE;
-        }
-        System.out.println("Starting authentication check...");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = null;
-        String userNickname = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserEntity) {
-                UserEntity userEntity = (UserEntity) principal;
-                userEmail = userEntity.getEmail();
-                userNickname = userEntity.getNickname();
-            }
-        }
-
-        System.out.println("userEmail: " + userEmail);
-        System.out.println("userNickname: " + userNickname);
-
-        if (userEmail == null) {
-            System.out.println("Authentication failed. Returning FAILURE.");
-            return ArticleResult.FAILURE;
-        }
-
-        comment.setCreatedAt(LocalDateTime.now());
-        comment.setUserEmail(userEmail);
-        comment.setUserNickname(userNickname != null ? userNickname : "익명");
-
-        int result = commentMapper.insertComment(comment);
-
-        return result > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
-    }
-
-    // 대댓글 작성
-    public ArticleResult saveReplyComment(int parentCommentId, String content) {
-        if (parentCommentId < 1 || content == null || content.isEmpty() || content.length() > 100) {
-            return ArticleResult.FAILURE;
-        }
-        CommentEntity parentComment = this.commentMapper.selectCommentByIndex(parentCommentId);
-        if (parentComment == null || parentComment.getIsDeleted() != null) {
-            return ArticleResult.FAILURE;
-        }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = null;
-        String userNickname = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserEntity) {
-                UserEntity userEntity = (UserEntity) principal;
-                userEmail = userEntity.getEmail();
-                userNickname = userEntity.getNickname();
-            }
-        }
-
-        if (userEmail == null) {
-            return ArticleResult.FAILURE;
-        }
-
-        CommentEntity replyComment = new CommentEntity();
-        replyComment.setPostId(parentComment.getPostId());
-        replyComment.setCommentId(parentCommentId);
-        replyComment.setComment(content);
-        replyComment.setCreatedAt(LocalDateTime.now());
-        replyComment.setUpdateAt(null);
-        replyComment.setIsDeleted(null);
-        replyComment.setUserEmail(userEmail);
-        replyComment.setUserNickname(userNickname != null ? userNickname : "익명");
-
-        return this.commentMapper.insertComment(replyComment) > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
-    }
-
     // 부모 댓글에 대한 대댓글 목록 조회
     public CommentEntity[] getRepliesByParentId(int parentCommentId) {
         if (parentCommentId < 1) {
@@ -207,6 +324,8 @@ public class CommentService {
         }
         return this.commentMapper.selectRepliesByParentId(parentCommentId);
     }
+
+
 }
 
 

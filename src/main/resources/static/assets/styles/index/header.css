@@ -24,8 +24,9 @@
   flex-direction: row;
   gap: 0;
   justify-content: center;
+  padding: 0 2rem 0 1rem;
   align-items: center;
-  width: 100%;
+  width: 98%;
   height: 4rem;
 }
 .header .menu > .-spring {
@@ -67,28 +68,30 @@
   display: flex;
   align-items: center;
   width: 100%;
+  position: relative;
 }
 .header .menu .stretch .form .keyword-label .input {
   flex-grow: 1;
   height: 2.5rem;
-  padding: 0 1rem;
+  padding: 0 3rem 0 1rem;
   border: 0.0625rem solid #ccc;
   border-radius: 700px;
   outline: none;
   transition: border-color 0.3s ease;
 }
 .header .menu .stretch .form .keyword-label .input:focus {
-  border-color: #776969;
+  border-color: #e1e1e1;
 }
 .header .menu .stretch .form .keyword-label .submit-button {
-  background-color: #776969;
+  position: absolute;
+  right: 0.8rem;
+  width: 1.5rem;
+  height: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: -2rem;
-  width: 2.5rem;
-  height: 2.5rem;
   border: none;
+  background: none;
   cursor: pointer;
   padding: 0;
 }
@@ -96,20 +99,17 @@
   width: 1.5rem;
   height: 1.5rem;
   fill: #776969;
+  transition: fill 0.3s ease;
 }
 .header .menu .stretch .form .keyword-label .submit-button svg:hover {
-  fill: #584f47;
+  fill: #bda9a9;
 }
 .header .menu .stretch .form > .label {
   display: flex;
   align-items: center;
 }
 .header .menu .stretch .form > .label > .field > option {
-  color: #1A1A24;
-}
-.header .menu .stretch .form > .submit-button {
-  display: flex;
-  align-items: center;
+  color: #e1e1e1;
 }
 .header .nav {
   width: 100%;
@@ -143,11 +143,12 @@
 }
 
 .main-section {
+  width: 100.2%;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  height: 480px;
+  height: 350px;
 }
 .main-section .image-slider {
   display: flex;
@@ -194,6 +195,7 @@ footer {
   background: #C1B5A3;
   text-align: center;
   padding: 20px 0;
+  width: 101%;
 }
 footer p {
   margin: 5px;

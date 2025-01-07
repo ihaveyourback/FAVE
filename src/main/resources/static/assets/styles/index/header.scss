@@ -14,8 +14,9 @@
 
   .menu {
     @include flex(row, space-between, center);
+    padding: 0 2rem 0 1rem;
     align-items: center; // 아이템 모두 헤더의 중앙으로 배치
-    width: 100%;
+    width: 98%;
     height: 4rem; // 헤더 전체 높이
 
     // 로고 섹션
@@ -50,7 +51,7 @@
       flex-grow: 1;
       display: flex;
       justify-content: center;
-      align-items: center; // 헤더 높이에 맞게 정렬
+      align-items: center;
 
       .form {
         display: flex;
@@ -61,32 +62,34 @@
 
         .keyword-label {
           display: flex;
-          align-items: center; // 입력 필드와 버튼 수직 정렬
+          align-items: center;
           width: 100%;
+          position: relative; // SVG 아이콘을 절대 위치로 배치하기 위해 필요
 
           .input {
             flex-grow: 1;
-            height: 2.5rem; // 헤더 높이에 맞춘 입력 필드
-            padding: 0 1rem;
+            height: 2.5rem;
+            padding: 0 3rem 0 1rem; // 오른쪽 패딩 추가하여 아이콘과 간격 확보
             border: 0.0625rem solid #ccc;
             border-radius: 700px;
             outline: none;
             transition: border-color 0.3s ease;
 
             &:focus {
-              border-color: #776969;
+              border-color: #e1e1e1;
             }
           }
 
           .submit-button {
-            background-color: #776969;
+            position: absolute;
+            right: 0.8rem; // 아이콘이 입력 필드 내부 오른쪽에 정렬됨
+            width: 1.5rem;
+            height: 1.5rem;
             display: flex;
-            align-items: center; // 버튼 내부 요소 수직 정렬
+            align-items: center;
             justify-content: center;
-            margin-left: -2rem; // 버튼과 입력 필드 연결
-            width: 2.5rem;
-            height: 2.5rem; // 헤더 높이에 맞춘 버튼 크기
             border: none;
+            background: none;
             cursor: pointer;
             padding: 0;
 
@@ -94,9 +97,10 @@
               width: 1.5rem;
               height: 1.5rem;
               fill: #776969;
+              transition: fill 0.3s ease;
 
               &:hover {
-                fill: #584f47;
+                fill: #bda9a9;
               }
             }
           }
@@ -107,20 +111,32 @@
           align-items: center;
 
           > .field {
-
             > option {
-              color: #1A1A24;
+              color: #e1e1e1;
             }
           }
-        }
-
-        > .submit-button {
-          display: flex;
-          align-items: center;
         }
       }
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   .nav {
     width: 100%;
@@ -159,11 +175,12 @@
 
 
 .main-section {
+  width: 100.2%;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;  // 슬라이드 바깥의 이미지가 보이지 않게 함
-  height: 480px; // 섹션의 높이를 설정합니다.
+  height: 350px; // 섹션의 높이를 설정합니다.
 
   .image-slider {
     display: flex;
@@ -221,6 +238,7 @@ footer {
   background: #C1B5A3;
   text-align: center;
   padding: 20px 0;
+  width: 101%;
 
   p {
     margin: 5px;
