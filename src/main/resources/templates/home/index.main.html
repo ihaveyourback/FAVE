@@ -30,7 +30,7 @@
         <!-- 로고 -->
         <li class="item">
             <a th:href="@{/}">
-            <img alt="Fave" src="/assets/images/header-logo.png">
+                <img alt="Fave" src="/assets/images/header-logo.png">
             </a>
         </li>
         <!-- 검색 폼 -->
@@ -51,14 +51,14 @@
                     </select>
                 </label>
                 <button class="submit-button" type="submit"></button>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="0.9">
-                            <path d="M15.8999 14.5L19.0862 17.7187" stroke="currentColor" stroke-width="1.8"
-                                  stroke-linecap="round" stroke-linejoin="round"></path>
-                            <circle cx="11.4302" cy="10.4819" r="5.35" stroke="currentColor"
-                                    stroke-width="1.8"></circle>
-                        </g>
-                    </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g opacity="0.9">
+                        <path d="M15.8999 14.5L19.0862 17.7187" stroke="currentColor" stroke-width="1.8"
+                              stroke-linecap="round" stroke-linejoin="round"></path>
+                        <circle cx="11.4302" cy="10.4819" r="5.35" stroke="currentColor"
+                                stroke-width="1.8"></circle>
+                    </g>
+                </svg>
             </form>
         </li>
         <li id="UserLinkWrapper" sec:authorize="isAuthenticated() and !hasAuthority('ROLE_ADMIN')">
@@ -80,7 +80,7 @@
         <ul class="ul">
             <li><a href="/fave/">올해 축제</a></li>
             <li><a href="/board/list">자유 게시판</a></li>
-           <li><a href="/inquiries/list">Q&A</a></li>
+            <li><a href="/inquiries/list">Q&A</a></li>
         </ul>
     </nav>
 </header>

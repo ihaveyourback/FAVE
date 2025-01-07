@@ -132,9 +132,8 @@ public class FaveBoardController {
 //                                    @RequestParam(value = "filter", required = false, defaultValue = "all") String filter) {
 //        ModelAndView modelAndView = new ModelAndView();
 //        Pair<FaveBoardVo, FaveInfoEntity[]> pair = this.faveService.searchFaveInfo(page, filter, keyword);
-//        modelAndView.addObject("page", pair.getLeft());
+//        modelAndView.addObject("page", pair.getLeft());//        modelAndView.setViewName("board/faveBoard");
 //        modelAndView.addObject("fave", pair.getRight());
-//        modelAndView.setViewName("board/faveBoard");
 //        return modelAndView;
 //    }
 

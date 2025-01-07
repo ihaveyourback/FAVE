@@ -43,7 +43,22 @@ public class MyPageController {
     @GetMapping("/profile")
     public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal,
                                     @RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "1") int reportPage,
+                                    @RequestParam(defaultValue = "1") int favoritePage) { // 페이지 번호 (기본값: 1)
+        // 게시글 페이징 정보 생성
+        int totalPostCount = boardPostService.countPostsByUserEmail(principal.getName()); // 사용자의 게시물 수
+        PageVo postPageVo = new PageVo(page, totalPostCount); // 게시글 페이지 정보 생성
+        List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), postPageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
 
+        // 신고 내역 페이징 정보 생성
+        Pair<PageVo, List<ReportEntity>> reportPair = reportService.getReportsByLoggedInUser(reportPage, 10); // 사용자의 신고 목록 가져오기 (페이징 처리)
+        PageVo reportPageVo = reportPair.getLeft();
+        List<ReportEntity> reports = reportPair.getRight();
+
+        // 찜 목록 페이징 정보 생성
+        Pair<PageVo, List<FaveInfoEntity>> favoritePair = userService.getFavoritePostsByUserEmailWithPagination(principal.getName(), favoritePage, 10);
+        PageVo favoritePageVo = favoritePair.getLeft();
+        List<FaveInfoEntity> favoritePosts = favoritePair.getRight();
 
         ModelAndView modelAndView = new ModelAndView(); // 뷰와 모델을 함께 설정 가능
 
@@ -52,23 +67,41 @@ public class MyPageController {
             modelAndView.addObject("nickname", user.getNickname()); // 사용자 닉네임
         }
 
+        modelAndView.addObject("favoritePosts", favoritePosts);
+        modelAndView.addObject("favoritePageVo", favoritePageVo);
+        modelAndView.addObject("reports", reports);
+        modelAndView.addObject("posts", posts);
+        modelAndView.addObject("reportPageVo", reportPageVo); // 신고 내역 페이지 정보 추가
+        modelAndView.addObject("postPageVo", postPageVo); // 게시글 페이지 정보 추가
+
+        modelAndView.addObject("username", principal.getName()); // 사용자 이름
+        modelAndView.setViewName("user/profile");
         return modelAndView;
     }
 
 
+    // 회원탈퇴 메서드
     @PostMapping("/secession")
-    public ResponseEntity<?> secession(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Map<String, String> payload) {
-        if (userDetails == null) {
+    public ResponseEntity<?> secession(@AuthenticationPrincipal Object principal, @RequestBody Map<String, String> payload) {
+        if (principal == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
         }
 
-        UserEntity user;
-        if (userDetails instanceof UserEntity) {
-            user = (UserEntity) userDetails;
+        PrincipalDetails principalDetails;
+        if (principal instanceof PrincipalDetails) {
+            principalDetails = (PrincipalDetails) principal;
+        } else if (principal instanceof CustomOAuth2User) {
+            CustomOAuth2User oauthUser = (CustomOAuth2User) principal;
+            UserEntity user = new UserEntity();
+            user.setEmail(oauthUser.getEmail());
+            user.setNickname(oauthUser.getNickname());
+            user.setOauth2Provider(oauthUser.getProvider());
+            principalDetails = new PrincipalDetails(user, oauthUser.getAttributes());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
         }
 
+        UserEntity user = principalDetails.getUser();
         if (!user.isSocialLogin()) {
             String currentPassword = payload.get("currentPassword");
             if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
@@ -85,12 +118,12 @@ public class MyPageController {
         }
     }
 
+    // 사용자 정보를 업데이트하는 메서드
     @PostMapping("/update-profile")
     public ResponseEntity<?> updateUserInfo(
             @AuthenticationPrincipal UserDetails userDetails, // 사용자 정보
             @RequestBody Map<String, String> payload, // 요청 본문
             HttpServletRequest request) { // 사용자 정보 업데이트
-
         if (!(userDetails instanceof UserEntity user)) { // 사용자 정보가 없으면
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
                     "message", "사용자 정보가 없습니다. 소셜 로그인은 사용불가능합니다."
@@ -100,7 +133,6 @@ public class MyPageController {
         String newNickname = payload.get("nickname"); // 새 닉네임
         String currentPassword = payload.get("currentPassword"); // 현재 비밀번호
         String newPassword = payload.get("newPassword"); // 새 비밀번호
-
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
@@ -119,7 +151,7 @@ public class MyPageController {
         // 세션 무효화 및 인증 정보 지우기
         request.getSession().invalidate(); // 세션 무효화
         SecurityContextHolder.clearContext(); // 인증 정보 지우기
-        System.out.println("응답 메시지: " + Map.of("message", "사용자 정보가 성공적으로 업데이트되었습니다."));
+
         return ResponseEntity.ok(Map.of("message", "사용자 정보가 성공적으로 업데이트되었습니다. 로그아웃 후 변경된 비밀번호로 다시 로그인 해주세요."));
     }
 }

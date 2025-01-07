@@ -89,10 +89,6 @@ public class ReportService {
     }
 
 
-
-
-
-
     private String getLoggedInUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -102,8 +98,17 @@ public class ReportService {
     }
 
 
+
     // 로그인한 사용자의 이메일을 기준으로 신고 내역을 가져오는 메서드 (페이징 처리)
     public Pair<PageVo, List<ReportEntity>> getReportsByLoggedInUser(int page, int size) {
-        String loggedInUserEmail = getLoggedInUserEmail(); // 로그인한 사용자의 이메일을 가져옴
+        String loggedInUserEmail = getLoggedInUserEmail();
         List<ReportEntity> allReports = reportRepository.findReportsByUserEmailOrderByReportedAtDesc(loggedInUserEmail).orElse(List.of());
-
+        int totalCount = allReports.size();
+        PageVo pageVo = new PageVo(page, totalCount); // 페이징 정보 생성
+        List<ReportEntity> reports = allReports.stream()
+                .skip(pageVo.offsetCount)
+                .limit(pageVo.countPerPage)
+                .toList();
+        return Pair.of(pageVo, reports); // 페이징 정보와 신고 내역 반환
+    }
+}
