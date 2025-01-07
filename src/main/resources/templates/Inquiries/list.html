@@ -30,9 +30,8 @@
             <td colspan="5">등록된 글이 없습니다.</td>
         </tr>
         <tr th:each="article : ${articles}">
-            <!--            <td th:text="${article.getIndex()}">1</td>-->
             <td style="text-align: center" th:text="${article.getIndex()}"></td>
-            <td style="text-align: center">
+            <td style="text-align: center;">
                 <a th:text="${article.getTitle()}" th:href="@{'/inquiries/read'(index=${article.getIndex()})}">제목입니다</a>
                 <!--                <b class="commentCount">[<span th:text="${article.getCommentCount()}"></span>]</b>-->
             </td>

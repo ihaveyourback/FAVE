@@ -48,14 +48,6 @@
   margin-top: 3rem;
   margin-right: 0.5rem;
 }
-.container .button-container .report {
-  margin-right: auto;
-  margin-left: 0.8rem;
-}
-.container .button-container .button_list {
-  margin-right: auto;
-  margin-left: 0.5rem;
-}
 .container .button-container .button {
   padding: 0.3rem 0.8rem;
   font-size: 0.7rem;
@@ -64,10 +56,11 @@
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
-  transition: all 0.3s ease;
   text-align: center;
+  transition: all 0.3s ease;
 }
 .container .button-container .button.report {
+  margin-left: 0.8rem;
   background-color: #c1b5a3;
 }
 .container .button-container .button.report:hover {
@@ -97,6 +90,23 @@
 .container .button-container .button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+.container .button-container .button.hidden {
+  visibility: hidden;
+}
+.container .button-container .button_list {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.container .button-container .button_list .back {
+  background-color: #c1b5a3;
+}
+.container .button-container .button_list .back:hover {
+  background-color: rgb(172.4675324675, 156.4935064935, 132.5324675325);
+}
+.container .button-container .button_list .back:active {
+  background-color: rgb(162.2012987013, 144.2402597403, 117.2987012987);
 }
 .container > .content {
   min-height: 5rem;
