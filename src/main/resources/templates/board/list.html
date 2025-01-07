@@ -18,15 +18,10 @@
 
 </head>
 <body>
+<th:block th:replace="~{home/index.main :: loginMain}"></th:block>
 <th:block th:replace="~{home/index.main :: header}"></th:block>
-<th:block th:replace="~{home/index.main :: main}"></th:block>
 <th:block th:replace="~{home/index.main :: cover}"></th:block>
 <main id="list">
-      <!-- Cover Screen -->
-    <div class="cover" id="cover"></div>
-    <br>
-    <br>
-    <br>
     <h1 class="title" onclick="location.href='/board/list'" style="cursor: pointer">자유게시판</h1>
     <table class="article-table">
         <thead>
@@ -94,7 +89,6 @@
            th:href="@{'/board/list' (page=${pageVo.movableMaxPage}, filter=${filter}, keyword=${keyword})}">&gt;&gt;</a>
     </div>
 </main>
-
 <footer>
     <div class="footer-content">
         <p>김용현 김창윤 김범수 이석민</p>

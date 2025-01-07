@@ -80,7 +80,7 @@
           white-space: nowrap;
           font-size: 0.9rem;
 
-          &:nth-of-type(1) > a {
+          &:nth-of-type(2) > a {
             color: inherit;
             text-decoration: none;
             white-space: break-spaces;
@@ -94,7 +94,7 @@
             }
           }
 
-          &:nth-of-type(1) > b {
+          &:nth-of-type(2) > b {
             color: black;
           }
         }
