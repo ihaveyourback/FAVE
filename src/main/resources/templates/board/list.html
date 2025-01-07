@@ -22,6 +22,11 @@
 <th:block th:replace="~{home/index.main :: main}"></th:block>
 <th:block th:replace="~{home/index.main :: cover}"></th:block>
 <main id="list">
+      <!-- Cover Screen -->
+    <div class="cover" id="cover"></div>
+    <br>
+    <br>
+    <br>
     <h1 class="title" onclick="location.href='/board/list'" style="cursor: pointer">자유게시판</h1>
     <table class="article-table">
         <thead>
@@ -89,5 +94,14 @@
            th:href="@{'/board/list' (page=${pageVo.movableMaxPage}, filter=${filter}, keyword=${keyword})}">&gt;&gt;</a>
     </div>
 </main>
+
+<footer>
+    <div class="footer-content">
+        <p>김용현 김창윤 김범수 이석민</p>
+        <p>고객센터: 123-456-7890</p>
+        <p>&copy; 2024 축제잇슈. All Rights Reserved.</p>
+        <p>대구광역시 중구 동성로3가 동성로1길 15</p>
+    </div>
+</footer>
 </body>
 </html>

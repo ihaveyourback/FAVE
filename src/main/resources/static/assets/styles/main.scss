@@ -33,6 +33,38 @@ body {
   }
 }
 
+.sns-login {
+  text-align: center;
+  margin-top: 10px;
+
+  .sns-login-title {
+    font-size:1rem;
+    color: #333;
+  }
+
+  .sns-login-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius: 5px;
+    font-size: 0.325rem;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    img {
+      vertical-align: middle;
+      height: 28px;
+      margin-right: 8px;
+    }
+  }
+}
+
 
 
 /* 기본 슬라이더 스타일 */
@@ -87,10 +119,10 @@ body {
 
 .modal {
   @include flex(column, stretch, flex-start, 0.5rem);
-  top: 50%;
+  top: 55%;
   left: 50%;
   width: 25rem;
-  max-width: 100vw;
+  max-width: 98vw;
   max-height: calc(100vh - 2rem);
   background-color: #ffffff;
   box-sizing: border-box;
