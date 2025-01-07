@@ -48,5 +48,8 @@
 #main > .content[rel=reports] > .table > .tbody > .page-container > td {
   padding: 0.825rem;
 }
+#main > .content[rel=reports] > .table > .tbody > .page-container > td > a {
+  padding: 0.325rem;
+}
 
 /*# sourceMappingURL=adminReports.css.map */

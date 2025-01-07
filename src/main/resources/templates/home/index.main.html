@@ -86,7 +86,6 @@
 <!-- Cover Screen -->
 <div class="cover" id="cover"></div>
 <div class="gongback"></div>
-
 <!--관리자가 소개하는 인기 축제  api?-->
 <a href="">
     <section class="main-section">
@@ -97,9 +96,9 @@
     </span>
     </section>
 </a>
-
 <main id="faveMain">
     <span style="text-align: center; display: block; font-size: 2.5rem; font-weight: bold; color: #000000"  > 오늘의 축제</span>
+<main id="faveMain">
     <div class="grid-container">
         <div class="empty" th:if="${fave == null || fave.length == 0}">
             <span>해당 축제는 없습니다.</span>
@@ -114,8 +113,8 @@
     </div>
 </main>
 
-<main id="main">
-    <div class="content" th:fragment="login">
+<main id="main" th:fragment="main">
+    <div class="content">
         <form novalidate class="login-form" id="loginForm" th:action="@{/api/login}" method="post">
             <h2 class="title">
                 로그인</h2>

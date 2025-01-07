@@ -52,7 +52,7 @@ public class FaveBoardController {
                                      @RequestParam(value = "userEmail") String userEmail) {
         // FaveInfo 조회
         FaveInfoEntity fave = this.faveService.selectFaveInfoById(index);
-
+        this.faveService.updateFaveInfo(fave);
         // 찜 상태 확인
         Optional<FavoritesEntity> existingLike = favoriteRepository.findByUserEmailAndFestivalId(userEmail, index);
         boolean isLiked = existingLike.isPresent(); // 찜한 상태 여부
