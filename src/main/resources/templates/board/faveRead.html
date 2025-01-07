@@ -13,7 +13,6 @@
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3a292de2c208474fb8fc896f87e4674b&libraries=services"></script>
     <script src="/board/scripts/faveRead.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
@@ -22,7 +21,8 @@
 
 </head>
 <body>
-<div th:insert="~{home/index.main.html :: header}"></div>
+<div th:insert="~{home/index.main :: header}"></div>
+<br><br><br><br>
 <main id="main">
     <div class="container">
         <div class="post">
@@ -46,9 +46,6 @@
                          alt="like-outline" />
                 </a>
             </div>
-
-
-
         </div>
         <div class="content">
             <div th:utext="${fave.getDescription()}"></div>
@@ -57,9 +54,9 @@
     </div>
     <div class="button-container">
         <a class="button" th:href="@{'/fave/'}" target="_self">목록으로</a>
-
     </div>
 </main>
+<div th:insert="~{home/index.main :: footer}"></div>
 
 </body>
 </html>
