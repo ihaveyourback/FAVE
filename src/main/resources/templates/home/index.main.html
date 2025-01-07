@@ -86,7 +86,7 @@
     </nav>
 </header>
 <!-- Cover Screen -->
-<div class="cover" id="cover"></div>
+<div class="cover" id="cover" th:fragment="cover"></div>
 <br><br>
 <!--관리자가 소개하는 인기 축제  api?-->
 <a href="">
@@ -99,7 +99,6 @@
     </section>
 </a>
 <main id="faveMain">
-
     <div class="grid-container">
         <div class="empty" th:if="${fave == null || fave.length == 0}">
             <span>해당 축제는 없습니다.</span>
@@ -114,7 +113,7 @@
     </div>
 </main>
 
-<main id="main">
+<main id="main" th:fragment="main">
     <div class="content">
         <form novalidate class="login-form" id="loginForm" th:action="@{/api/login}" method="post">
             <h2 class="title">
