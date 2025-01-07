@@ -8,24 +8,25 @@
     <title>축제잇슈 자유게시판</title>
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
     <link rel="stylesheet" type="text/css" href="/board/assets/styles/list.css">
-    <link rel="stylesheet" type="text/css" href="/assets/styles/common_cy.css">
-
-    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
-    <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
-    <script defer type="text/javascript" src="/assets/scripts/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
+
+    <script type="text/javascript" src="/assets/scripts/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
+
 </head>
 <body>
-<div th:insert="~{home/index.main.html :: header}"></div>
-
-<main id="main">
-    <!-- Cover Screen -->
+<th:block th:replace="~{home/index.main :: header}"></th:block>
+<th:block th:replace="~{home/index.main :: main}"></th:block>
+<th:block th:replace="~{home/index.main :: cover}"></th:block>
+<main id="list">
+      <!-- Cover Screen -->
     <div class="cover" id="cover"></div>
     <br>
     <br>
     <br>
-
     <h1 class="title" onclick="location.href='/board/list'" style="cursor: pointer">자유게시판</h1>
     <table class="article-table">
         <thead>

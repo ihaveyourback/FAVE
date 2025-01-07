@@ -66,7 +66,7 @@ public class FaveBoardController {
 
         // FaveInfo 조회
         FaveInfoEntity fave = this.faveService.selectFaveInfoById(index);
-
+        this.faveService.updateFaveInfo(fave);
         // 찜 상태 확인
         boolean isLiked = false;
         if (isLoggedIn) {
