@@ -47,7 +47,6 @@
                            placeholder="새로운 잇슈 검색!"
                            spellcheck="false"
                            type="text" th:value="${keyword}">
-                </label>
                 <button class="submit-button" type="submit">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g opacity="0.9">
@@ -58,6 +57,7 @@
                         </g>
                     </svg>
                 </button>
+                </label>
             </form>
         </li>
         <li id="UserLinkWrapper" sec:authorize="isAuthenticated() and !hasAuthority('ROLE_ADMIN')">
@@ -84,8 +84,8 @@
     </nav>
 </header>
 <!-- Cover Screen -->
-<div class="cover" id="cover" th:fragment="cover"></div>
-<br><br>
+<div class="cover" id="cover"></div>
+<div class="gongback"></div>
 <!--관리자가 소개하는 인기 축제  api?-->
 <a href="">
     <section class="main-section">
@@ -96,6 +96,8 @@
     </span>
     </section>
 </a>
+<main id="faveMain">
+    <span style="text-align: center; display: block; font-size: 2.5rem; font-weight: bold; color: #000000"  > 오늘의 축제</span>
 <main id="faveMain">
     <div class="grid-container">
         <div class="empty" th:if="${fave == null || fave.length == 0}">
@@ -237,7 +239,6 @@
         </form>
     </div>
 </main>
-
 
 <footer>
     <div class="footer-content" >

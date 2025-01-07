@@ -5,6 +5,7 @@ body {
   flex-direction: column;
   gap: 0;
   justify-content: flex-start;
+  width: 100%;
 }
 body > .-spring {
   flex-grow: 1;
@@ -73,7 +74,7 @@ body > .-spring {
 .image-slider {
   position: relative;
   width: 100%;
-  height: 100%; /* 슬라이더 높이 조정 */
+  height: 85%; /* 슬라이더 높이 조정 */
 }
 
 /* 이미지 스타일 */
@@ -220,6 +221,10 @@ body > .-spring {
 #recoverForm > .content > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
+}
+
+.gongback {
+  margin: 2.475rem;
 }
 
 /*# sourceMappingURL=main.css.map */

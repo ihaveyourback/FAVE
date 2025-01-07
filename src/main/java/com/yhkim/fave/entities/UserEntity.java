@@ -133,7 +133,9 @@ public class UserEntity implements UserDetails, OAuth2User {
     @Override
     public String getName() {
         return email;
-    } // 이름을 가져오는 메서드
+    }
+
+
 
     public boolean isSuspended() {
         return suspended;
