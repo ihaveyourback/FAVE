@@ -190,72 +190,40 @@ public ArticleResult saveReplyComment(int parentCommentId, String content, Strin
 
 
 
-//    // 댓글 수정 기능
-//    public ModifyCommentResult modifyComment(int index, String content) {
-//        if (index < 1 || content == null || content.isEmpty() || content.length() > 100) {
-//            return ModifyCommentResult.FAILURE;
-//        }
-//        CommentEntity comment = this.commentMapper.selectCommentByIndex(index);
-//        if (comment == null || comment.getIsDeleted() != null) {
-//            return ModifyCommentResult.FAILURE;
-//        }
-//
-//        // 로그인된 사용자 이메일과 댓글 작성자의 이메일 비교
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String userEmail = null;
-//
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            Object principal = authentication.getPrincipal();
-//            if (principal instanceof UserEntity) {
-//                UserEntity userEntity = (UserEntity) principal;
-//                userEmail = userEntity.getEmail();
-//            }
-//        }
-//
-//        if (userEmail == null || !userEmail.equals(comment.getUserEmail())) {
-//            return ModifyCommentResult.FAILURE; // 다른 사용자의 댓글은 수정할 수 없음
-//        }
-//
-//        comment.setComment(content);
-//        comment.setUpdateAt(LocalDateTime.now());
-//        return this.commentMapper.updateComment(comment) > 0
-//                ? ModifyCommentResult.SUCCESS
-//                : ModifyCommentResult.FAILURE;
-//    }
-//댓글 수정
-    public ModifyCommentResult modifyComment(int index, String content, String userEmail) {
-        // 입력 값 검증
-        if (index < 1 || content == null || content.isEmpty() || content.length() > 100) {
-            return ModifyCommentResult.FAILURE; // 유효하지 않은 입력
-        }
-
-        // 댓글 조회
-        CommentEntity comment = this.commentMapper.selectCommentByIndex(index);
-        if (comment == null || comment.getIsDeleted() != null) {
-            return ModifyCommentResult.FAILURE; // 댓글이 없거나 삭제됨
-        }
-
-        // 로그인된 사용자의 이메일과 댓글 작성자의 이메일 비교
-        if (userEmail == null || !userEmail.equals(comment.getUserEmail())) {
-            return ModifyCommentResult.FAILURE; // 다른 사용자의 댓글은 수정할 수 없음
-        }
-
-        // 댓글 내용 수정
-        comment.setComment(content);
-        comment.setUpdateAt(LocalDateTime.now());
-
-        // 댓글 업데이트
-        return this.commentMapper.updateComment(comment) > 0
-                ? ModifyCommentResult.SUCCESS
-                : ModifyCommentResult.FAILURE;
+//댓글 수정기능
+public ModifyCommentResult modifyComment(int index, String content, String userEmail) {
+    // 입력 값 검증
+    if (index < 1 || content == null || content.isEmpty() || content.length() > 100) {
+        return ModifyCommentResult.FAILURE; // 유효하지 않은 입력
     }
 
+    // 댓글 조회
+    CommentEntity comment = this.commentMapper.selectCommentByIndex(index);
+    if (comment == null || comment.getIsDeleted() != null) {
+        return ModifyCommentResult.FAILURE; // 댓글이 없거나 삭제됨
+    }
+
+    // 로그인된 사용자의 이메일과 댓글 작성자의 이메일 비교
+    if (userEmail == null || !userEmail.equals(comment.getUserEmail())) {
+        return ModifyCommentResult.FAILURE; // 다른 사용자의 댓글은 수정할 수 없음
+    }
+
+    // 댓글 내용 수정
+    comment.setComment(content);
+    comment.setUpdateAt(LocalDateTime.now());
+
+    // 댓글 업데이트
+    return this.commentMapper.updateComment(comment) > 0
+            ? ModifyCommentResult.SUCCESS
+            : ModifyCommentResult.FAILURE;
+}
     // 댓글 삭제
-    public DeleteCommentResult deleteComment(int index) {
+    public DeleteCommentResult deleteComment(int index, String userEmail) {
         if (index < 1) {
             return DeleteCommentResult.FAILURE; // 유효하지 않은 index
         }
 
+        // 댓글 조회
         CommentEntity comment = this.commentMapper.selectCommentByIndex(index);
         if (comment == null) {
             return DeleteCommentResult.FAILURE; // 댓글이 없음
@@ -266,21 +234,11 @@ public ArticleResult saveReplyComment(int parentCommentId, String content, Strin
         }
 
         // 로그인된 사용자 이메일과 댓글 작성자의 이메일 비교
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserEntity) {
-                UserEntity userEntity = (UserEntity) principal;
-                userEmail = userEntity.getEmail();
-            }
-        }
-
-        if (userEmail == null || !userEmail.equals(comment.getUserEmail())) {
+        if (userEmail == null || !userEmail.equalsIgnoreCase(comment.getUserEmail())) {
             return DeleteCommentResult.FAILURE; // 다른 사용자의 댓글은 삭제할 수 없음
         }
 
+        // 댓글 삭제 처리
         comment.setIsDeleted(LocalDateTime.now()); // 삭제 시간 설정
         int updateCount = this.commentMapper.updateComment(comment);
 
@@ -315,12 +273,23 @@ public ArticleResult saveReplyComment(int parentCommentId, String content, Strin
         if (articleIndex < 1) {
             return new CommentEntity[0];
         }
+
         CommentEntity[] commentEntities = this.commentMapper.selectCommentsByPostId(articleIndex);
+
         if (commentEntities == null || commentEntities.length == 0) {
             return new CommentEntity[0];
         }
+
+        // 이메일 대소문자 문제 방지 - 이메일 값을 소문자로 통일
+        for (CommentEntity comment : commentEntities) {
+            if (comment.getUserEmail() != null) {
+                comment.setUserEmail(comment.getUserEmail().toLowerCase());
+            }
+        }
+
         return commentEntities;
     }
+
 
     // 부모 댓글에 대한 대댓글 목록 조회
     public CommentEntity[] getRepliesByParentId(int parentCommentId) {

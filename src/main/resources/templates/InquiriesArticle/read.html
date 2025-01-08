@@ -49,7 +49,14 @@
                     th:onclick="|location.href='/mail/send?index=${article.getIndex()}'|">
                 답변하기
             </button>
-
+            <div class="button_list">
+                <a th:href="@{'/inquiries/list'}" target="_self"
+                   class="button_list button back write --obj-button -button_color">목록으로</a>
+            </div>
+            <button name="modify" class="button modify" type="button">수정</button>
+            <button name="delete" class="button delete" type="button">삭제</button>
+        </div>
+    </div>
             <!-- 목록으로 버튼 -->
             <div class="button_list">
                 <a th:href="@{'/inquiries/list'}" target="_self" class="button back write --obj-button -button_color">
@@ -73,8 +80,6 @@
                 </button>
             </div>
         </div>
-
-
 </main>
 </body>
 </html>

@@ -52,7 +52,7 @@
         <a class="page"
            th:each="page : ${#numbers.sequence(page.displayMinPage, page.displayMaxPage)}"
            th:text="${page}"
-           th:href="@{/fave(page=${page})}"></a> <!-- URL 수정 -->
+           th:href="@{'/fave/' (page=${page})}"></a> <!-- URL 수정 -->
     </div>
 </main>
 
