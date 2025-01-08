@@ -111,20 +111,6 @@ public class CommentController {
 
 
 //    // 댓글 수정 기능
-//    @RequestMapping(value = "/", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public String patchIndex(
-//            @RequestParam(value = "index", required = false, defaultValue = "0") int index,
-//            @RequestParam(value = "content", required = false) String content,
-//            @AuthenticationPrincipal Object principal) {
-//
-//        ModifyCommentResult result = this.commentService.modifyComment(index, content);
-//        JSONObject response = new JSONObject();
-//        response.put("result", result.name().toLowerCase());
-//        return response.toString();
-//    }
-
-
     @RequestMapping(value = "/", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String patchIndex(
@@ -201,12 +187,6 @@ public class CommentController {
         }
         return ResponseEntity.ok(replies);
     }
-
-
-
-
-
-
 
 
 }
