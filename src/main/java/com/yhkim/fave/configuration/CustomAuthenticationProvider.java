@@ -53,9 +53,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 throw new UserSuspendedException("계정이 잠겼습니다");
             }
 
+            logger.info("Input password: {}", password);
+            logger.info("Stored password: {}", user.getPassword());
+
             if (!passwordEncoder.matches(password, user.getPassword())) {
+                logger.warn("Password mismatch for user: {}", email);
                 throw new BadCredentialsException("아이디 또는 비밀번호가 일치하지 않습니다");
             }
+
         }
 
         return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());

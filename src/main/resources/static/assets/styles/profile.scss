@@ -12,6 +12,7 @@ body {
   margin: 0;
   padding: 0;
 }
+
 .posts-table {
   width: 100%;
   border-collapse: collapse;
@@ -219,6 +220,7 @@ body {
     }
   }
 }
+
 // 회원탈퇴 폼 스타일
 .deactivate-form {
   @include flex(column, flex-start, flex-start, 1rem);
@@ -257,6 +259,38 @@ body {
 
     &:hover {
       background-color: #c99e7a;
+    }
+  }
+}
+
+// 찜목록 스타일
+.favorites-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: #1c1d1e;
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f8f4f0;
+  }
+
+  td {
+    background-color: #fff;
+  }
+
+  a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #e0c3a1;
     }
   }
 }

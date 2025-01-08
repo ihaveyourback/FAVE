@@ -62,17 +62,17 @@
   white-space: nowrap;
   font-size: 0.9rem;
 }
-#list > .article-table > tbody > tr > td:nth-of-type(1) > a {
+#list > .article-table > tbody > tr > td:nth-of-type(2) > a {
   color: inherit;
   text-decoration: none;
   white-space: break-spaces;
   margin-right: 0.4rem;
   padding-left: 1rem;
 }
-#list > .article-table > tbody > tr > td:nth-of-type(1) > a:hover {
+#list > .article-table > tbody > tr > td:nth-of-type(2) > a:hover {
   text-decoration: underline;
 }
-#list > .article-table > tbody > tr > td:nth-of-type(1) > b {
+#list > .article-table > tbody > tr > td:nth-of-type(2) > b {
   color: black;
 }
 #list .commentCount {
@@ -186,7 +186,7 @@
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
   text-decoration: none;
-  text-align: left;
+  text-align: center;
   transition: background-color 0.3s;
 }
 #list .button.write:hover {
@@ -196,4 +196,4 @@
   background-color: rgb(172.4675324675, 156.4935064935, 132.5324675325);
 }
 
-/*# sourceMappingURL=list.css.map */
+/*# sourceMappingURL=inquiriesList.css.map */

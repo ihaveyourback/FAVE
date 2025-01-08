@@ -1,9 +1,12 @@
 package com.yhkim.fave.configuration;
 
+import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.exceptions.AccountDeletedException;
 import com.yhkim.fave.exceptions.OAuth2IdNotFoundException;
 import com.yhkim.fave.exceptions.UserNotVerifiedException;
 import com.yhkim.fave.exceptions.UserSuspendedException;
+import com.yhkim.fave.services.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,30 +20,33 @@ import java.io.IOException;
 @Component
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
+    private final UserService userService;
+
+    public CustomAuthenticationFailureHandler(UserService userService) {
+        this.userService = userService;
+    }
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         String failureReason;
         int statusCode;
 
-        if (exception instanceof OAuth2AuthenticationException) {
-            if (exception.getCause() instanceof OAuth2IdNotFoundException) {
-                failureReason = "oauth2IdNotFound";
-                statusCode = 401;
-            } else if (exception.getCause() instanceof OAuth2AuthenticationException) {
-                failureReason = "oauth2_deleted"; // 탈퇴된 소셜 계정 메시지
-                statusCode = 403;
-            } else {
-                failureReason = "oauth2_authentication_failed";
-                statusCode = 401;
-            }
-        } else if (exception instanceof UserNotVerifiedException) {
+        if (exception instanceof UserNotVerifiedException) {
             failureReason = "failure_not_verified";
             statusCode = 200;
+            UserEntity user = ((UserNotVerifiedException) exception).getUser();
+
+            // 메일 재전송
+            try {
+                userService.handleUserNotVerified(user, null); // validationLink가 필요하다면 해당 부분 수정
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         } else if (exception instanceof UserSuspendedException) {
             failureReason = "failure_suspended";
             statusCode = 403;
         } else if (exception instanceof AccountDeletedException) {
-            failureReason = "failure_deleted"; // 일반 회원 탈퇴 메시지
+            failureReason = "failure_deleted";
             statusCode = 403;
         } else if (exception instanceof BadCredentialsException) {
             failureReason = "failure_bad_credentials";
@@ -52,6 +58,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
         response.setCharacterEncoding("UTF-8");
         response.setStatus(statusCode);
-        response.getWriter().write("{\"error\": \"" + failureReason + "\"}");
+        response.getWriter().write("{\"result\": \"" + failureReason + "\"}");
     }
 }

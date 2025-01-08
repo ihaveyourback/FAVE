@@ -1,6 +1,7 @@
 package com.yhkim.fave.services;
 
 import com.yhkim.fave.entities.ArticleEntity;
+import com.yhkim.fave.entities.CustomOAuth2User;
 import com.yhkim.fave.entities.ImageEntity;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.mappers.ArticleMapper;
@@ -133,41 +134,97 @@ public class ArticleService {
         return this.imageMapper.insertImage(image) > 0;
     }
 
-    // 게시글 작성
+//    // 게시글 작성
+//    public ArticleResult write(ArticleEntity article) {
+//        if (article == null ||
+//                article.getTitle() == null || article.getTitle().isEmpty() || article.getTitle().length() > 100 ||
+//                article.getContent() == null || article.getContent().isEmpty()) {
+//            return ArticleResult.FAILURE;
+//        }
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userEmail = null;
+//        String userNickname = null;
+//
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            Object principal = authentication.getPrincipal();
+//            if (principal instanceof UserEntity) {
+//                UserEntity userEntity = (UserEntity) principal;
+//                userEmail = userEntity.getEmail();
+//                userNickname = userEntity.getNickname();
+//            }
+//        }
+//
+//        System.out.println("userEmail: " + userEmail);
+//        System.out.println("userNickname: " + userNickname);
+//
+//        if (userEmail == null) {
+//            System.out.println("Authentication failed. Returning FAILURE.");
+//            return ArticleResult.FAILURE;
+//        }
+//
+//        article.setCreatedAt(LocalDateTime.now());
+//        article.setUserEmail(userEmail);
+//        article.setUserNickname(userNickname != null ? userNickname : "익명");
+//
+//        int result = this.articleMapper.insertArticle(article);
+//
+//        return result > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
+//    }
+
+
     public ArticleResult write(ArticleEntity article) {
+        // 1. 입력 검증: 게시글이 null이 아니고, 제목과 내용이 유효한지 체크
         if (article == null ||
                 article.getTitle() == null || article.getTitle().isEmpty() || article.getTitle().length() > 100 ||
                 article.getContent() == null || article.getContent().isEmpty()) {
+            // 유효하지 않으면 실패 반환
             return ArticleResult.FAILURE;
         }
 
+        // 2. 인증된 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = null;
         String userNickname = null;
 
+        // 3. 사용자가 인증된 경우, 이메일과 닉네임 추출
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
-            if (principal instanceof UserEntity) {
+
+            // 4. 소셜 로그인 (CustomOAuth2User) 처리
+            if (principal instanceof CustomOAuth2User) {
+                CustomOAuth2User customUser = (CustomOAuth2User) principal;
+                userEmail = customUser.getEmail(); // 이메일 추출
+                userNickname = customUser.getNickname(); // 닉네임 추출
+            }
+            // 5. 일반 로그인 (UsernamePasswordAuthenticationToken) 처리
+            else if (principal instanceof UserEntity) {
                 UserEntity userEntity = (UserEntity) principal;
-                userEmail = userEntity.getEmail();
-                userNickname = userEntity.getNickname();
+                userEmail = userEntity.getEmail(); // 이메일 추출
+                userNickname = userEntity.getNickname(); // 닉네임 추출
             }
         }
 
+        // 6. 사용자 정보 출력 (디버깅 용도)
         System.out.println("userEmail: " + userEmail);
         System.out.println("userNickname: " + userNickname);
 
+        // 7. 이메일 정보가 없다면 인증 실패로 간주하고, 실패 반환
         if (userEmail == null) {
             System.out.println("Authentication failed. Returning FAILURE.");
             return ArticleResult.FAILURE;
         }
 
-        article.setCreatedAt(LocalDateTime.now());
-        article.setUserEmail(userEmail);
-        article.setUserNickname(userNickname != null ? userNickname : "익명");
+        // 8. 게시글의 생성일시와 사용자 정보 설정
+        article.setCreatedAt(LocalDateTime.now()); // 현재 시간으로 생성일시 설정
+        article.setUserEmail(userEmail); // 사용자 이메일 설정
+        article.setUserNickname(userNickname != null ? userNickname : "익명"); // 닉네임 설정 (null이면 "익명"으로 설정)
 
+        // 9. 게시글을 데이터베이스에 삽입
         int result = this.articleMapper.insertArticle(article);
 
+        // 10. 삽입 결과가 성공적이면 SUCCESS 반환, 아니면 FAILURE 반환
         return result > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
     }
+
 }

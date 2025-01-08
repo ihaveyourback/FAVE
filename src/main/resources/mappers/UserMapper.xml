@@ -96,34 +96,38 @@
     <!--  user 테이블에 있는 데이터 불러오기 -->
     <select id="selectAllUser" parameterType="com.yhkim.fave.entities.UserEntity"
             resultType="com.yhkim.fave.entities.UserEntity">
-        SELECT `email`        AS `email`,
-               `password`     AS `password`,
-               `nickname`     AS `nickname`,
-               `contact`      AS `contact`,
-               `create_at`    AS `createdAt`,
-               `update_at`    AS `updatedAt`,
-               `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `admin`,
-               `is_suspended` AS `suspended`,
-               `is_verified`  AS `verified`,
-               `warning`      AS `warning`
+        SELECT `email`           AS `email`,
+               `password`        AS `password`,
+               `nickname`        AS `nickname`,
+               `contact`         AS `contact`,
+               `create_at`       AS `createdAt`,
+               `update_at`       AS `updatedAt`,
+               `deleted_at`      AS `deletedAt`,
+               `is_admin`        AS `admin`,
+               `is_suspended`    AS `suspended`,
+               `is_verified`     AS `verified`,
+               `warning`         AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id`       AS `oauth2Id`
         FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
           AND `is_suspended` = false
         ORDER BY `create_at` DESC
     </select>
     <select id="selectUserByEmailAdmin" resultType="com.yhkim.fave.entities.UserEntity">
-        SELECT `email`        AS `email`,
-               `password`     AS `password`,
-               `nickname`     AS `nickname`,
-               `contact`      AS `contact`,
-               `create_at`    AS `createdAt`,
-               `update_at`    AS `updatedAt`,
-               `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `admin`,
-               `is_suspended` AS `suspended`,
-               `is_verified`  AS `verified`,
-               `warning`      AS `warning`
+        SELECT `email`           AS `email`,
+               `password`        AS `password`,
+               `nickname`        AS `nickname`,
+               `contact`         AS `contact`,
+               `create_at`       AS `createdAt`,
+               `update_at`       AS `updatedAt`,
+               `deleted_at`      AS `deletedAt`,
+               `is_admin`        AS `admin`,
+               `is_suspended`    AS `suspended`,
+               `is_verified`     AS `verified`,
+               `warning`         AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id`       AS `oauth2Id`
         FROM `fave`.`users`
         WHERE `email` = #{userEmail}
     </select>
@@ -137,19 +141,23 @@
     <select id="selectUserCount" resultType="java.lang.Integer">
         SELECT COUNT(0)
         FROM `fave`.`users`
+        WHERE `deleted_at` IS NULL
+          AND `is_suspended` = false
     </select>
     <select id="selectUserPage">
-        SELECT `email`        AS `email`,
-               `password`     AS `password`,
-               `nickname`     AS `nickname`,
-               `contact`      AS `contact`,
-               `create_at`    AS `createdAt`,
-               `update_at`    AS `updatedAt`,
-               `deleted_at`   AS `deletedAt`,
-               `is_admin`     AS `admin`,
-               `is_suspended` AS `suspended`,
-               `is_verified`  AS `verified`,
-               `warning`      AS `warning`
+        SELECT `email`           AS `email`,
+               `password`        AS `password`,
+               `nickname`        AS `nickname`,
+               `contact`         AS `contact`,
+               `create_at`       AS `createdAt`,
+               `update_at`       AS `updatedAt`,
+               `deleted_at`      AS `deletedAt`,
+               `is_admin`        AS `admin`,
+               `is_suspended`    AS `suspended`,
+               `is_verified`     AS `verified`,
+               `warning`         AS `warning`,
+               `oauth2_provider` AS `oauth2Provider`,
+               `oauth2_id`       AS `oauth2Id`
        FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
           AND `is_suspended` = false
@@ -159,31 +167,35 @@
     <select id="selectUserCountBySearch" resultType="java.lang.Integer">
         SELECT COUNT(0)
         FROM `fave`.`users`
+        WHERE `deleted_at` IS NULL
+        AND `is_suspended` = false
         <if test="filter.equals('email')">
-            WHERE `email` LIKE CONCAT('%', #{keyword}, '%')
+            AND `email` LIKE CONCAT('%', #{keyword}, '%')
         </if>
         <if test="filter.equals('nickname')">
-            WHERE `nickname` LIKE CONCAT('%', #{keyword}, '%')
+            AND `nickname` LIKE CONCAT('%', #{keyword}, '%')
         </if>
         <if test="filter.equals('contact')">
-            WHERE `contact` LIKE CONCAT('%', #{keyword}, '%')
+            AND `contact` LIKE CONCAT('%', #{keyword}, '%')
         </if>
         <if test="filter.equals('verified')">
-            WHERE `is_verified` = #{keyword}
+            AND `is_verified` = #{keyword}
         </if>
     </select>
     <select id="selectUserBySearch" resultType="com.yhkim.fave.entities.UserEntity" parameterType="com.yhkim.fave.entities.UserEntity">
-        SELECT `email`        AS `email`,
-        `password`     AS `password`,
-        `nickname`     AS `nickname`,
-        `contact`      AS `contact`,
-        `create_at`    AS `createdAt`,
-        `update_at`    AS `updatedAt`,
-        `deleted_at`   AS `deletedAt`,
-        `is_admin`     AS `admin`,
-        `is_suspended` AS `suspended`,
-        `is_verified`  AS `verified`,
-        `warning`      AS `warning`
+        SELECT `email`           AS `email`,
+        `password`        AS `password`,
+        `nickname`        AS `nickname`,
+        `contact`         AS `contact`,
+        `create_at`       AS `createdAt`,
+        `update_at`       AS `updatedAt`,
+        `deleted_at`      AS `deletedAt`,
+        `is_admin`        AS `admin`,
+        `is_suspended`    AS `suspended`,
+        `is_verified`     AS `verified`,
+        `warning`         AS `warning`,
+        `oauth2_provider` AS `oauth2Provider`,
+        `oauth2_id`       AS `oauth2Id`
         FROM `fave`.`users`
         WHERE `deleted_at` IS NULL
         AND `is_suspended` = false
@@ -210,8 +222,9 @@
     </select>
     <select id="selectFavoritePostsByUserEmailWithPagination" resultType="com.yhkim.fave.entities.FaveInfoEntity">
         SELECT fi.*, fi.start_date AS startDate, fi.end_date AS endDate
-        FROM fave.favorites f
-                 JOIN fave.festival_info fi ON f.festival_id = fi.`index`
+        FROM `fave`.`favorites` f
+                 JOIN `fave`.`festival_info` fi ON f.festival_id = fi.`index`
+
         WHERE f.user_email = #{email}
         LIMIT #{limitCount} OFFSET #{offsetCount}
     </select>

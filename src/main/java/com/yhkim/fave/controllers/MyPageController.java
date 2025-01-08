@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -80,28 +81,43 @@ public class MyPageController {
     }
 
 
-    // 회원탈퇴 메서드
+//회원탈퇴 메서드
     @PostMapping("/secession")
     public ResponseEntity<?> secession(@AuthenticationPrincipal Object principal, @RequestBody Map<String, String> payload) {
         if (principal == null) {
+            System.out.println("Principal is null");  // principal이 null인 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
         }
 
-        PrincipalDetails principalDetails;
+        // 디버깅을 위한 로깅 - principal 객체의 실제 타입 출력
+        System.out.println("Principal type: " + principal.getClass().getName());
+
+        PrincipalDetails principalDetails = null;
+
+        // principal이 PrincipalDetails의 인스턴스인 경우
         if (principal instanceof PrincipalDetails) {
             principalDetails = (PrincipalDetails) principal;
-        } else if (principal instanceof CustomOAuth2User) {
+        }
+        // principal이 UsernamePasswordAuthenticationToken인 경우
+        else if (principal instanceof UsernamePasswordAuthenticationToken) {
+            Object authPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+            if (authPrincipal instanceof PrincipalDetails) {
+                principalDetails = (PrincipalDetails) authPrincipal;
+            }
+            // authPrincipal이 UserEntity의 인스턴스인 경우
+            else if (authPrincipal instanceof UserEntity) {
+                UserEntity userEntity = (UserEntity) authPrincipal;
+                principalDetails = new PrincipalDetails(userEntity, userEntity.getAttributes());
+            }
+        }
+   
             CustomOAuth2User oauthUser = (CustomOAuth2User) principal;
             UserEntity user = new UserEntity();
             user.setEmail(oauthUser.getEmail());
             user.setNickname(oauthUser.getNickname());
             user.setOauth2Provider(oauthUser.getProvider());
             principalDetails = new PrincipalDetails(user, oauthUser.getAttributes());
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
-        }
 
-        UserEntity user = principalDetails.getUser();
         if (!user.isSocialLogin()) {
             String currentPassword = payload.get("currentPassword");
             if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
@@ -109,12 +125,12 @@ public class MyPageController {
             }
         }
 
-        String email = user.getEmail();
-        boolean isDeleted = userService.deactivateAccount(email);
+        String email = user.getEmail();  // 사용자 이메일 가져오기
+        boolean isDeleted = userService.deactivateAccount(email);  // 계정 비활성화
         if (isDeleted) {
-            return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));
+            return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));  // 회원탈퇴 성공 메시지 반환
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "회원탈퇴 처리 중 오류가 발생했습니다. 다시 시도해 주세요."));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "회원탈퇴 처리 중 오류가 발생했습니다. 다시 시도해 주세요."));  // 오류 메시지 반환
         }
     }
 

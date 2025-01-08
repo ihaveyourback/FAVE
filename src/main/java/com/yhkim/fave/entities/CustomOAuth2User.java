@@ -19,14 +19,16 @@ public class CustomOAuth2User implements OAuth2User { // OAuth2User 인터페이
     private final String email; // 이메일
     private final String contact; // 연락처
 
-    public CustomOAuth2User(OAuth2User oAuth2User, String provider, String principalName, String nickname, String contact, String email) { // 생성자 메서드
-        this.oAuth2User = oAuth2User; // OAuth2User 객체
-        this.provider = provider; // 제공자 이름
-        this.principalName = principalName; // 제공자 이름
-        this.nickname = nickname; // 닉네임
-        this.contact = contact; // 연락처
-        this.email = email; // 이메일
+    public CustomOAuth2User(OAuth2User oAuth2User, String provider, String principalName, String nickname, String contact, String email) {
+        this.oAuth2User = oAuth2User;
+        this.provider = provider;
+        this.principalName = principalName;
+        this.nickname = nickname;
+        this.contact = contact;
+        this.email = email;
+        System.out.println("OAuth2User attributes: " + oAuth2User.getAttributes()); // 추가된 디버깅 로그
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { // 권한을 가져오는 메서드
@@ -39,8 +41,9 @@ public class CustomOAuth2User implements OAuth2User { // OAuth2User 인터페이
     }
 
     @Override
-    public String getName() { // 이름을 가져오는 메서드
-        return oAuth2User.getName();
+    public String getName() {
+        return this.email;
     }
+
 
 }

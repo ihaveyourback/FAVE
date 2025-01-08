@@ -5,6 +5,7 @@ body {
   flex-direction: column;
   gap: 0;
   justify-content: flex-start;
+  width: 100%;
 }
 body > .-spring {
   flex-grow: 1;
@@ -40,11 +41,40 @@ body > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
 }
+.sns-login {
+  text-align: center;
+  margin-top: 10px;
+}
+.sns-login .sns-login-title {
+  font-size: 1rem;
+  color: #333;
+}
+.sns-login .sns-login-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.sns-login .btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.8rem;
+  border-radius: 5px;
+  font-size: 0.325rem;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+.sns-login .btn img {
+  vertical-align: middle;
+  height: 28px;
+  margin-right: 8px;
+}
+
 /* 기본 슬라이더 스타일 */
 .image-slider {
   position: relative;
   width: 100%;
-  height: 100%; /* 슬라이더 높이 조정 */
+  height: 85%; /* 슬라이더 높이 조정 */
 }
 
 /* 이미지 스타일 */
@@ -96,10 +126,10 @@ body > .-spring {
   flex-direction: column;
   gap: 0.5rem;
   justify-content: flex-start;
-  top: 50%;
+  top: 55%;
   left: 50%;
   width: 25rem;
-  max-width: 100vw;
+  max-width: 98vw;
   max-height: calc(100vh - 2rem);
   background-color: #ffffff;
   box-sizing: border-box;
@@ -191,6 +221,10 @@ body > .-spring {
 #recoverForm > .content > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
+}
+
+.gongback {
+  margin: 2.475rem;
 }
 
 /*# sourceMappingURL=main.css.map */

@@ -267,4 +267,30 @@ body > .-spring {
   background-color: #c99e7a;
 }
 
+.favorites-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: #1c1d1e;
+}
+.favorites-table th, .favorites-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+.favorites-table th {
+  background-color: #f8f4f0;
+}
+.favorites-table td {
+  background-color: #fff;
+}
+.favorites-table a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.favorites-table a:hover {
+  color: #e0c3a1;
+}
+
 /*# sourceMappingURL=profile.css.map */

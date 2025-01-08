@@ -103,12 +103,6 @@ public class ReportService {
     public Pair<PageVo, List<ReportEntity>> getReportsByLoggedInUser(int page, int size) {
         String loggedInUserEmail = getLoggedInUserEmail();
         List<ReportEntity> allReports = reportRepository.findReportsByUserEmailOrderByReportedAtDesc(loggedInUserEmail).orElse(List.of());
-        int totalCount = allReports.size();
-        PageVo pageVo = new PageVo(page, totalCount); // 페이징 정보 생성
-        List<ReportEntity> reports = allReports.stream()
-                .skip(pageVo.offsetCount)
-                .limit(pageVo.countPerPage)
-                .toList();
-        return Pair.of(pageVo, reports); // 페이징 정보와 신고 내역 반환
+
     }
 }

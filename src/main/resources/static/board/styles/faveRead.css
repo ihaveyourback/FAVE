@@ -1,5 +1,6 @@
 @charset "UTF-8";
 #main {
+  color: #1c1d1e;
   align-items: center;
   display: flex;
   flex-direction: column;
