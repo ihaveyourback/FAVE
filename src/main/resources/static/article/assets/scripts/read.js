@@ -154,36 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         });
 
-        // const $modifyButton = document.createElement('button');
-        // $modifyButton.className = 'action';
-        // $modifyButton.textContent = '수정';
-        // $modifyButton.addEventListener('click', () => {
-        //     // 작성자가 아니면 알림을 띄운다
-        //     if (comment.userEmail !== loggedInUserEmail) {
-        //         alert('내가 작성한 댓글이 아닙니다.');
-        //         return;
-        //     }
-        //
-        //     // 수정 폼 생성 후 댓글 아래에 삽입
-        //     const $modifyForm = createModifyForm(comment.index, comment.comment, $contentDiv, $actionContainer, $commentItem);
-        // });
-
         const $modifyButton = document.createElement('button');
         $modifyButton.className = 'action';
         $modifyButton.textContent = '수정';
         $modifyButton.addEventListener('click', () => {
-            // 작성자 이메일과 로그인된 사용자 이메일 출력
-            console.log('Comment user email:', comment.userEmail); // 작성자 이메일 확인
-            console.log('Logged in user email:', loggedInUserEmail); // 로그인된 사용자 이메일 확인
-
-            // 소셜 로그인 사용자의 이메일이 제대로 가져와졌는지 확인
-            if (loggedInUserEmail) {
-                console.log('Social login user email:', loggedInUserEmail); // 소셜 로그인 이메일 출력
-            } else {
-                console.log('No email found for social login user.');
-            }
-
-            // 작성자 이메일과 로그인된 이메일이 같지 않으면 수정할 수 없도록 함
+            // 작성자가 아니면 알림을 띄운다
             if (comment.userEmail !== loggedInUserEmail) {
                 alert('내가 작성한 댓글이 아닙니다.');
                 return;
@@ -192,8 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // 수정 폼 생성 후 댓글 아래에 삽입
             const $modifyForm = createModifyForm(comment.index, comment.comment, $contentDiv, $actionContainer, $commentItem);
         });
-
-
 
         const $deleteButton = document.createElement('button');
         $deleteButton.className = 'action';

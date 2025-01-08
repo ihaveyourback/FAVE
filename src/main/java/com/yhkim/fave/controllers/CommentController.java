@@ -111,20 +111,6 @@ public class CommentController {
 
 
 //    // 댓글 수정 기능
-//    @RequestMapping(value = "/", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public String patchIndex(
-//            @RequestParam(value = "index", required = false, defaultValue = "0") int index,
-//            @RequestParam(value = "content", required = false) String content,
-//            @AuthenticationPrincipal Object principal) {
-//
-//        ModifyCommentResult result = this.commentService.modifyComment(index, content);
-//        JSONObject response = new JSONObject();
-//        response.put("result", result.name().toLowerCase());
-//        return response.toString();
-//    }
-
-
     @RequestMapping(value = "/", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String patchIndex(
@@ -132,23 +118,19 @@ public class CommentController {
             @RequestParam(value = "content", required = false) String content,
             @AuthenticationPrincipal Object principal) {
 
-        // 로그인된 사용자의 이메일과 닉네임 가져오기
         String userEmail = null;
-        if (principal instanceof UserEntity) {
-            UserEntity userEntity = (UserEntity) principal;
+        if (principal instanceof UserEntity userEntity) {
             userEmail = userEntity.getEmail();
-        } else if (principal instanceof CustomOAuth2User) {
-            CustomOAuth2User customOAuth2User = (CustomOAuth2User) principal;
+        } else if (principal instanceof CustomOAuth2User customOAuth2User) {
             userEmail = customOAuth2User.getEmail();
         }
 
-        // 로그인되지 않았거나 이메일 정보가 없는 경우
         if (userEmail == null) {
             return "{\"result\":\"failure\", \"message\":\"로그인이 필요합니다.\"}";
         }
 
-        // 댓글 수정 서비스 호출
-        ModifyCommentResult result = this.commentService.modifyComment(index, content, userEmail);
+        // 댓글 수정 서비스 호출 (대소문자 무시 비교)
+        ModifyCommentResult result = this.commentService.modifyComment(index, content, userEmail.toLowerCase());
 
         JSONObject response = new JSONObject();
         response.put("result", result.name().toLowerCase());
@@ -193,12 +175,6 @@ public class CommentController {
         }
         return ResponseEntity.ok(replies);
     }
-
-
-
-
-
-
 
 
 }

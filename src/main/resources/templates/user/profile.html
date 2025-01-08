@@ -100,7 +100,7 @@
                     <td colspan="4">게시글이 없습니다.</td>
                 </tr>
                 <tr th:each="post : ${posts}">
-                    <td th:text="${post.title}">제목</td>
+                    <td> <a th:href="@{'/article/read?index=' + ${post.index}}" th:text="${post.title}"> 제목 </a></td>
                     <td th:utext="${#strings.abbreviate(post.content, 10)}">내용</td>
                     <td th:text="${#temporals.format(post.getCreatedAt(), 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${post.view}">조회수</td>

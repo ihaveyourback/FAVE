@@ -6,6 +6,7 @@ $border-color: #ddd;
 
 
 
+
 #read {
   color: #1c1d1e;
   align-items: center;
@@ -52,7 +53,15 @@ $border-color: #ddd;
         cursor: pointer;
       }
 
-
+      .error-message{
+        position: absolute; /* 아이콘을 절대 위치로 설정 */
+        right: 0; /* 오른쪽으로 정렬 */
+        bottom: 0; /* 아래쪽으로 정렬 */
+        display: flex;
+        align-items: center; /* 이미지 세로 정렬 */
+        justify-content: center; /* 이미지 가로 정렬 */
+        cursor: pointer;
+      }
       > .title {
         font-weight: 500;
         font-size: 1.5rem;

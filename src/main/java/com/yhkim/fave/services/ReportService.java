@@ -92,7 +92,6 @@ public class ReportService {
 
 
 
-
     private String getLoggedInUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
