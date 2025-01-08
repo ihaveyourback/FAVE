@@ -67,7 +67,7 @@
                 <a th:href="@{'/board/list'}" target="_self"
                    class="button_list button back write --obj-button -button_color">목록으로</a>
             </div>
-            <div th:if="${email == article.getUserEmail()}">
+            <div th:if="${email != null and email.equalsIgnoreCase(article.getUserEmail())}">
                 <button name="modify" class="button modify" type="button">수정</button>
                 <button name="delete" class="button delete" type="button">삭제</button>
             </div>

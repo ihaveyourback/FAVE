@@ -52,21 +52,28 @@ public class FaveBoardController {
     @RequestMapping(value = "/read/", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView getReadBoard(@RequestParam(value = "index") int index) {
-        // 현재 로그인한 사용자의 이메일 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = null;
-        boolean isLoggedIn = false; // 로그인 여부 확인을 위한 변수
-        if (authentication != null && authentication.isAuthenticated() &&
-                !"anonymousUser".equals(authentication.getPrincipal())) {
-            // 로그인한 사용자 정보 가져오기
-            UserEntity user = (UserEntity) authentication.getPrincipal();
-            userEmail = user.getEmail();
-            isLoggedIn = true;
+        boolean isLoggedIn = false;
+
+        // 로그인 여부 및 이메일 확인
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserEntity) {
+                // 일반 로그인 사용자
+                userEmail = ((UserEntity) principal).getEmail();
+            } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User) {
+                // 소셜 로그인 사용자
+                Map<String, Object> attributes = ((org.springframework.security.oauth2.core.user.DefaultOAuth2User) principal).getAttributes();
+                userEmail = (String) attributes.get("email"); // 이메일 속성 확인
+            }
+            isLoggedIn = (userEmail != null);
         }
 
         // FaveInfo 조회
         FaveInfoEntity fave = this.faveService.selectFaveInfoById(index);
         this.faveService.updateFaveInfo(fave);
+
         // 찜 상태 확인
         boolean isLiked = false;
         if (isLoggedIn) {
@@ -74,25 +81,15 @@ public class FaveBoardController {
             isLiked = existingLike.isPresent();
         }
 
-        // 모델에 전달할 메시지
-        String errorMessage = null;
-
-        // 로그인하지 않은 상태에서 찜하기 버튼을 눌렀을 경우
-        if (!isLoggedIn) {
-            errorMessage = "로그인 후 찜할 수 있습니다.";
-        }
-
-        // 찜 상태를 모델에 추가
+        // 모델 준비
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("fave", fave);
         modelAndView.addObject("isLiked", isLiked);
-        modelAndView.addObject("userEmail", userEmail);  // 수정된 부분: userEmail을 템플릿으로 전달
-        modelAndView.addObject("errorMessage", errorMessage); // 로그인하지 않으면 에러 메시지를 전달
+        modelAndView.addObject("userEmail", userEmail);
         modelAndView.setViewName("board/faveRead");
 
         return modelAndView;
     }
-
 
     @RequestMapping(value = "/read/status", method = RequestMethod.GET)
     @ResponseBody
