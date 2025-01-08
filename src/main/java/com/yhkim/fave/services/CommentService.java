@@ -218,11 +218,12 @@ public ModifyCommentResult modifyComment(int index, String content, String userE
             : ModifyCommentResult.FAILURE;
 }
     // 댓글 삭제
-    public DeleteCommentResult deleteComment(int index) {
+    public DeleteCommentResult deleteComment(int index, String userEmail) {
         if (index < 1) {
             return DeleteCommentResult.FAILURE; // 유효하지 않은 index
         }
 
+        // 댓글 조회
         CommentEntity comment = this.commentMapper.selectCommentByIndex(index);
         if (comment == null) {
             return DeleteCommentResult.FAILURE; // 댓글이 없음
@@ -233,21 +234,11 @@ public ModifyCommentResult modifyComment(int index, String content, String userE
         }
 
         // 로그인된 사용자 이메일과 댓글 작성자의 이메일 비교
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserEntity) {
-                UserEntity userEntity = (UserEntity) principal;
-                userEmail = userEntity.getEmail();
-            }
-        }
-
-        if (userEmail == null || !userEmail.equals(comment.getUserEmail())) {
+        if (userEmail == null || !userEmail.equalsIgnoreCase(comment.getUserEmail())) {
             return DeleteCommentResult.FAILURE; // 다른 사용자의 댓글은 삭제할 수 없음
         }
 
+        // 댓글 삭제 처리
         comment.setIsDeleted(LocalDateTime.now()); // 삭제 시간 설정
         int updateCount = this.commentMapper.updateComment(comment);
 
@@ -298,6 +289,7 @@ public ModifyCommentResult modifyComment(int index, String content, String userE
 
         return commentEntities;
     }
+
 
     // 부모 댓글에 대한 대댓글 목록 조회
     public CommentEntity[] getRepliesByParentId(int parentCommentId) {

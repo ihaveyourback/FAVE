@@ -141,11 +141,23 @@ public class CommentController {
 
 
 
-    // 댓글 삭제 기능
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String deleteComment(@RequestParam(value = "commentId", required = false, defaultValue = "0") int commentId) {
-        DeleteCommentResult result = this.commentService.deleteComment(commentId);
+    public String deleteComment(@RequestParam(value = "commentId", required = false, defaultValue = "0") int commentId,
+                                @AuthenticationPrincipal Object principal) {
+        String userEmail = null;
+        if (principal instanceof UserEntity userEntity) {
+            userEmail = userEntity.getEmail();
+        } else if (principal instanceof CustomOAuth2User customOAuth2User) {
+            userEmail = customOAuth2User.getEmail();
+        }
+
+        if (userEmail == null) {
+            return "{\"result\":\"failure\", \"message\":\"로그인이 필요합니다.\"}";
+        }
+
+        // 댓글 삭제 서비스 호출
+        DeleteCommentResult result = this.commentService.deleteComment(commentId, userEmail.toLowerCase());
         JSONObject response = new JSONObject();
         response.put("result", result.name().toLowerCase());
         return response.toString();

@@ -211,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
         $commentList.appendChild($commentItem);
 
 
-
         // 답글 작성 폼
         const $replyForm = createReplyForm(comment.index);
         $commentItem.appendChild($replyForm);
@@ -403,6 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
+            console.log(xhr.responseText); // 서버 응답 확인
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     alert('댓글이 삭제되었습니다.');
