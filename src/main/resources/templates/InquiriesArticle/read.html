@@ -44,91 +44,37 @@
             </div>
         </div>
         <div class="button-container">
-            <button class="button report" type="button" th:if="${isAdmin}" th:onclick="|location.href='/mail/send?index=${article.getIndex()}'|">
+            <!-- 답변하기 버튼 -->
+            <button class="button report" type="button" th:if="${isAdmin}"
+                    th:onclick="|location.href='/mail/send?index=${article.getIndex()}'|">
                 답변하기
             </button>
 
-
-
-
-
+            <!-- 목록으로 버튼 -->
             <div class="button_list">
-                <!--    <a class="page prev"-->
-                <!--       th:if="${pageVo.requestPage > pageVo.movableMinPage}"-->
-                <!--       th:href="@{'/article/read' (page=${pageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}">&lt;</a>-->
-                <a th:href="@{'/inquiries/list'}" target="_self"
-                   class="button_list button back write --obj-button -button_color">목록으로</a>
-                <!--    <a class="page next"-->
-                <!--       th:if="${pageVo.requestPage < pageVo.movableMaxPage}"-->
-                <!--       th:href="@{'/article/read' (page=${pageVo.requestPage + 1}, filter=${filter}, keyword=${keyword})}">&gt;</a>-->
+                <a th:href="@{'/inquiries/list'}" target="_self" class="button back write --obj-button -button_color">
+                    목록으로
+                </a>
             </div>
-            <!--            <span class="spring"></span>-->
-            <button name="modify" class="button modify" type="button">수정</button>
-            <button name="delete" class="button delete" type="button">삭제</button>
+
+            <!-- 수정 버튼 -->
+            <div>
+                <button name="modify" class="button modify" type="button"
+                        th:if="${#authentication.principal.email == article.getUserEmail() || isAdmin}">
+                    수정
+                </button>
+            </div>
+
+            <!-- 삭제 버튼 -->
+            <div>
+                <button name="delete" class="button delete" type="button"
+                        th:if="${#authentication.principal.email == article.getUserEmail() || isAdmin}">
+                    삭제
+                </button>
+            </div>
         </div>
-<!--        <div class="comments">-->
-<!--            <div class="comment-container">-->
-<!--                <h2 class="title">댓글 (<span id="commentCount">0</span>)</h2>-->
-<!--                <input type="hidden" id="articleIndex" th:value="${article.getIndex()}">-->
-<!--                <ul class="list">-->
-<!--                    <li class="item">-->
-<!--                        <div class="top">-->
-<!--                            <span class="nickname">작성자 자리</span>-->
-<!--                            <span class="spring"></span>-->
-<!--                            <span class="datetime">2024-11-08 11:34</span>-->
-<!--                            <label class="link">-->
-<!--                                <input class="checkbox" name="toggle" type="checkbox">-->
-<!--                            </label>-->
-<!--                        </div>-->
-<!--                        <div class="content">내용자리</div>-->
-<!--                        <div class="action-container">-->
-<!--                            <input checked id="commentNoAction0" name="comment0" type="radio" value="noAction">-->
-<!--                            <label class="action">-->
-<!--                                <input name="comment0" type="radio" value="reply">-->
-<!--                                <span class="text">답글 쓰기</span>-->
-<!--                            </label>-->
-<!--                            <label class="action">-->
-<!--                                <input name="comment0" type="radio" value="modify">-->
-<!--                                <span class="text">수정</span>-->
-<!--                            </label>-->
-<!--                            <button class="action" name="delete" type="button" data-comment-id="12345">삭제</button>-->
-<!--                        </div>-->
-<!--                        <form class="form reply">-->
-<!--                            <label class="label spring">-->
-<!--                                <span class="text">내용</span>-->
-<!--                                <textarea required class="field" maxlength="100" minlength="1"-->
-<!--                                          name="content"></textarea>-->
-<!--                            </label>-->
-<!--                            <div class="button-container">-->
-<!--                                <button class="&#45;&#45;obj-button -blue" type="submit">답글 쓰기</button>-->
-<!--                                <label class="&#45;&#45;obj-button -light" for="commentNoAction0">취소</label>-->
-<!--                            </div>-->
-<!--                        </form>-->
-<!--                        <form class="form modify">-->
-<!--                            <label class="label spring">-->
-<!--                                <span class="text">내용</span>-->
-<!--                                <textarea required class="field" maxlength="100" minlength="1"-->
-<!--                                          name="content"></textarea>-->
-<!--                            </label>-->
-<!--                            <div class="button-container">-->
-<!--                                <button class="&#45;&#45;obj-button -blue" type="submit">댓글 수정</button>-->
-<!--                                <label class="&#45;&#45;obj-button -light" for="commentNoAction0">취소</label>-->
-<!--                            </div>-->
-<!--                        </form>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </div>-->
-<!--            <div class="comment_write">-->
-<!--                <form class="form" id="commentForm" action="/comment/write" method="POST">-->
-<!--                    <label class="label">-->
-<!--                        <span class="text">답변 하기</span>-->
-<!--                        <textarea required minlength="1" maxlength="1000" name="comment" class="content_text"></textarea>-->
-<!--                    </label>-->
-<!--                    <button class="button_write &#45;&#45;obj-button -button_color" type="submit">답글</button>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </div>-->
-    </div>
+
+
 </main>
 </body>
 </html>

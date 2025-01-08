@@ -224,6 +224,7 @@
         SELECT fi.*, fi.start_date AS startDate, fi.end_date AS endDate
         FROM `fave`.`favorites` f
                  JOIN `fave`.`festival_info` fi ON f.festival_id = fi.`index`
+
         WHERE f.user_email = #{email}
         LIMIT #{limitCount} OFFSET #{offsetCount}
     </select>
