@@ -17,6 +17,7 @@
                `like_count`  AS likeCount
         FROM fave.board_posts
         WHERE user_email = #{userEmail}
+          AND deleted_at IS NULL
         ORDER BY create_at DESC
         LIMIT #{pageVo.offsetCount}, #{pageVo.countPerPage}
     </select>
@@ -25,6 +26,7 @@
         SELECT COUNT(*)
         FROM fave.board_posts
         WHERE user_email = #{userEmail}
+          AND deleted_at IS NULL
     </select>
 
     <!-- 김범수 -->
