@@ -2,10 +2,7 @@ package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.entities.FaveInfoEntity;
 import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.exceptions.EmailAlreadyExistsException;
-import com.yhkim.fave.exceptions.OAuth2IdNotFoundException;
 import com.yhkim.fave.services.FaveService;
-import com.yhkim.fave.services.OAuth2MemberService;
 import com.yhkim.fave.vos.FaveBoardVo;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.tuple.Pair;
@@ -14,11 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +53,7 @@ public class HomeController {
     // 로그인 성공 여부를 JSON으로 반환하는 API
     @RequestMapping(value = "/api/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody // JSON 반환
-    public Map<String, String> login(@AuthenticationPrincipal UserDetails userDetails) {
+    public Map<String, String> login(@AuthenticationPrincipal UserDetails userDetails) { // 소셜 정보 가져오는 어노테이선
         Map<String, String> response = new HashMap<>();
 
         if (userDetails != null) {

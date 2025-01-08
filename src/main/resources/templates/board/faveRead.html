@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
-    <link rel="stylesheet" type="text/css" href="/board/styles/common_cy.css">
     <link href="/board/styles/faveRead.css" rel="stylesheet" type="text/css">
     <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3a292de2c208474fb8fc896f87e4674b&libraries=services"></script>
@@ -18,11 +17,13 @@
     <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
     <script type="text/javascript" src="/assets/scripts/common.js"></script>
     <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
 </head>
 <body>
-<div th:insert="~{home/index.main :: header}"></div>
-<br><br><br><br>
-<main id="main">
+<th:block th:replace="~{home/index.main :: header}"></th:block>
+<th:block th:replace="~{home/index.main :: loginMain}"></th:block>
+<th:block th:replace="~{home/index.main :: cover}"></th:block>
+<main id="read">
     <div class="container">
         <div class="post">
             <div class="title" th:text="${fave.getTitle()}"></div>
@@ -58,6 +59,6 @@
         <a class="button" th:href="@{'/fave/'}" target="_self">목록으로</a>
     </div>
 </main>
-<div th:insert="~{home/index.main :: footer}"></div>
+<th:block th:replace="~{home/index.main :: footer}"></th:block>
 </body>
 </html>

@@ -4,6 +4,7 @@ import com.yhkim.fave.entities.CommentEntity;
 import com.yhkim.fave.entities.CustomOAuth2User;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.mappers.CommentMapper;
+import com.yhkim.fave.mappers.UserMapper;
 import com.yhkim.fave.results.article.ArticleResult;
 import com.yhkim.fave.results.comment.DeleteCommentResult;
 import com.yhkim.fave.results.comment.ModifyCommentResult;
@@ -16,9 +17,11 @@ import java.time.LocalDateTime;
 @Service
 public class CommentService {
     private final CommentMapper commentMapper;
+    public  final UserMapper userMapper;
 
-    public CommentService(CommentMapper commentMapper) {
+    public CommentService(CommentMapper commentMapper, UserMapper userMapper) {
         this.commentMapper = commentMapper;
+        this.userMapper = userMapper;
     }
 
     // 댓글 작성
@@ -115,7 +118,7 @@ public class CommentService {
     }
 
 
-    // 대댓글 작성
+//     대댓글 작성
 //    public ArticleResult saveReplyComment(int parentCommentId, String content) {
 //        if (parentCommentId < 1 || content == null || content.isEmpty() || content.length() > 100) {
 //            return ArticleResult.FAILURE;
@@ -153,84 +156,95 @@ public class CommentService {
 //
 //        return this.commentMapper.insertComment(replyComment) > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
 //    }
-
-    public ArticleResult saveReplyComment(int parentCommentId, String content) {
-        // 입력 검증
-        if (parentCommentId < 1 || content == null || content.isEmpty() || content.length() > 100) {
-            return ArticleResult.FAILURE; // 유효하지 않은 입력
-        }
-
-        // 부모 댓글 조회
-        CommentEntity parentComment = this.commentMapper.selectCommentByIndex(parentCommentId);
-        if (parentComment == null || parentComment.getIsDeleted() != null) {
-            return ArticleResult.FAILURE; // 부모 댓글이 없거나 삭제됨
-        }
-
-        // 사용자 정보 추출
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = null;
-        String userNickname = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserEntity) {
-                UserEntity userEntity = (UserEntity) principal;
-                userEmail = userEntity.getEmail();
-                userNickname = userEntity.getNickname();
-            }
-        }
-
-        // 사용자 인증 확인
-        if (userEmail == null) {
-            return ArticleResult.FAILURE; // 인증된 사용자만 가능
-        }
-
-        // 대댓글 생성
-        CommentEntity replyComment = new CommentEntity();
-        replyComment.setPostId(parentComment.getPostId());
-        replyComment.setCommentId(parentCommentId);
-        replyComment.setComment(content);
-        replyComment.setCreatedAt(LocalDateTime.now());
-        replyComment.setUpdateAt(null);
-        replyComment.setIsDeleted(null);
-        replyComment.setUserEmail(userEmail);
-        replyComment.setUserNickname(userNickname != null ? userNickname : "익명");
-
-        // 댓글 저장
-        return this.commentMapper.insertComment(replyComment) > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
+//대댓글 작성 (용현)
+public ArticleResult saveReplyComment(int parentCommentId, String content, String userEmail, String userNickname) {
+    // 입력 값 검증
+    if (parentCommentId < 1 || content == null || content.isEmpty() || content.length() > 100) {
+        return ArticleResult.FAILURE; // 유효하지 않은 입력
     }
 
+    // 부모 댓글 조회
+    CommentEntity parentComment = this.commentMapper.selectCommentByIndex(parentCommentId);
+    if (parentComment == null || parentComment.getIsDeleted() != null) {
+        return ArticleResult.FAILURE; // 부모 댓글이 없거나 삭제됨
+    }
+
+    // 댓글 엔티티 생성
+    CommentEntity replyComment = new CommentEntity();
+    replyComment.setPostId(parentComment.getPostId());
+    replyComment.setCommentId(parentCommentId);
+    replyComment.setComment(content);
+    replyComment.setCreatedAt(LocalDateTime.now());
+    replyComment.setUpdateAt(null);
+    replyComment.setIsDeleted(null);
+    replyComment.setUserEmail(userEmail);
+    replyComment.setUserNickname(userNickname);
+
+    // 댓글 저장
+    int insertResult = this.commentMapper.insertComment(replyComment);
+
+    // 결과에 따라 성공 또는 실패 반환
+    return insertResult > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
+}
 
 
 
-    // 댓글 수정 기능
-    public ModifyCommentResult modifyComment(int index, String content) {
+
+//    // 댓글 수정 기능
+//    public ModifyCommentResult modifyComment(int index, String content) {
+//        if (index < 1 || content == null || content.isEmpty() || content.length() > 100) {
+//            return ModifyCommentResult.FAILURE;
+//        }
+//        CommentEntity comment = this.commentMapper.selectCommentByIndex(index);
+//        if (comment == null || comment.getIsDeleted() != null) {
+//            return ModifyCommentResult.FAILURE;
+//        }
+//
+//        // 로그인된 사용자 이메일과 댓글 작성자의 이메일 비교
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userEmail = null;
+//
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            Object principal = authentication.getPrincipal();
+//            if (principal instanceof UserEntity) {
+//                UserEntity userEntity = (UserEntity) principal;
+//                userEmail = userEntity.getEmail();
+//            }
+//        }
+//
+//        if (userEmail == null || !userEmail.equals(comment.getUserEmail())) {
+//            return ModifyCommentResult.FAILURE; // 다른 사용자의 댓글은 수정할 수 없음
+//        }
+//
+//        comment.setComment(content);
+//        comment.setUpdateAt(LocalDateTime.now());
+//        return this.commentMapper.updateComment(comment) > 0
+//                ? ModifyCommentResult.SUCCESS
+//                : ModifyCommentResult.FAILURE;
+//    }
+//댓글 수정
+    public ModifyCommentResult modifyComment(int index, String content, String userEmail) {
+        // 입력 값 검증
         if (index < 1 || content == null || content.isEmpty() || content.length() > 100) {
-            return ModifyCommentResult.FAILURE;
+            return ModifyCommentResult.FAILURE; // 유효하지 않은 입력
         }
+
+        // 댓글 조회
         CommentEntity comment = this.commentMapper.selectCommentByIndex(index);
         if (comment == null || comment.getIsDeleted() != null) {
-            return ModifyCommentResult.FAILURE;
+            return ModifyCommentResult.FAILURE; // 댓글이 없거나 삭제됨
         }
 
-        // 로그인된 사용자 이메일과 댓글 작성자의 이메일 비교
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserEntity) {
-                UserEntity userEntity = (UserEntity) principal;
-                userEmail = userEntity.getEmail();
-            }
-        }
-
+        // 로그인된 사용자의 이메일과 댓글 작성자의 이메일 비교
         if (userEmail == null || !userEmail.equals(comment.getUserEmail())) {
             return ModifyCommentResult.FAILURE; // 다른 사용자의 댓글은 수정할 수 없음
         }
 
+        // 댓글 내용 수정
         comment.setComment(content);
         comment.setUpdateAt(LocalDateTime.now());
+
+        // 댓글 업데이트
         return this.commentMapper.updateComment(comment) > 0
                 ? ModifyCommentResult.SUCCESS
                 : ModifyCommentResult.FAILURE;
@@ -293,15 +307,6 @@ public class CommentService {
 
         return updateCount;
     }
-
-
-
-
-
-
-
-
-
 
 
 
