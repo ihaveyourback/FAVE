@@ -54,7 +54,21 @@
         WHERE `comment_id` = #{parentCommentId}
           AND `is_deleted` IS NULL
     </select>
-
+    <select id="selectByParentId" resultType="com.yhkim.fave.entities.CommentEntity">
+        SELECT `index`         AS `index`,
+               `post_id`       AS `postId`,
+               `comment_id`    AS `commentId`,
+               `comment`       AS `comment`,
+               `user_email`    AS `userEmail`,
+               `user_nickname` AS `userNickname`,
+               `create_at`     AS `createdAt`,
+               `update_at`     AS `updateAt`,
+               `is_deleted`    AS `isDeleted`
+        FROM `fave`.`board_comments`
+        WHERE `index` = #{parentCommentId}
+          AND `is_deleted` IS NULL
+        LIMIT 1
+    </select>
     <update id="updateComment" parameterType="com.yhkim.fave.entities.CommentEntity">
         UPDATE `fave`.`board_comments`
         SET `post_id`       = #{postId},

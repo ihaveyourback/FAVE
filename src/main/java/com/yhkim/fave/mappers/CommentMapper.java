@@ -16,4 +16,6 @@ public interface CommentMapper {
 
     // 대댓글 불러오기
     CommentEntity[] selectRepliesByParentId(@Param("parentCommentId") int parentCommentId);
+//     이석민
+    CommentEntity selectByParentId(@Param("parentCommentId") int parentCommentId);
 }

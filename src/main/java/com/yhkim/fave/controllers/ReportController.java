@@ -81,6 +81,7 @@ public class ReportController {
     public ResponseEntity<String> createReport(
             @AuthenticationPrincipal UserDetails user,
             ReportEntity report,CommentEntity comment,
+            @RequestParam(value = "userEmail",required = false) String userEmail,
             @RequestParam(value = "index", required = false) Integer index
     ) {
         if (index == null) {
@@ -90,7 +91,7 @@ public class ReportController {
         try {
             report.setUserEmail(user.getUsername());
             // 신고하는 게시글 조회
-            boolean suspended = reportService.checkIfSuspended();
+            boolean suspended = reportService.checkIfSuspended(userEmail);
             Result result = this.reportService.EmailDuplicate(report);
             if (suspended) {
                 throw new IllegalStateException("계정이 정지된 사용자입니다.");

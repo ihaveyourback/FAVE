@@ -2,6 +2,7 @@ package com.yhkim.fave.services;
 
 import com.yhkim.fave.entities.ReportEntity;
 import com.yhkim.fave.entities.UserEntity;
+import com.yhkim.fave.repository.BoardCommentRepository;
 import com.yhkim.fave.repository.ReportRepository;
 import com.yhkim.fave.repository.UserRepository;
 import com.yhkim.fave.results.CommonResult;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,8 +31,8 @@ public class ReportService {
     public ReportService(ReportRepository reportRepository, UserRepository userRepository) {
         this.reportRepository = reportRepository;
         this.userRepository = userRepository;
-    }
 
+    }
 
     @Transactional
     public Result EmailDuplicate(ReportEntity report) {
@@ -67,7 +69,7 @@ public class ReportService {
     @Transactional
     public void increaseWarningForReportedUser(String reportedUserEmail) {
         // 1. 사용자가 존재하는지 확인
-        UserEntity user = userRepository.findById(reportedUserEmail)
+        UserEntity user = userRepository.findByEmail(reportedUserEmail)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + reportedUserEmail));
 
         // 2. 경고 카운터 증가
@@ -79,8 +81,8 @@ public class ReportService {
 
     //삭제 사용자 확인
     @Transactional
-    public boolean checkIfSuspended() {
-        boolean isSuspended = userRepository.existsByIsSuspended();
+    public boolean checkIfSuspended(@RequestParam(value = "userEmail",required = false) String userEmail) {
+        boolean isSuspended = userRepository.existsByIsSuspended(userEmail);
 
         if (isSuspended) {
             throw new IllegalStateException("이미 삭제된 사용자입니다.");
