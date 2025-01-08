@@ -110,9 +110,12 @@ public class ArticleController {
 
     // 게시글 읽기 요청 처리
     @RequestMapping(value = "/read", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getRead(HttpServletResponse response,
-                                @RequestParam(value = "index", required = false) int index,
-                                @AuthenticationPrincipal UserDetails userDetails){
+    public ModelAndView getRead(
+            HttpServletResponse response,
+            @RequestParam(value = "index", required = false) int index,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal Object principal) {
+
         ArticleEntity article = articleService.getArticleByIndex(index);
         ModelAndView modelAndView = new ModelAndView();
         if (article != null) {
@@ -120,14 +123,24 @@ public class ArticleController {
         }
 
         // 로그인한 사용자 정보를 뷰에 전달
+        String userEmail = null;
         if (userDetails instanceof UserEntity user) {
-            modelAndView.addObject("user", user); // user 객체 생성
-            modelAndView.addObject("email", user.getEmail());
+            userEmail = user.getEmail();
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("email", userEmail);
             modelAndView.addObject("now", LocalDateTime.now());
             modelAndView.addObject("isAdmin", user.isAdmin());
             modelAndView.addObject("nickname", user.getUsername());
             modelAndView.addObject("name", user.getNickname());
+        } else if (principal instanceof CustomOAuth2User customOAuth2User) {
+            userEmail = customOAuth2User.getEmail();
+            modelAndView.addObject("email", userEmail); // 소셜 로그인 이메일 추가
+            modelAndView.addObject("nickname", customOAuth2User.getNickname());
         }
+
+        // 로그인되지 않은 경우 이메일을 null로 전달
+        modelAndView.addObject("email", userEmail);
+
         modelAndView.setViewName("article/read");
         modelAndView.addObject("article", article);
         response.setHeader("Cache-Control", "no-cache");

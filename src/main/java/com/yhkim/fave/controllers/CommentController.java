@@ -197,19 +197,8 @@ public class CommentController {
         }
 
 
-//    // 댓글 수정 기능
-//    @RequestMapping(value = "/", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public String patchIndex(
-//            @RequestParam(value = "index", required = false, defaultValue = "0") int index,
-//            @RequestParam(value = "content", required = false) String content,
-//            @AuthenticationPrincipal Object principal) {
-//
-//        ModifyCommentResult result = this.commentService.modifyComment(index, content);
-//        JSONObject response = new JSONObject();
-//        response.put("result", result.name().toLowerCase());
-//        return response.toString();
-//    }
+
+
 
 
         @RequestMapping(value = "/", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -252,6 +241,69 @@ public class CommentController {
             JSONObject response = new JSONObject();
             response.put("result", result.name().toLowerCase());
             return response.toString();
+=======
+    @RequestMapping(value = "/", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String patchIndex(
+            @RequestParam(value = "index", required = false, defaultValue = "0") int index,
+            @RequestParam(value = "content", required = false) String content,
+            @AuthenticationPrincipal Object principal) {
+
+        String userEmail = null;
+        if (principal instanceof UserEntity userEntity) {
+            userEmail = userEntity.getEmail();
+        } else if (principal instanceof CustomOAuth2User customOAuth2User) {
+            userEmail = customOAuth2User.getEmail();
+        }
+
+        if (userEmail == null) {
+            return "{\"result\":\"failure\", \"message\":\"로그인이 필요합니다.\"}";
+        }
+
+        // 댓글 수정 서비스 호출 (대소문자 무시 비교)
+        ModifyCommentResult result = this.commentService.modifyComment(index, content, userEmail.toLowerCase());
+
+        JSONObject response = new JSONObject();
+        response.put("result", result.name().toLowerCase());
+        return response.toString();
+    }
+
+
+
+
+
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String deleteComment(@RequestParam(value = "commentId", required = false, defaultValue = "0") int commentId,
+                                @AuthenticationPrincipal Object principal) {
+        String userEmail = null;
+        if (principal instanceof UserEntity userEntity) {
+            userEmail = userEntity.getEmail();
+        } else if (principal instanceof CustomOAuth2User customOAuth2User) {
+            userEmail = customOAuth2User.getEmail();
+        }
+
+        if (userEmail == null) {
+            return "{\"result\":\"failure\", \"message\":\"로그인이 필요합니다.\"}";
+        }
+
+        // 댓글 삭제 서비스 호출
+        DeleteCommentResult result = this.commentService.deleteComment(commentId, userEmail.toLowerCase());
+        JSONObject response = new JSONObject();
+        response.put("result", result.name().toLowerCase());
+        return response.toString();
+    }
+
+
+
+
+    // 댓글 불러오기 기능
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<CommentEntity[]> getComments(@RequestParam(value = "postId", required = false, defaultValue = "0") int articleIndex) {
+        CommentEntity[] comments = this.commentService.getCommentsByPostId(articleIndex);
+        if (comments == null) {
+            return ResponseEntity.notFound().build();
         }
 
 
@@ -267,7 +319,6 @@ public class CommentController {
             return ResponseEntity.ok().body(comments);
         }
 
-
         // 대댓글 불러오기 엔드포인트
         @GetMapping("/replies")
         public ResponseEntity<CommentEntity[]> getReplies ( @RequestParam int parentCommentId){
@@ -277,6 +328,4 @@ public class CommentController {
             }
             return ResponseEntity.ok(replies);
         }
-
-
     }
