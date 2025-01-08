@@ -80,6 +80,7 @@ public class MyPageController {
         return modelAndView;
     }
 
+
 //회원탈퇴 메서드
     @PostMapping("/secession")
     public ResponseEntity<?> secession(@AuthenticationPrincipal Object principal, @RequestBody Map<String, String> payload) {
@@ -109,35 +110,14 @@ public class MyPageController {
                 principalDetails = new PrincipalDetails(userEntity, userEntity.getAttributes());
             }
         }
-        // principal이 CustomOAuth2User인 경우
-        else if (principal instanceof CustomOAuth2User) {
+   
             CustomOAuth2User oauthUser = (CustomOAuth2User) principal;
             UserEntity user = new UserEntity();
             user.setEmail(oauthUser.getEmail());
             user.setNickname(oauthUser.getNickname());
             user.setOauth2Provider(oauthUser.getProvider());
             principalDetails = new PrincipalDetails(user, oauthUser.getAttributes());
-        }
-        // principal이 UserEntity인 경우
-        else if (principal instanceof UserEntity) {
-            UserEntity userEntity = (UserEntity) principal;
-            principalDetails = new PrincipalDetails(userEntity, userEntity.getAttributes());
-        }
-        // principal이 위의 어떤 타입에도 해당하지 않는 경우
-        else {
-            System.out.println("Principal is not an instance of PrincipalDetails, UserEntity, or CustomOAuth2User");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
-        }
 
-        // principalDetails 객체 생성 실패 시 처리
-        if (principalDetails == null) {
-            System.out.println("Unable to create PrincipalDetails");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
-        }
-
-        UserEntity user = principalDetails.getUser();  // 사용자 정보 가져오기
-
-        // 소셜 로그인이 아닌 경우 현재 비밀번호 일치 여부 확인
         if (!user.isSocialLogin()) {
             String currentPassword = payload.get("currentPassword");
             if (!passwordEncoder.matches(currentPassword, user.getPassword())) {

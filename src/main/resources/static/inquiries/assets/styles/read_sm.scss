@@ -53,20 +53,10 @@ $border-color: #ddd;
 
   .button-container {
     display: flex;
-    justify-content: flex-end; // 버튼을 오른쪽 끝에 배치
-    gap: 0.5rem; // 버튼 사이의 간격
+    justify-content: flex-end;
+    gap: 0.5rem; // 버튼 간격
     margin-top: 3rem;
     margin-right: 0.5rem;
-
-    .report {
-      margin-right: auto;
-      margin-left: 0.8rem;
-    }
-
-    .button_list {
-      margin-right: auto;
-      margin-left: 0.5rem;
-    }
 
     .button {
       padding: 0.3rem 0.8rem;
@@ -76,11 +66,13 @@ $border-color: #ddd;
       border: none;
       border-radius: 0.25rem;
       cursor: pointer;
-      transition: all 0.3s ease; // 부드러운 전환 효과
       text-align: center;
+      transition: all 0.3s ease; // 부드러운 전환 효과
 
+      // 버튼 상태별 색상
       &.report {
-        background-color: #c1b5a3; // 신고하기 버튼의 색상 설정
+        margin-left: 0.8rem;
+        background-color: #c1b5a3;
 
         &:hover {
           background-color: darken(#c1b5a3, 10%);
@@ -90,7 +82,6 @@ $border-color: #ddd;
           background-color: darken(#c1b5a3, 15%);
         }
       }
-
 
       &.modify {
         background-color: #c1b5a3;
@@ -120,8 +111,33 @@ $border-color: #ddd;
         background-color: #cccccc;
         cursor: not-allowed;
       }
+
+      // 숨김 상태 (공간 유지)
+      &.hidden {
+        visibility: hidden;
+      }
+    }
+
+    // "목록으로" 버튼 정렬
+    .button_list {
+      flex: 1; // 버튼 리스트를 중앙에 배치
+      display: flex;
+      justify-content: center;
+
+      .back {
+        background-color: #c1b5a3;
+
+        &:hover {
+          background-color: darken(#c1b5a3, 10%);
+        }
+
+        &:active {
+          background-color: darken(#c1b5a3, 15%);
+        }
+      }
     }
   }
+
 
   > .content {
     min-height: 5rem;

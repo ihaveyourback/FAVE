@@ -89,9 +89,6 @@ public class ReportService {
     }
 
 
-
-
-
     private String getLoggedInUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -99,6 +96,7 @@ public class ReportService {
         }
         return authentication.getName();  // 인증된 사용자의 이메일을 반환
     }
+
 
 
     // 로그인한 사용자의 이메일을 기준으로 신고 내역을 가져오는 메서드 (페이징 처리)
