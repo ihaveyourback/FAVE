@@ -142,7 +142,7 @@ public class ArticleController {
         return modelAndView;
     }
 
-    // 게시글 작성 처리
+    // 게시글 작성 처리 //용현
     @RequestMapping(value = "/write", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postWrite(ArticleEntity articleEntity) {

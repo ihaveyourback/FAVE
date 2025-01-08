@@ -10,21 +10,22 @@
     <link rel="stylesheet" href="/admin/styles/common.css">
     <script src="/board/scripts/faveBoard.js"></script>
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
-    <link rel="stylesheet" type="text/css" href="/board/styles/common_cy.css">
 
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
     <script type="text/javascript" src="/assets/scripts/common.js"></script>
     <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
 
 
     <title>올해 축제</title>
 </head>
 <body>
-<div th:insert="~{home/index.main :: header}"></div>
-<br><br><br><br>
-<main id="main">
+<th:block th:replace="~{home/index.main :: header}"></th:block>
+<th:block th:replace="~{home/index.main :: loginMain}"></th:block>
+<th:block th:replace="~{home/index.main :: cover}"></th:block>
+<main id="list">
     <div class="grid-container">
         <div class="grid" th:each="fave : ${fave}">
             <!-- 로그인 사용자 -->
@@ -55,6 +56,7 @@
     </div>
 </main>
 
-<div th:insert="~{home/index.main :: footer}"></div>
+<th:block th:replace="~{home/index.main :: footer}"></th:block>
+
 </body>
 </html>

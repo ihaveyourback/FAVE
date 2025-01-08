@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -37,8 +38,18 @@ public class SecurityConfig {
     @Lazy
     @Autowired
     private OAuth2MemberService oAuth2MemberService;
+
+    @Value("${csrf.enabled:true}") // 프로퍼티에서 CSRF 활성화 여부를 가져옵니다.
+    private boolean csrfEnabled;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        if (csrfEnabled) {
+            http.csrf(); // CSRF 활성화
+        } else {
+            http.csrf().disable(); // CSRF 비활성화
+        }
+
         http
                 .authenticationProvider(customAuthenticationProvider)
                 .sessionManagement(session -> session
@@ -51,7 +62,6 @@ public class SecurityConfig {
                         .key(System.getenv("SECURITY_REMEMBER_ME_KEY") != null ? System.getenv("SECURITY_REMEMBER_ME_KEY") : "defaultRememberMeKey")
                         .userDetailsService(userDetailsService)
                 )
-                .csrf().disable()
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/assets/**").permitAll()
