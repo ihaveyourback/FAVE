@@ -1,6 +1,7 @@
 package com.yhkim.fave.repository;
 
 import com.yhkim.fave.entities.UserEntity;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,9 +14,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByNickname(String nickname);
     Optional<UserEntity> findByEmail(String email);
 
-    @Query("SELECT COUNT(u) > 0 FROM UserEntity u WHERE u.suspended = true")
-
-    boolean existsByIsSuspended();
+    @Query("SELECT COUNT(u) > 0 FROM UserEntity u WHERE u.suspended = true AND u.email = :userEmail")
+    boolean existsByIsSuspended(@Param("userEmail") String userEmail);
 
     boolean existsByEmail(String email);
     boolean existsByContact(String contact);

@@ -329,7 +329,9 @@ public ArticleResult saveReplyComment(int parentCommentId, String content, Strin
         }
         return this.commentMapper.selectRepliesByParentId(parentCommentId);
     }
-
+    public CommentEntity getSelectCommentsByParentId(int parentCommentId) {
+        return this.commentMapper.selectByParentId(parentCommentId);
+    }
 
 }
 

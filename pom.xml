@@ -152,6 +152,15 @@
             <artifactId>selenium-java</artifactId>
             <version>4.9.0</version>
         </dependency> <!-- 의존성 추가후 크롬드라이브 설치해서 경로 지정해야 크롤링이 작동함. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
