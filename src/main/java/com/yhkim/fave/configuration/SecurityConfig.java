@@ -94,13 +94,13 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/")
+                        .defaultSuccessUrl("/")
                         .userInfoEndpoint()
                         .userService(oAuth2MemberService)
                         .and()

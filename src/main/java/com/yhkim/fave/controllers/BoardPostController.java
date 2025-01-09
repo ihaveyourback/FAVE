@@ -5,14 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.yhkim.fave.entities.BoardPostEntity;
 import com.yhkim.fave.entities.NotificationEntity;
-import com.yhkim.fave.entities.UserEntity;
-import com.yhkim.fave.mappers.NotificationMapper;
 import com.yhkim.fave.results.LikedResult;
-
 import com.yhkim.fave.services.BoardPostService;
-
+import com.yhkim.fave.mappers.NotificationMapper;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,23 +21,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/board")
+@RequiredArgsConstructor
 public class BoardPostController {
 
     private final BoardPostService boardPostService;
-    private final WebSocketController webSocketController;
-
-
-    // TODO 임시
     private final NotificationMapper notificationMapper;
     private final SimpMessagingTemplate brokerMessagingTemplate;
-
-    @Autowired
-    public BoardPostController(BoardPostService boardPostService, WebSocketController webSocketController, NotificationMapper notificationMapper, SimpMessagingTemplate brokerMessagingTemplate) {
-        this.boardPostService = boardPostService;
-        this.webSocketController = webSocketController;
-        this.notificationMapper = notificationMapper;
-        this.brokerMessagingTemplate = brokerMessagingTemplate;
-    }
 
     // 좋아요 추가 처리
     @PostMapping("/like/{postId}")
@@ -50,50 +36,39 @@ public class BoardPostController {
         String userNickname = null;
 
         if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserEntity) {
-                UserEntity userEntity = (UserEntity) principal;
-                userEmail = userEntity.getEmail();
-                userNickname = userEntity.getNickname();
-            }
+            userEmail = authentication.getName(); // 로그인된 사용자 이메일
+            // 사용자 닉네임 가져오기 (필요시 UserEntity에서 추가 로직 구현 가능)
+            userNickname = "닉네임"; // 예: DB 조회 로직으로 교체
         }
+
         if (userEmail == null) {
             return LikedResult.NOT_LOGGED_IN;
         }
-        boolean result = boardPostService.addLike(postId); // 서비스가 로그인된 사용자 이메일을 처리
+
+        boolean result = boardPostService.addLike(postId);
 
         if (result) {
-            try {
-                Map<String, String> messageData = new HashMap<>();
-
-                webSocketController.sendTestMessage(messageData);
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("알림 전송 실패: " + e.getMessage());
-                // 실패 응답 반환 (필요 시)
-                return LikedResult.FAILURE;
-            }
-
+            // 알림 처리 로직 추가
             BoardPostEntity boardPost = this.boardPostService.getPostById(postId);
-            NotificationEntity n = NotificationEntity.builder()
-                    .userEmail(boardPost.getUserEmail())
+            NotificationEntity notification = NotificationEntity.builder()
+                    .userEmail(boardPost.getUserEmail()) // 게시글 작성자의 이메일
                     .message(String.format("%s님이 게시글에 좋아요를 눌렀습니다.", userNickname))
-                    .url(String.format("/article/read?index=%d", postId))
+                    .url(String.format("/article/read?index=%d", postId)) // 알림 클릭 시 이동할 URL
                     .isRead(false)
                     .createdAt(LocalDateTime.now())
                     .build();
-            this.notificationMapper.insert(n);
+            this.notificationMapper.insert(notification);
+
+            // WebSocket 실시간 알림 전송
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
-            this.brokerMessagingTemplate.convertAndSend("/topic/alerts", new JSONObject(objectMapper.writeValueAsString(n)).toString());
+            this.brokerMessagingTemplate.convertAndSend("/topic/alerts", new JSONObject(objectMapper.writeValueAsString(notification)).toString());
 
             return LikedResult.SUCCESS;
         }
 
-        return result ? LikedResult.SUCCESS : LikedResult.ALREADY_LIKED;
-
+        return LikedResult.ALREADY_LIKED;
     }
-
 
     // 좋아요 삭제 처리
     @PostMapping("/unlike/{postId}")
@@ -127,4 +102,3 @@ public class BoardPostController {
         return response;
     }
 }
-
