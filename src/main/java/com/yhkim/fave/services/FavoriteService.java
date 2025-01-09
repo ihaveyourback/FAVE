@@ -27,11 +27,11 @@ public class FavoriteService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName(); // 로그인된 사용자의 이메일
 
-        FavoritesEntity favoritesEntity = new FavoritesEntity();
-        favoritesEntity.setUserEmail(userEmail);
-        favoritesEntity.setFestivalId(favoritesDto.getFestivalId());
-        favoriteRepository.save(favoritesEntity);
-    }
+            FavoritesEntity favoritesEntity = new FavoritesEntity();
+            favoritesEntity.setUserEmail(userEmail);
+            favoritesEntity.setFestivalId(favoritesDto.getFestivalId());
+            favoriteRepository.save(favoritesEntity);
+        }
 
     public void removeSpotLike(FavoritesDto favoritesDto) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -39,5 +39,5 @@ public class FavoriteService {
         // 해당 데이터를 DB에서 삭제
         Optional<FavoritesEntity> like = favoriteRepository.findByUserEmailAndFestivalId(userEmail, favoritesDto.getFestivalId());
         like.ifPresent(favoriteRepository::delete);  // 값이 있으면 삭제
-    }
+ }
 }

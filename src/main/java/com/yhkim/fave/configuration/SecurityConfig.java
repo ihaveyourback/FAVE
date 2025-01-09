@@ -72,6 +72,7 @@ public class SecurityConfig {
                                 .requestMatchers("/user/secession").authenticated()
                                 .requestMatchers("/user/**").permitAll()
                                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/report/**").permitAll()
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/api/login").permitAll()
                                 .anyRequest().authenticated()

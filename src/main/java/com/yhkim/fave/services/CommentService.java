@@ -298,7 +298,9 @@ public ModifyCommentResult modifyComment(int index, String content, String userE
         }
         return this.commentMapper.selectRepliesByParentId(parentCommentId);
     }
-
+    public CommentEntity getSelectCommentsByParentId(int parentCommentId) {
+        return this.commentMapper.selectByParentId(parentCommentId);
+    }
 
 }
 

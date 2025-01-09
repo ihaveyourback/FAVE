@@ -74,6 +74,9 @@ public class BoardPostService {
         }
         return false;
     }
+    public BoardPostEntity getPostById(int id) {
+        return this.boardPostMapper.selectBoardPostsByIndex(id);
+    }
 
     // 게시글의 좋아요 여부 조회
     public boolean isLiked(int postId, String userEmail) {
