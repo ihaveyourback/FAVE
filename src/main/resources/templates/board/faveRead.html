@@ -33,8 +33,7 @@
                 <span class="meta" th:text="'축제 일정 : ' + ${fave.getStartDate()} + ' ~ ' + ${fave.getEndDate()}"></span>
                 <span class="meta" th:text="'축제 위치 : ' + ${fave.getLocation()}"></span>
                 <!-- 좋아요 버튼 및 이미지 (로그인한 사용자만 볼 수 있음) -->
-                <a class="likeButton" href="#" target="_self" id="likeButton"
-                   th:if="${userEmail}" th:data-user-email="${userEmail}"
+                <a class="likeButton" href="#" target="_self" id="likeButton" th:data-user-email="${userEmail}"
                    th:data-festival-id="${fave.index}">
                     <!-- 좋아요 이미지 -->
                     <img th:if="${isLiked}"
