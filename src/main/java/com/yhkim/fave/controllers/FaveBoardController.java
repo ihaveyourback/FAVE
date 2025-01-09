@@ -1,6 +1,7 @@
 package com.yhkim.fave.controllers;
 
 import com.yhkim.fave.dto.FavoritesDto;
+import com.yhkim.fave.entities.CustomOAuth2User;
 import com.yhkim.fave.entities.FaveInfoEntity;
 import com.yhkim.fave.entities.FavoritesEntity;
 import com.yhkim.fave.entities.UserEntity;
@@ -62,10 +63,13 @@ public class FaveBoardController {
             if (principal instanceof UserEntity) {
                 // 일반 로그인 사용자
                 userEmail = ((UserEntity) principal).getEmail();
-            } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User) {
+            } else if (principal instanceof CustomOAuth2User) {
                 // 소셜 로그인 사용자
+                userEmail = ((CustomOAuth2User) principal).getName(); // getName()을 통해 이메일 반환
+            } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User) {
+                // 기본 OAuth2User로 처리하는 경우
                 Map<String, Object> attributes = ((org.springframework.security.oauth2.core.user.DefaultOAuth2User) principal).getAttributes();
-                userEmail = (String) attributes.get("email"); // 이메일 속성 확인
+                userEmail = (String) attributes.get("email");
             }
             isLoggedIn = (userEmail != null);
         }
@@ -90,6 +94,7 @@ public class FaveBoardController {
 
         return modelAndView;
     }
+
 
     @RequestMapping(value = "/read/status", method = RequestMethod.GET)
     @ResponseBody

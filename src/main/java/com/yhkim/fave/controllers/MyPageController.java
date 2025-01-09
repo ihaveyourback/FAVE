@@ -57,7 +57,7 @@ public class MyPageController {
         List<ReportEntity> reports = reportPair.getRight();
 
         // 찜 목록 페이징 정보 생성
-        Pair<PageVo, List<FaveInfoEntity>> favoritePair = userService.getFavoritePostsByUserEmailWithPagination(principal.getName(), favoritePage, 10);
+        Pair<PageVo, List<FaveInfoEntity>> favoritePair = userService.getFavoritePostsByUserEmailWithPagination(principal.getName(), favoritePage, 5);
         PageVo favoritePageVo = favoritePair.getLeft();
         List<FaveInfoEntity> favoritePosts = favoritePair.getRight();
 

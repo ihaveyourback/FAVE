@@ -290,7 +290,7 @@ public class UserService {
         }
 
         // 이메일 인증 링크 생성 (validationLink를 생성 후 사용)
-        String emailValidationLink = String.format("http://localhost:8080/user/validate-email-token?userEmail=%s&key=%s",
+        String emailValidationLink = String.format("https://fave.herefave.org//user/validate-email-token?userEmail=%s&key=%s",
                 emailToken.getUserEmail(),
                 emailToken.getKey());
 
