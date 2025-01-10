@@ -32,7 +32,8 @@ public class HomeController {
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE) // HTML 반환
     public ModelAndView getIndex(@AuthenticationPrincipal UserDetails userDetails,
                                  HttpSession session,
-                                 @RequestParam(value = "page", required = false, defaultValue = "1")int page,@AuthenticationPrincipal Object principal) {// 사용자 정보를 가져오는 메서드
+                                 @RequestParam(value = "page", required = false, defaultValue = "1")int page,
+                                 @AuthenticationPrincipal Object principal) {// 사용자 정보를 가져오는 메서드
         ModelAndView modelAndView = new ModelAndView();// 뷰 객체 생성
         if (userDetails instanceof UserEntity user) {// 사용자 정보가 UserEntity 객체인 경우
             modelAndView.addObject("user", user); // user 객체 생성

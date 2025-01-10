@@ -77,6 +77,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/api/login").permitAll()
                                 .requestMatchers("/path/**").permitAll()
+                                .requestMatchers("/admin/styles/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

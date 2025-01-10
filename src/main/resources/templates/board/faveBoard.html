@@ -17,15 +17,24 @@
     <script type="text/javascript" src="/assets/scripts/common.js"></script>
     <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
     <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
+
+    <script defer src="/path/to/websocket.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+
     <title>올해 축제</title>
 </head>
 <body>
 <th:block th:replace="~{home/index.main :: header}"></th:block>
 <th:block th:replace="~{home/index.main :: cover}"></th:block>
 <th:block th:replace="~{home/index.main :: loginMain}"></th:block>
-
 <div class="empty" th:if="${fave == null || fave.length == 0}">
-    <span>해당 축제는 없습니다.</span>
+    해당 축제는 없습니다.
+    <!-- 목록으로 버튼 추가 -->
+    <div class="back-button-container" th:if="${fave == null || fave.length == 0}">
+        <a class="back-button" th:href="@{'/fave/'}">목록으로</a>
+    </div>
 </div>
 
 <main id="list">
@@ -33,7 +42,7 @@
         <div class="grid" th:each="fave : ${fave}">
             <!-- 로그인 사용자 -->
             <a th:if="${#authorization.expression('isAuthenticated()')}"
-               th:href="@{'/fave/read/?index=' + ${fave.index} + '&userEmail=' + ${#authentication.principal.email}}">
+               th:href="@{'/fave/read/?index=' + ${fave.index}}">
                 <img class="img"
                      th:src="@{'/fave/image?index=' + ${fave.index}}"
                      alt="">
@@ -49,13 +58,16 @@
         </div>
     </div>
 
-    <div class="page-container">
+    <!-- 페이지 목록 숨기기 -->
+    <div class="page-container" th:if="${fave != null && fave.length != 0}">
         <a class="page"
            th:each="page : ${#numbers.sequence(page.displayMinPage, page.displayMaxPage)}"
            th:text="${page}"
-           th:href="@{'/fave/' (page=${page})}"></a> <!-- URL 수정 -->
+           th:href="@{'/fave/' (page=${page})}"></a>
     </div>
 </main>
+
+
 
 <th:block th:replace="~{home/index.main :: footer}"></th:block>
 </body>

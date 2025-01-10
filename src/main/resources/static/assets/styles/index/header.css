@@ -108,11 +108,11 @@ body {
 .header .menu .stretch .form .keyword-label .submit-button svg {
   width: 1.5rem;
   height: 1.5rem;
-  fill: #776969;
   transition: fill 0.3s ease;
 }
 .header .menu .stretch .form .keyword-label .submit-button svg:hover {
-  fill: #bda9a9;
+  fill: #955c5c;
+  scale: 105%;
 }
 .header .menu .stretch .form > .label {
   display: flex;
@@ -120,6 +120,34 @@ body {
 }
 .header .menu .stretch .form > .label > .field > option {
   color: #e1e1e1;
+}
+.header #notificationContainer {
+  position: relative;
+  display: inline-block;
+}
+.header #notificationBell {
+  font-size: 24px;
+}
+.header #notificationDropdown {
+  z-index: 1000;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+.header #alertMessageDiv {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.header #alertMessageDiv * {
+  margin: 0;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+}
+.header #alertMessageDiv *:last-child {
+  border-bottom: none;
 }
 .header .nav {
   width: 100%;
@@ -206,6 +234,7 @@ footer {
   text-align: center;
   padding: 20px 0;
   width: 101%;
+  margin-top: auto;
 }
 footer p {
   margin: 5px;

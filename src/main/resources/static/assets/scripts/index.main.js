@@ -145,6 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
     $menu.querySelector(':scope > .item > [rel="register"]').onclick = (e) => {
         e.preventDefault();
         $cover.onclick = () => { //커버(바깥쪽) 누르면 빠져나와야 하니까
@@ -361,8 +362,18 @@ $recoverForm.onsubmit = (e) => {
 };
 
 window.onload = () => {
-    const $content = $main.querySelector(':scope > .content');
-    const $loginForm = $content.querySelector(':scope > .login-form');
-    setTimeout(() => $loginForm.show(), 75);
-    $cover.show();
+    if (window.location.pathname === '/') { // 경로가 '/'인 경우에만 실행
+        const $content = $main.querySelector(':scope > .content');
+        const $loginForm = $content.querySelector(':scope > .login-form');
+        const $cover = document.querySelector('.cover');
+
+        setTimeout(() => $loginForm.show(), 75);
+        $cover.show();
+
+        // 커버 클릭 이벤트 리스너 추가
+        $cover.addEventListener('click', () => {
+            $loginForm.hide();
+            $cover.hide();
+        });
+    }
 };

@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,8 +43,19 @@ public class FaveBoardController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView getBoard(@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+    public ModelAndView getBoard(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                 @AuthenticationPrincipal UserDetails userDetails,
+                                 @AuthenticationPrincipal Object principal) {
         ModelAndView modelAndView = new ModelAndView();
+        if (userDetails instanceof UserEntity user) {// 사용자 정보가 UserEntity 객체인 경우
+            modelAndView.addObject("user", user); // user 객체 생성
+            modelAndView.addObject("isAdmin", user.isAdmin()); // 관리자 여부를 가져옴
+            modelAndView.addObject("email", user.getEmail());
+            modelAndView.addObject("nickname", user.getNickname());
+        }else if (principal instanceof CustomOAuth2User){ // 소셜 이메일 가져오기
+            String email = ((CustomOAuth2User) principal).getEmail();
+            modelAndView.addObject("email", email);
+        }
         Pair<FaveBoardVo, FaveInfoEntity[]> pair = this.faveService.selectFaveInfo(page);
         modelAndView.addObject("page", pair.getLeft());
         modelAndView.addObject("fave", pair.getRight());
@@ -50,49 +63,57 @@ public class FaveBoardController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/read/", method = RequestMethod.GET)
-    @ResponseBody
-    public ModelAndView getReadBoard(@RequestParam(value = "index") int index) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = null;
-        boolean isLoggedIn = false;
+@RequestMapping(value = "/read/", method = RequestMethod.GET)
+@ResponseBody
+public ModelAndView getReadBoard(
+        @RequestParam(value = "index") int index,
+        @AuthenticationPrincipal UserDetails userDetails,
+        @AuthenticationPrincipal Object principal) {
 
-        // 로그인 여부 및 이메일 확인
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserEntity) {
-                // 일반 로그인 사용자
-                userEmail = ((UserEntity) principal).getEmail();
-            } else if (principal instanceof CustomOAuth2User) {
-                // 소셜 로그인 사용자
-                userEmail = ((CustomOAuth2User) principal).getName(); // getName()을 통해 이메일 반환
-            } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User) {
-                // 기본 OAuth2User로 처리하는 경우
-                Map<String, Object> attributes = ((org.springframework.security.oauth2.core.user.DefaultOAuth2User) principal).getAttributes();
-                userEmail = (String) attributes.get("email");
-            }
-            isLoggedIn = (userEmail != null);
+    ModelAndView modelAndView = new ModelAndView("board/faveRead");
+    String userEmail = extractUserEmail(userDetails, principal);
+    boolean isLoggedIn = (userEmail != null);
+
+    // 사용자 정보 추가 (웹소켓 활용 가능)
+    if (userDetails instanceof UserEntity user) {
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("isAdmin", user.isAdmin());
+        modelAndView.addObject("email", user.getEmail());
+        modelAndView.addObject("nickname", user.getNickname());
+    } else if (principal instanceof CustomOAuth2User oAuthUser) {
+        modelAndView.addObject("email", oAuthUser.getEmail());
+    }
+
+    // 찜 상태 확인
+    boolean isLiked = isLoggedIn && favoriteRepository
+            .findByUserEmailAndFestivalId(userEmail, index)
+            .isPresent();
+
+    // 축제 정보 조회 및 업데이트
+    FaveInfoEntity fave = faveService.selectFaveInfoById(index);
+    faveService.updateFaveInfo(fave);
+
+    // 모델에 데이터 추가
+    modelAndView.addObject("fave", fave);
+    modelAndView.addObject("isLiked", isLiked);
+    modelAndView.addObject("userEmail", userEmail);
+
+    return modelAndView;
+}
+
+    /**
+     * 사용자 이메일 추출 메서드 (일반 로그인 및 소셜 로그인 대응)
+     */
+    private String extractUserEmail(UserDetails userDetails, Object principal) {
+        if (userDetails instanceof UserEntity user) {
+            return user.getEmail();
+        } else if (principal instanceof CustomOAuth2User oAuthUser) {
+            return oAuthUser.getEmail();
+        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oauth2User) {
+            Map<String, Object> attributes = oauth2User.getAttributes();
+            return (String) attributes.get("email");
         }
-
-        // FaveInfo 조회
-        FaveInfoEntity fave = this.faveService.selectFaveInfoById(index);
-        this.faveService.updateFaveInfo(fave);
-
-        // 찜 상태 확인
-        boolean isLiked = false;
-        if (isLoggedIn) {
-            Optional<FavoritesEntity> existingLike = favoriteRepository.findByUserEmailAndFestivalId(userEmail, index);
-            isLiked = existingLike.isPresent();
-        }
-
-        // 모델 준비
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("fave", fave);
-        modelAndView.addObject("isLiked", isLiked);
-        modelAndView.addObject("userEmail", userEmail);
-        modelAndView.setViewName("board/faveRead");
-
-        return modelAndView;
+        return null;
     }
 
 

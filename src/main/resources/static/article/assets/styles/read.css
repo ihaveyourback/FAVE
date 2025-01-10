@@ -12,7 +12,8 @@
   display: block;
 }
 
-#main {
+#mainRead {
+  color: #1c1d1e;
   display: flex;
   justify-content: center;
   margin-top: 3rem;

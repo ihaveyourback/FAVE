@@ -106,11 +106,11 @@ body {
             svg {
               width: 1.5rem;
               height: 1.5rem;
-              fill: #776969;
               transition: fill 0.3s ease;
 
               &:hover {
-                fill: #bda9a9;
+                fill: #955c5c;
+                scale: (105%);
               }
             }
           }
@@ -133,6 +133,44 @@ body {
 
 
 
+
+
+
+
+  #notificationContainer {
+    position: relative;
+    display: inline-block;
+  }
+
+  #notificationBell {
+    font-size: 24px;
+  }
+
+  #notificationDropdown {
+    z-index: 1000;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  #alertMessageDiv {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  #alertMessageDiv * {
+    margin: 0;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 1rem;
+  }
+
+  #alertMessageDiv *:last-child {
+    border-bottom: none;
+
+  }
 
 
 
@@ -250,6 +288,7 @@ footer {
   text-align: center;
   padding: 20px 0;
   width: 101%;
+  margin-top: auto;
 
   p {
     margin: 5px;
