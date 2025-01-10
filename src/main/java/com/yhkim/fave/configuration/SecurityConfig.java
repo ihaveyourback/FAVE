@@ -65,6 +65,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/assets/**").permitAll()
+                                .requestMatchers("/like/**").authenticated()
                                 .requestMatchers("/board/**").permitAll()
                                 .requestMatchers("/fave/**").permitAll()
                                 .requestMatchers("/fave/read/**").authenticated() // 찜 상세 조회는 로그인 필요
@@ -75,6 +76,7 @@ public class SecurityConfig {
                                 .requestMatchers("/report/**").permitAll()
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/api/login").permitAll()
+                                .requestMatchers("/path/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -94,13 +96,13 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/")
-                        .defaultSuccessUrl("/")
                         .userInfoEndpoint()
                         .userService(oAuth2MemberService)
                         .and()

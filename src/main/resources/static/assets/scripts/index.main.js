@@ -153,6 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         $cover.show();
         $registerForm.reset(); // 필드 초기화
+        $loginForm.hide();
         $registerForm.show();
         $registerForm[`email`].focus();
     };
@@ -165,6 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
             $recoverForm.hide();
         };
         $cover.show();
+        $loginForm.hide();
         $recoverForm.reset(); // 필드 초기화
         $recoverForm.show();
     };
@@ -172,8 +174,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 $registerForm[`cancel`].onclick = () => {
-    $cover.hide();
     $registerForm.hide();
+    $cover.hide();
 };
 
 $registerForm.onsubmit = (e) => {
@@ -251,8 +253,8 @@ $registerForm.onsubmit = (e) => {
 };
 
 $recoverForm['cancel'].onclick = () => {
-    $cover.hide();
     $recoverForm.hide();
+    $cover.hide();
 };
 
 $recoverForm.onsubmit = (e) => {

@@ -89,7 +89,7 @@
         FROM `fave`.`board_posts`
         WHERE `deleted_at` IS NULL
         <if test="filter != null and filter == 'all' and keyword != null and !keyword.isEmpty()">
-            AND (`title` LIKE CONCAT('%', #{keyword}, '%') OR `content` LIKE CONCAT('%', #{keyword}, '%'))
+            AND (`title` LIKE CONCAT('%', #{keyword}, '%'))
         </if>
         <if test="filter != null and filter == 'title' and keyword != null and !keyword.isEmpty()">
             AND `title` LIKE CONCAT('%', #{keyword}, '%')
@@ -100,6 +100,7 @@
         ORDER BY `index` DESC
         LIMIT #{offsetCount}, #{limitCount}
     </select>
+
 
     <select id="selectArticleCountBySearch" resultType="int">
         SELECT COUNT(0)
