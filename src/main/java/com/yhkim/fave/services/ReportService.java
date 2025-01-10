@@ -1,5 +1,6 @@
 package com.yhkim.fave.services;
 
+import com.yhkim.fave.entities.CustomOAuth2User;
 import com.yhkim.fave.entities.ReportEntity;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.repository.BoardCommentRepository;
@@ -12,8 +13,10 @@ import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.tuple.Pair;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,32 +38,38 @@ public class ReportService {
     }
 
     @Transactional
-    public Result EmailDuplicate(ReportEntity report) {
+    public Result EmailDuplicate(ReportEntity report,
+                                 @AuthenticationPrincipal Object principal) {
         String status = report.getStatus();
+        String userEmail = null;
+        if (principal instanceof CustomOAuth2User customOAuth2User) {
+            userEmail = customOAuth2User.getEmail();
 
-        if ("게시글".equals(status)) {
-            Optional<ReportEntity> existingReport = reportRepository.findFirstByUserEmailAndReportedPostId(
-                    report.getUserEmail(), report.getReportedPostId());
+            if ("게시글".equals(status)) {
+                Optional<ReportEntity> existingReport = reportRepository.findFirstByUserEmailAndReportedPostId(
+                        userEmail, report.getReportedPostId());
 
-            if (existingReport.isPresent() && existingReport.get().getReportedPostId() != null) {
+                if (existingReport.isPresent() && existingReport.get().getReportedPostId() != null) {
 
-                throw new IllegalStateException("이미 신고했습니다.");
+                    throw new IllegalStateException("이미 신고했습니다.");
+                }
+            } else if ("댓글".equals(status)) {
+                Optional<ReportEntity> existingComment = reportRepository.findFirstByUserEmailAndReportedCommentId(
+                        userEmail, report.getReportedCommentId());
+
+                if (existingComment.isPresent() && existingComment.get().getReportedCommentId() != null) {
+
+                    throw new IllegalStateException("이미 신고했습니다.");
+                }
+            } else {
+                throw new IllegalArgumentException("잘못된 신고 상태입니다: " + status);
             }
-        } else if ("댓글".equals(status)) {
-            Optional<ReportEntity> existingComment = reportRepository.findFirstByUserEmailAndReportedCommentId(
-                    report.getUserEmail(), report.getReportedCommentId());
 
-            if (existingComment.isPresent() && existingComment.get().getReportedCommentId() != null) {
-
-                throw new IllegalStateException("이미 신고했습니다.");
-            }
-        } else {
-            throw new IllegalArgumentException("잘못된 신고 상태입니다: " + status);
+            // 신고 처리
+            report.setReportedAt(LocalDateTime.now());
+            reportRepository.save(report);
+            return CommonResult.SUCCESS;
         }
-
-        // 신고 처리
-        report.setReportedAt(LocalDateTime.now());
-        reportRepository.save(report);
         return CommonResult.SUCCESS;
     }
 

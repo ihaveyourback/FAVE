@@ -57,13 +57,33 @@ public class CommentController {
     //댓글 작성 기능 (용현)
     @RequestMapping(value = "/write", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String postIndex(CommentEntity comment, Authentication authentication, @RequestParam Map<String, String> messageData, @RequestParam("postId") Integer postId, @AuthenticationPrincipal UserEntity user) throws JsonProcessingException {
+    public String postIndex(CommentEntity comment, Authentication authentication,
+                            @RequestParam Map<String, String> messageData,
+                            @RequestParam("postId") Integer postId,
+                            @AuthenticationPrincipal UserEntity user) throws JsonProcessingException {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "{\"result\":\"FAILURE\"}"; // 인증되지 않은 사용자 처리
         }
 
         // 인증된 사용자 정보 가져오기
+        String userEmail = null;
+        String userNickname = null;
+
+        if (authentication.getPrincipal() instanceof UserEntity) {
+            // 일반 로그인 사용자 처리
+            UserEntity userEntity = (UserEntity) authentication.getPrincipal();
+            userEmail = userEntity.getEmail();
+            userNickname = userEntity.getNickname(); // UserEntity에 닉네임 필드가 있다고 가정
+        } else if (authentication.getPrincipal() instanceof CustomOAuth2User) {
+            // 소셜 로그인 사용자 처리
+            CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+            userEmail = oauthUser.getName(); // 소셜 로그인 이메일
+            userNickname = (String) oauthUser.getAttributes().getOrDefault("nickname", "사용자"); // 소셜 로그인 닉네임
+        }
+
+        // 댓글 작성 처리
         ArticleResult result = this.commentService.writeComment(comment, authentication);
+
         // 댓글 작성이 성공적인 경우
         if (result == ArticleResult.SUCCESS) {
             // 댓글 작성자 정보
@@ -75,15 +95,24 @@ public class CommentController {
                 e.printStackTrace();
                 System.out.println("알림 전송 실패");
             }
+
+            // 게시글 정보 가져오기
             BoardPostEntity boardPost = this.boardPostService.getPostById(postId);
+            String postTitle = boardPost.getTitle();
+
+            // 알림 생성
             NotificationEntity n = NotificationEntity.builder()
-                    .userEmail(boardPost.getUserEmail())
-                    .message(String.format("%s님이 댓글을 달았습니다.", user.getNickname()))
+                    .userEmail(boardPost.getUserEmail()) // 게시글 작성자에게 알림
+                    .message(String.format("%s님이 %s 댓글을 달았습니다.", userNickname, postTitle))
                     .url(String.format("/article/read?index=%d", postId))
                     .isRead(false)
                     .createdAt(LocalDateTime.now())
                     .build();
+
+            // 알림 저장
             this.notificationMapper.insert(n);
+
+            // WebSocket을 통해 실시간 알림 전송
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             this.brokerMessagingTemplate.convertAndSend("/topic/alerts", new JSONObject(objectMapper.writeValueAsString(n)).toString());
@@ -93,8 +122,11 @@ public class CommentController {
             response.put("result", result);
             return response.toString();
         }
+
+        // 댓글 작성 실패 시 처리
         return ArticleResult.FAILURE.toString();
     }
+
 
 
     //    // 대댓글 작성 엔드포인트
@@ -164,20 +196,17 @@ public class CommentController {
             // 부모 댓글 작성자 정보 가져오기
             CommentEntity commentPost = this.commentService.getSelectCommentsByParentId(parentCommentId);
 
-            if (commentPost == null) {
-                response.put("result", "failure");
-                response.put("message", "부모 댓글 정보를 가져올 수 없습니다.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
+            String replyComment = commentPost.getComment();
 
             // 알림 생성 및 저장
             NotificationEntity n = NotificationEntity.builder()
-                    .userEmail(commentPost.getUserEmail())
-                    .message(String.format("%s님이 내 댓글에 댓글을 작성했습니다.", userNickname))
+                    .userEmail(commentPost.getUserEmail()) // 부모 댓글 작성자에게 알림
+                    .message(String.format("%s님이 %s에 대댓글을 달았습니다.", userNickname,replyComment))
                     .url(postId != null ? String.format("/article/read?index=%d", postId) : "/")
                     .isRead(false)
                     .createdAt(LocalDateTime.now())
                     .build();
+
 
             notificationMapper.insert(n);
 
@@ -195,7 +224,6 @@ public class CommentController {
         response.put("message", "대댓글 작성 실패");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
 
 
     @RequestMapping(value = "/", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)

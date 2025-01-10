@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentUserEmail = document.getElementById("currentUserEmail");
 
     let _unreadCount = 0;
-
     const createNotificationAnchor = (notification) => {
         const $a = document.createElement('a');
         const $delete = document.createElement('button');

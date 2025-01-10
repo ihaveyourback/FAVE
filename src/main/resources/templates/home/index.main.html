@@ -92,20 +92,24 @@
                            placeholder="새로운 잇슈 검색!"
                            spellcheck="false"
                            type="text" th:value="${keyword}">
-
+                    <button class="submit-button" type="submit">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g opacity="0.9">
+                                <path d="M15.8999 14.5L19.0862 17.7187" stroke="currentColor" stroke-width="1.8"
+                                      stroke-linecap="round" stroke-linejoin="round"></path>
+                                <circle cx="11.4302" cy="10.4819" r="5.35" stroke="currentColor"
+                                        stroke-width="1.8"></circle>
+                            </g>
+                        </svg>
+                    </button>
                 </label>
-                <button class="submit-button" type="submit">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="0.9">
-                            <path d="M15.8999 14.5L19.0862 17.7187" stroke="currentColor" stroke-width="1.8"
-                                  stroke-linecap="round" stroke-linejoin="round"></path>
-                            <circle cx="11.4302" cy="10.4819" r="5.35" stroke="currentColor"
-                                    stroke-width="1.8"></circle>
-                        </g>
-                    </svg>
-                </button>
             </form>
         </li>
+
+
+
+
+
         <li id="UserLinkWrapper" sec:authorize="isAuthenticated() and !hasAuthority('ROLE_ADMIN')">
             <a class="--obj-button -color-primary" th:href="@{/user/profile}">마이 페이지</a> <!-- 사용자 -->
         </li>
@@ -121,7 +125,7 @@
         </li>
         <li id="notificationContainer">
             <!-- 종 아이콘 -->
-            <div id="notificationBell" th:if="${user != null}" style="cursor: pointer; position: relative;">
+            <div id="notificationBell" sec:authorize="isAuthenticated()" style="cursor: pointer; position: relative;">
                 🔔
                 <span id="unreadCount" style="position: absolute; top: -5px; right: -10px;
             background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: none;">
@@ -149,7 +153,9 @@
 <!-- Cover Screen -->
 <div class="cover" id="cover" th:fragment="cover"></div>
 <div class="gongback"></div>
-<!--관리자가 소개하는 인기 축제  api?-->
+<br><br>
+
+
 <a href="">
     <section class="main-section">
     <span class="image-slider">
@@ -160,7 +166,7 @@
     </section>
 </a>
 <main id="faveMain">
-    <span style="text-align: center; display: block; font-size: 2.5rem; font-weight: bold; color: #000000"  > 오늘의 축제</span>
+<!--    <span style="text-align: center; display: block; font-size: 2.5rem; font-weight: bold; color: #000000"  > 오늘의 축제</span>-->
     <div class="grid-container">
         <div class="empty" th:if="${fave == null || fave.length == 0}">
             <span>해당 축제는 없습니다.</span>

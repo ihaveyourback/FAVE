@@ -1,5 +1,6 @@
 package com.yhkim.fave.controllers;
 
+import com.yhkim.fave.entities.CustomOAuth2User;
 import com.yhkim.fave.entities.FaveInfoEntity;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.services.FaveService;
@@ -31,13 +32,16 @@ public class HomeController {
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE) // HTML 반환
     public ModelAndView getIndex(@AuthenticationPrincipal UserDetails userDetails,
                                  HttpSession session,
-                                 @RequestParam(value = "page", required = false, defaultValue = "1")int page) {// 사용자 정보를 가져오는 메서드
+                                 @RequestParam(value = "page", required = false, defaultValue = "1")int page,@AuthenticationPrincipal Object principal) {// 사용자 정보를 가져오는 메서드
         ModelAndView modelAndView = new ModelAndView();// 뷰 객체 생성
         if (userDetails instanceof UserEntity user) {// 사용자 정보가 UserEntity 객체인 경우
             modelAndView.addObject("user", user); // user 객체 생성
             modelAndView.addObject("isAdmin", user.isAdmin()); // 관리자 여부를 가져옴
             modelAndView.addObject("email", user.getEmail());
             modelAndView.addObject("nickname", user.getNickname());
+        }else if (principal instanceof CustomOAuth2User){ // 소셜 이메일 가져오기
+            String email = ((CustomOAuth2User) principal).getEmail();
+            modelAndView.addObject("email", email);
         }
         Pair<FaveBoardVo, FaveInfoEntity[]> pair = this.faveService.selectFaveInfo(page);
         modelAndView.addObject("page", pair.getLeft());

@@ -7,6 +7,7 @@
   justify-content: flex-start;
   margin: 1rem 10rem;
   color: #1c1d1e;
+  min-height: calc(100vh - 2rem); /* 화면 높이에서 헤더 높이를 제외한 영역 */
 }
 #list > h1 {
   font-size: 1.5rem;

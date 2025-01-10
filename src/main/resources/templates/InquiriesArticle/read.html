@@ -35,7 +35,7 @@
         <div class="post">
             <div class="title" th:text="${article.getTitle()}">게시글 제목</div>
             <a class="meta"
-               th:text="'작성자: ' + ${article.getUserNickname()} + ' | 작성일: ' + ${#temporals.format(article.getCreatedAt, 'yyyy-MM-dd')} + ' | 조회수: ' + ${article.getView()}">>작성자:
+               th:text="'작성자: ' + ${article.getUserNickname()} + ' | 작성일: ' + ${#temporals.format(article.getCreateAt(), 'yyyy-MM-dd')} + ' | 조회수: ' + ${article.getView()}">>작성자:
                 사용자 | 작성일: 2024-12-06 | 조회수: 123</a>
         </div>
         <div class="content">
