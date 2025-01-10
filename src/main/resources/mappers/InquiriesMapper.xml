@@ -11,7 +11,7 @@
                `content`       AS `content`,
                `user_email`    AS `userEmail`,
                `user_nickname` AS `userNickName`,
-               `create_at`     AS `createdAt`,
+               `create_at`     AS `createAt`,
                `update_at`     AS `updateAt`,
                `is_deleted`    AS `isDeleted`,
                `is_resolved`   AS `isResolved`,
@@ -34,7 +34,8 @@
             parameterType="com.yhkim.fave.entities.InquiriesArticleEntity">
         INSERT INTO `fave`.`inquiries` (`title`, `content`, `user_email`, `user_nickname`, `create_at`, `update_at`,
                                         `is_deleted`, `view`, `is_resolved`)
-        VALUES (#{title}, #{content}, #{userEmail}, #{userNickname}, #{createAt}, #{updateAt}, #{isDeleted}, #{view},#{isResolved})
+        VALUES (#{title}, #{content}, #{userEmail}, #{userNickname}, #{createdAt}, #{updateAt}, #{isDeleted}, #{view},
+                #{isResolved})
     </insert>
 
     <select id="selectArticleByIndex" resultType="com.yhkim.fave.entities.InquiriesArticleEntity">
@@ -42,29 +43,61 @@
                `title`         AS `title`,
                `content`       AS `content`,
                `user_email`    AS `userEmail`,
-               `user_nickname` AS `userNickName`,
-               `create_at`     AS `createAt`,
+               `user_nickname` AS `userNickname`,
+               `create_at`     AS `createdAt`,
                `update_at`     AS `updateAt`,
                `is_deleted`    AS `isDeleted`,
-               `is_resolved`   AS `isResolved`,
-               `view`          AS `view`
+               `view`          AS `view`,
+               `is_resolved`   AS `isResolved`
         FROM `fave`.`inquiries`
         WHERE `index` = #{index}
         LIMIT 1
     </select>
 
+    <!--    <select id="selectArticles" resultType="com.cykim.teamproject.entities.ArticleEntity">-->
+    <!--        SELECT `index` AS `index`,-->
+    <!--               `title` AS `title`,-->
+    <!--               `content` AS `content`,-->
+    <!--               `user_email` AS `userEmail`,-->
+    <!--               `user_nickname` AS `userNickname`,-->
+    <!--               `create_at` AS `createdAt`,-->
+    <!--               `update_at` AS `updateAt`,-->
+    <!--               `deleted_at` AS `deletedAt`,-->
+    <!--               `view` AS `view`-->
+    <!--        FROM `fave`.`board_posts`-->
+    <!--        WHERE `deleted_at` IS NULL-->
+    <!--        ORDER BY `index` DESC-->
+    <!--    </select>-->
+
+    <!--    <select id="selectArticlesByPaging" resultType="com.cykim.teamproject.entities.ArticleEntity">-->
+    <!--        SELECT `index` AS `index`,-->
+    <!--               `title` AS `title`,-->
+    <!--               `content` AS `content`,-->
+    <!--               `user_email` AS `userEmail`,-->
+    <!--               `user_nickname` AS `userNickname`,-->
+    <!--               `create_at` AS `createdAt`,-->
+    <!--               `update_at` AS `updateAt`,-->
+    <!--               `deleted_at` AS `deletedAt`,-->
+    <!--               `view` AS `view`-->
+    <!--        FROM `fave`.`board_posts`-->
+    <!--        WHERE `deleted_at` IS NULL-->
+    <!--        ORDER BY `index` DESC-->
+    <!--        LIMIT #{offsetCount}, #{countPerPage}-->
+    <!--    </select>-->
+
+    <!--    mm-->
     <!-- selectArticles 쿼리 수정 -->
     <select id="selectArticles" resultType="com.yhkim.fave.entities.InquiriesArticleEntity">
-        SELECT `index`         AS `index`,
-               `title`         AS `title`,
-               `content`       AS `content`,
-               `user_email`    AS `userEmail`,
-               `user_nickname` AS `userNickName`,
-               `create_at`     AS `createAt`,
-               `update_at`     AS `updateAt`,
-               `is_deleted`    AS `isDeleted`,
-               `is_resolved`   AS `isResolved`,
-               `view`          AS `view`
+        SELECT `index`                      AS `index`,
+               `title`                      AS `title`,
+               `content`                    AS `content`,
+               `user_email`                 AS `userEmail`,
+               `user_nickname`              AS `userNickname`,
+               `create_at`                  AS `createdAt`,
+               `update_at`                  AS `updateAt`,
+               `is_deleted`                 AS `isDeleted`,
+               `view`                       AS `view`,
+               `is_resolved`                AS `isResolved`
         FROM `fave`.`inquiries`
         WHERE `is_deleted` IS NULL
         ORDER BY `index` DESC
@@ -72,22 +105,23 @@
 
     <!-- selectArticlesByPaging 쿼리 수정 -->
     <select id="selectArticlesByPaging" resultType="com.yhkim.fave.vos.InquiriesArticleVo">
-        SELECT `index`         AS `index`,
-               `title`         AS `title`,
-               `content`       AS `content`,
-               `user_email`    AS `userEmail`,
-               `user_nickname` AS `userNickName`,
-               `create_at`     AS `createAt`,
-               `update_at`     AS `updateAt`,
-               `is_deleted`    AS `isDeleted`,
-               `is_resolved`   AS `isResolved`,
-               `view`          AS `view`
+        SELECT `index`                      AS `index`,
+               `title`                      AS `title`,
+               `content`                    AS `content`,
+               `user_email`                 AS `userEmail`,
+               `user_nickname`              AS `userNickname`,
+               `create_at`                  AS `createdAt`,
+               `update_at`                  AS `updateAt`,
+               `is_deleted`                 AS `IsDeleted`,
+               `view`                       AS `view`,
+               `is_resolved`                AS `isResolved`
         FROM `fave`.`inquiries`
         WHERE `is_deleted` IS NULL
         ORDER BY `index` DESC
         LIMIT #{offsetCount}, #{countPerPage}
     </select>
 
+    <!--,-->
     <select id="getTotalArticlesCount" resultType="int">
         SELECT COUNT(0)
         FROM `fave`.`inquiries`
@@ -99,12 +133,12 @@
         `title` AS `title`,
         `content` AS `content`,
         `user_email` AS `userEmail`,
-        `user_nickname` AS `userNickName`,
-        `create_at` AS `createAt`,
+        `user_nickname` AS `userNickname`,
+        `create_at` AS `createdAt`,
         `update_at` AS `updateAt`,
         `is_deleted` AS `isDeleted`,
-        `is_resolved` AS `isResolved`,
-        `view` AS `view`
+        `view` AS `view`,
+        `is_resolved` AS `isResolved`
         FROM `fave`.`inquiries`
         WHERE `is_deleted` IS NULL
         <if test="filter != null and filter == 'all' and keyword != null and !keyword.isEmpty()">
@@ -138,15 +172,15 @@
     <update id="updateArticle"
             parameterType="com.yhkim.fave.entities.InquiriesArticleEntity">
         UPDATE `fave`.`inquiries`
-        SET `title`         = #{title},
-            `content`       = #{content},
-            `user_email`    = #{userEmail},
+        SET `user_email`    = #{userEmail},
             `user_nickname` = #{userNickname},
-            `create_at`     = #{createAt},
+            `title`         = #{title},
+            `content`       = #{content},
+            `create_at`     = #{createdAt},
             `update_at`     = #{updateAt},
             `is_deleted`    = #{isDeleted},
-            `is_resolved`   =#{isResolved},
-            `view`          = #{view}
+            `view`          = #{view},
+            `is_resolved`   =#{isResolved}
         WHERE `index` = #{index}
         LIMIT 1
     </update>
