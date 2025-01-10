@@ -17,14 +17,17 @@
     <script type="text/javascript" src="/assets/scripts/common.js"></script>
     <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
     <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
-
-
     <title>올해 축제</title>
 </head>
 <body>
 <th:block th:replace="~{home/index.main :: header}"></th:block>
-<th:block th:replace="~{home/index.main :: loginMain}"></th:block>
 <th:block th:replace="~{home/index.main :: cover}"></th:block>
+<th:block th:replace="~{home/index.main :: loginMain}"></th:block>
+
+<div class="empty" th:if="${fave == null || fave.length == 0}">
+    <span>해당 축제는 없습니다.</span>
+</div>
+
 <main id="list">
     <div class="grid-container">
         <div class="grid" th:each="fave : ${fave}">
@@ -35,7 +38,6 @@
                      th:src="@{'/fave/image?index=' + ${fave.index}}"
                      alt="">
             </a>
-
             <!-- 비로그인 사용자 -->
             <a th:unless="${#authorization.expression('isAuthenticated()')}"
                th:href="@{'/fave/read/?index=' + ${fave.index}}">
@@ -43,7 +45,6 @@
                      th:src="@{'/fave/image?index=' + ${fave.index}}"
                      alt="">
             </a>
-
             <span th:text="${fave.getTitle()}"></span>
         </div>
     </div>
@@ -57,6 +58,5 @@
 </main>
 
 <th:block th:replace="~{home/index.main :: footer}"></th:block>
-
 </body>
 </html>

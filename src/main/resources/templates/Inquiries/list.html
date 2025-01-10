@@ -38,7 +38,7 @@
             <td th:text="${article.getIsResolved()}"></td>
             <td th:text="${article.getUserNickname()}">작성자입니다</td>
             <td th:text="${article.getView()}">조회수입니다</td>
-            <td th:text="${#temporals.format(article.getCreatedAt(), 'yyyy-MM-dd')}">작성일입니다.</td>
+            <td th:text="${#temporals.format(article.getCreateAt(), 'yyyy-MM-dd')}">작성일입니다.</td>
         </tr>
         </tbody>
     </table>

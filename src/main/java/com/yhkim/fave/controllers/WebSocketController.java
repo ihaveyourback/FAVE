@@ -1,6 +1,7 @@
 package com.yhkim.fave.controllers;
 
 
+import com.yhkim.fave.entities.CustomOAuth2User;
 import com.yhkim.fave.entities.NotificationEntity;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.mappers.NotificationMapper;
@@ -74,8 +75,23 @@ public class WebSocketController {
 
     @PatchMapping("/all")
     @ResponseBody
-    public void patchAll(@AuthenticationPrincipal UserEntity user) {
-        NotificationEntity[] ns = this.notificationMapper.selectAll(user.getEmail());
+    public void patchAll(@AuthenticationPrincipal UserEntity user, @AuthenticationPrincipal Object principal) {
+        String currentUserEmail = null;
+
+        if (user != null) {
+            // 일반 로그인 사용자
+            currentUserEmail = user.getEmail();
+        } else if (principal instanceof CustomOAuth2User) {
+            // 소셜 로그인 사용자 처리
+            CustomOAuth2User oauthUser = (CustomOAuth2User) principal;
+            currentUserEmail = oauthUser.getName(); // 이메일 또는 ID로 사용자 정보 반환
+        }
+
+        if (currentUserEmail == null) {
+            throw new IllegalStateException("사용자 정보를 확인할 수 없습니다.");
+        }
+
+        NotificationEntity[] ns = this.notificationMapper.selectAll(currentUserEmail);
         for (NotificationEntity n : ns) {
             n.setRead(true);
             this.notificationMapper.update(n);
@@ -84,15 +100,31 @@ public class WebSocketController {
 
     @DeleteMapping(value = "/")
     @ResponseBody
-    public ResponseEntity<Void> deleteIndex(@AuthenticationPrincipal UserEntity user,
-                              @RequestParam(value = "index", required = false) int index) {
-        if (user == null || index < 1) {
+    public ResponseEntity<Void> deleteIndex(
+            @AuthenticationPrincipal UserEntity user,
+            @AuthenticationPrincipal Object principal,
+            @RequestParam(value = "index", required = false) int index) {
+
+        String currentUserEmail = null;
+
+        if (user != null) {
+            // 일반 로그인 사용자
+            currentUserEmail = user.getEmail();
+        } else if (principal instanceof CustomOAuth2User) {
+            // 소셜 로그인 사용자 처리
+            CustomOAuth2User oauthUser = (CustomOAuth2User) principal;
+            currentUserEmail = oauthUser.getName(); // 이메일 또는 ID로 사용자 정보 반환
+        }
+
+        if (currentUserEmail == null || index < 1) {
             return ResponseEntity.badRequest().build();
         }
+
         NotificationEntity n = this.notificationMapper.select(index);
-        if (n == null || !n.getUserEmail().equals(user.getEmail())) {
+        if (n == null || !n.getUserEmail().equals(currentUserEmail)) {
             return ResponseEntity.badRequest().build();
         }
+
         n.setDeleted(true);
         this.notificationMapper.update(n);
         return ResponseEntity.ok().build();

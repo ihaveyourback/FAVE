@@ -15,11 +15,11 @@ public class InquiriesArticleEntity {
     private String content;
     private String userEmail;
     private String userNickname;
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
     private LocalDateTime updateAt;
     private LocalDateTime isDeleted;
-    private int view;
     private String isResolved = InquiriesStatus.PROCESSING.getDescription();
+    private int view;
 
 }
 enum InquiriesStatus {
