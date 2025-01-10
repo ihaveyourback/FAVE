@@ -16,10 +16,25 @@
     <script defer type="text/javascript" src="/common/assets/scripts/Like.js"></script>
     <script defer src="/article/assets/scripts/read.js" type="text/javascript"
             th:if="${article != null && article.getDeletedAt() == null}"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
+
+    <script type="text/javascript" src="/assets/scripts/common.js"></script>
+    <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
+    <script defer src="/path/to/websocket.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+
 
 </head>
+
 <body th:if="${article != null && article.getDeletedAt() == null}" th:data-logged-in-email="${#authentication.principal.email}">
-<div th:insert="~{common/common.html :: header_copy}"></div>
+<th:block th:replace="~{home/index.main :: header}"></th:block>
+<th:block th:replace="~{home/index.main :: loginMain}"></th:block>
+<th:block th:replace="~{home/index.main :: cover}"></th:block>
 <div id="cover"></div>
 <input type="hidden" id="loggedInUserNickname" th:value="${loggedInUserNickname}">
 <form id="deleteDialog">
@@ -32,7 +47,7 @@
         <button class="--obj-button -button_color" name="cancel" type="button">취소</button>
     </div>
 </form>
-<main id="main">
+<main id="mainRead">
     <div class="container">
         <div class="post">
             <div class="title" th:text="${article.getTitle()}">게시글 제목</div>

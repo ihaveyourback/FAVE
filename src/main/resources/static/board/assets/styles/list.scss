@@ -1,14 +1,14 @@
 @charset "UTF-8";
 
 #list {
-  align-items: stretch;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   justify-content: flex-start;
-  margin: 1rem 10rem;
+  margin-left: 10rem;
+  margin-right: 10rem;
+  margin-bottom: 5rem;
   color: #1c1d1e;
-  min-height: calc(100vh - 2rem); /* 화면 높이에서 헤더 높이를 제외한 영역 */
 
   > h1 {
     font-size: 1.5rem;

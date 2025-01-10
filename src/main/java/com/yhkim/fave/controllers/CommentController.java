@@ -78,7 +78,7 @@ public class CommentController {
             // 소셜 로그인 사용자 처리
             CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
             userEmail = oauthUser.getName(); // 소셜 로그인 이메일
-            userNickname = (String) oauthUser.getAttributes().getOrDefault("nickname", "사용자"); // 소셜 로그인 닉네임
+           userNickname = oauthUser.getNickname();
         }
 
         // 댓글 작성 처리
@@ -103,7 +103,7 @@ public class CommentController {
             // 알림 생성
             NotificationEntity n = NotificationEntity.builder()
                     .userEmail(boardPost.getUserEmail()) // 게시글 작성자에게 알림
-                    .message(String.format("%s님이 %s 댓글을 달았습니다.", userNickname, postTitle))
+                    .message(String.format("%s님이 %s에 댓글을 달았습니다.", userNickname, postTitle))
                     .url(String.format("/article/read?index=%d", postId))
                     .isRead(false)
                     .createdAt(LocalDateTime.now())
