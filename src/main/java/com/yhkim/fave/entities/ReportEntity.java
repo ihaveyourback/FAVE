@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 public class ReportEntity {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "`index`")
@@ -54,7 +55,6 @@ public class ReportEntity {
     @ManyToOne
     @JoinColumn(name = "reported_user_email", referencedColumnName = "email", insertable = false, updatable = false)
     private UserEntity reportedUser;
-
 }
 
 enum ReportStatus {

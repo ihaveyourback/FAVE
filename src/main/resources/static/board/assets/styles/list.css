@@ -17,8 +17,8 @@
   border-spacing: 0;
 }
 #list > .article-table > thead > tr > th {
-  background-color: #f5f5ec;
-  color: #000000;
+  background-color: rgb(172.4675324675, 156.4935064935, 132.5324675325);
+  color: #ffffff;
   font: inherit;
   padding: 0.5rem 1rem;
   white-space: nowrap;
@@ -35,7 +35,6 @@
   width: 100%;
 }
 #list > .article-table > tbody {
-  top: 0.5rem;
   position: relative;
 }
 #list > .article-table > tbody > tr:first-of-type > td:first-of-type {

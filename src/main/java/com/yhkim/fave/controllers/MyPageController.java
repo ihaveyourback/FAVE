@@ -52,7 +52,7 @@ public class MyPageController {
         List<BoardPostEntity> posts = boardPostService.getPostsByUserEmail(principal.getName(), postPageVo); // 사용자의 게시물 목록 가져오기 (페이징 처리)
 
         // 신고 내역 페이징 정보 생성
-        Pair<PageVo, List<ReportEntity>> reportPair = reportService.getReportsByLoggedInUser(reportPage, 10); // 사용자의 신고 목록 가져오기 (페이징 처리)
+        Pair<PageVo, List<ReportEntity>> reportPair = reportService.getReportsByLoggedInUser(reportPage, 10); // 사용자의 신고 목록 가져오기
         PageVo reportPageVo = reportPair.getLeft();
         List<ReportEntity> reports = reportPair.getRight();
 

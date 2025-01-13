@@ -43,4 +43,8 @@ public interface UserMapper {
     List<FaveInfoEntity> selectFavoritePostsByUserEmailWithPagination(@Param("email") String email,
                                                                       @Param("limitCount") int limitCount,
                                                                       @Param("offsetCount") int offsetCount); // 사용자의 찜 목록 조회 (페이징 처리)
+
+
+
+
 }

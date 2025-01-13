@@ -4,7 +4,6 @@ import com.yhkim.fave.entities.CustomOAuth2User;
 import com.yhkim.fave.entities.UserEntity;
 import com.yhkim.fave.services.ArticleService;
 import com.yhkim.fave.vos.ArticleVo;
-import com.yhkim.fave.vos.PageVo;
 import com.yhkim.fave.vos.PageVo_cy;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,17 +38,20 @@ public class BoardController {
             @AuthenticationPrincipal Object principal) {
 
         ModelAndView modelAndView = new ModelAndView();
-        if (userDetails instanceof UserEntity user) {// 사용자 정보가 UserEntity 객체인 경우
-            modelAndView.addObject("user", user); // user 객체 생성
-            modelAndView.addObject("isAdmin", user.isAdmin()); // 관리자 여부를 가져옴
+
+        // 사용자 정보 처리
+        if (userDetails instanceof UserEntity user) { // 사용자 정보가 UserEntity 객체인 경우
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("isAdmin", user.isAdmin()); // 관리자 여부
             modelAndView.addObject("email", user.getEmail());
             modelAndView.addObject("nickname", user.getNickname());
-        }else if (principal instanceof CustomOAuth2User){ // 소셜 이메일 가져오기
+        } else if (principal instanceof CustomOAuth2User) { // 소셜 이메일 가져오기
             String email = ((CustomOAuth2User) principal).getEmail();
             modelAndView.addObject("email", email);
         }
-        Pair<ArticleVo[], PageVo_cy> articles;
 
+        // 게시글 목록 및 페이징 처리
+        Pair<ArticleVo[], PageVo_cy> articles;
         if (filter == null || filter.isEmpty() || keyword == null || keyword.isEmpty()) {
             articles = this.articleService.getArticlesByPaging(page);
         } else {
@@ -59,6 +62,13 @@ public class BoardController {
         modelAndView.addObject("pageVo", articles.getRight());
         modelAndView.addObject("filter", filter);
         modelAndView.addObject("keyword", keyword);
+
+//        // 인기 게시글 (오늘)
+//        modelAndView.addObject("popularArticlesToday", this.articleService.getPopularArticlesToday());
+
+        // 인기 게시글 (한 달)
+        modelAndView.addObject("popularArticlesMonth", this.articleService.getPopularArticlesMonth());
+
         modelAndView.setViewName("board/list");
         return modelAndView;
     }
