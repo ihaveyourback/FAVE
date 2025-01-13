@@ -227,4 +227,15 @@ public class ArticleService {
         return result > 0 ? ArticleResult.SUCCESS : ArticleResult.FAILURE;
     }
 
+
+//    // 오늘 올라온 인기 게시글 가져오기
+//    public ArticleVo[] getPopularArticlesToday() {
+//        return articleMapper.selectPopularArticlesToday();
+//    }
+
+    // 한 달 사이에 올라온 인기 게시글 가져오기
+    public ArticleVo[] getPopularArticlesMonth() {
+        return articleMapper.selectPopularArticlesMonth();
+    }
+
 }

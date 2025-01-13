@@ -65,10 +65,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/assets/**").permitAll()
-                                .requestMatchers("/like/**").authenticated()
                                 .requestMatchers("/board/**").permitAll()
+                                .requestMatchers("/like/**").authenticated()
                                 .requestMatchers("/fave/**").permitAll()
-                                .requestMatchers("/fave/read/**").authenticated() // 찜 상세 조회는 로그인 필요
+                                .requestMatchers("/fave/read/**").authenticated()
                                 .requestMatchers("/profile/**").authenticated()
                                 .requestMatchers("/user/secession").authenticated()
                                 .requestMatchers("/user/**").permitAll()
@@ -78,8 +78,10 @@ public class SecurityConfig {
                                 .requestMatchers("/api/login").permitAll()
                                 .requestMatchers("/path/**").permitAll()
                                 .requestMatchers("/admin/styles/**").permitAll()
+                                .requestMatchers("/board/styles/**").permitAll()
                                 .anyRequest().authenticated()
                 )
+
                 .formLogin(form -> form
                         .loginPage("/")
                         .loginProcessingUrl("/api/login")

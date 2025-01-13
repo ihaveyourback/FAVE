@@ -3,7 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yhkim.fave.mappers.ReportsMapper">
-    <select id="selectReports" parameterType="com.yhkim.fave.entities.ReportEntity" resultType="com.yhkim.fave.entities.ReportEntity">
+    <select id="selectReports" parameterType="com.yhkim.fave.entities.ReportEntity"
+            resultType="com.yhkim.fave.entities.ReportEntity">
         SELECT `index`               AS `index`,
                `user_email`          AS `userEmail`,
                `reported_user_email` AS `reportedUserEmail`,
@@ -43,4 +44,20 @@
         SET `current_status` = #{currentStatus}
         WHERE `index` = #{index}
     </update>
+
+    <select id="findReportsByUserEmailWithPaging" resultType="com.yhkim.fave.entities.ReportEntity">
+        SELECT *
+        FROM reports
+        WHERE user_email = #{loggedInUserEmail}
+        ORDER BY reported_at DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countReportsByUserEmail" resultType="int">
+        SELECT COUNT(*)
+        FROM reports
+        WHERE user_email = #{loggedInUserEmail}
+    </select>
+
+
 </mapper>

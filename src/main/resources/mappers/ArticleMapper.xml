@@ -131,4 +131,61 @@
         WHERE `index` = #{index}
         LIMIT 1
     </update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--    &lt;!&ndash; 인기 게시글: 오늘 올라온 게시글 중 좋아요 수가 높은 순으로 가져오기 &ndash;&gt;-->
+<!--    <select id="selectPopularArticlesToday" resultType="com.yhkim.fave.vos.ArticleVo">-->
+<!--        SELECT-->
+<!--        `index` AS `index`,-->
+<!--        title AS title,-->
+<!--        content AS content,-->
+<!--        user_email AS userEmail,-->
+<!--        user_nickname AS userNickname,-->
+<!--        create_at AS createdAt,-->
+<!--        update_at AS updatedAt,-->
+<!--        deleted_at AS deletedAt,-->
+<!--        view AS view,-->
+<!--        like_count AS likesCount-->
+<!--        FROM fave.board_posts-->
+<!--        WHERE deleted_at IS NULL-->
+<!--        AND create_at >= CURDATE()  &lt;!&ndash; 오늘 날짜 기준 &ndash;&gt;-->
+<!--        ORDER BY like_count DESC-->
+<!--        LIMIT 3-->
+<!--    </select>-->
+
+    <!-- 인기 게시글: 한 달 사이에 올라온 게시글 중 좋아요 수가 높은 순으로 가져오기 -->
+    <select id="selectPopularArticlesMonth" resultType="com.yhkim.fave.vos.ArticleVo">
+        SELECT
+            `index` AS `index`,
+        title AS title,
+        content AS content,
+        user_email AS userEmail,
+        user_nickname AS userNickname,
+        create_at AS createdAt,
+        update_at AS updatedAt,
+        deleted_at AS deletedAt,
+        view AS view,
+        like_count AS likesCount
+        FROM fave.board_posts
+        WHERE deleted_at IS NULL
+        AND create_at >= NOW() - INTERVAL 1 WEEK  <!-- 지난 한 달 동안 -->
+        ORDER BY like_count DESC
+        LIMIT 3
+    </select>
+
+
+
 </mapper>
