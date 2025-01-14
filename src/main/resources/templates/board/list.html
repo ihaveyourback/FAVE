@@ -47,10 +47,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="empty" th:if="${articles == null || articles.length == 0}">
-            <td colspan="5">등록된 글이 없습니다.</td>
-        </tr>
-        <tr class="popular_top3" th:each="article : ${popularArticlesMonth}">
+        <tr class="popular_top3" th:each="article : ${popularArticlesMonth}"  th:if="${articles == null || articles.length != 0}">
             <td style="color: #fb3457; font-weight: 600; background-color: #f5f5ec">인기</td>
             <td style=" background-color: #f5f5ec">
                 <a style="font-weight: 500; background-color: #f5f5ec" th:text="${article.getTitle()}" th:href="@{'/article/read'(index=${article.getIndex()})}">제목입니다</a>
@@ -72,6 +69,9 @@
             <td style="text-align: center" th:text="${article.getView()}">조회수입니다</td>
             <td style="text-align: center" th:text="${article.getLikesCount()}">좋아요입니다</td>
         </tr>
+<tr class="empty" th:if="${articles == null || articles.length == 0}">
+    <td colspan="6">등록된 글이 없습니다.</td>
+</tr>
         </tbody>
     </table>
 

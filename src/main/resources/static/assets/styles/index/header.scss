@@ -20,45 +20,40 @@ body {
   background-color: #c1b5a3;
   color: #fff;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  align-items: center;
   z-index: 1000;
+  height: 4rem; // 헤더 높이 고정
 
-  .menu {
-    @include flex(row, space-between, center);
-    padding: 0 1rem 0 1rem;
-    align-items: center; // 아이템 모두 헤더의 중앙으로 배치
-    width: 100%;
-    height: 4rem; // 헤더 전체 높이
+  .logo-ul,
+  .menu,
+  .user-name {
+    position: absolute; // 위치를 고정하기 위해 절대 위치 사용
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 4rem; // 각 요소의 높이를 헤더 높이에 맞춤
+  }
 
-    // 로고 섹션
+  .logo-ul {
+    left: 1rem; // 왼쪽에 고정
+    width: 10rem;
+
     .item:first-child {
       img {
         height: 4rem; // 헤더 높이에 맞는 크기
         cursor: pointer;
       }
     }
+  }
 
-    // 로그인 버튼 섹션
-    .item:last-child {
-      button {
-        height: 2.5rem; // 버튼 높이 헤더 높이와 조화
-        background-color: #776969;
-        color: #fff;
-        border: none;
-        border-radius: 0.25rem;
-        padding: 0 1rem;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background-color 0.3s ease;
+  .menu {
+    left: 50%;
+    transform: translateX(-50%); // 중앙에 고정
+    width: 40rem;
+    justify-content: center;
+    align-items: center;
 
-        &:hover {
-          background-color: #584f47;
-        }
-      }
-    }
-
-    // 검색 창 섹션
     .stretch {
-      flex-grow: 1;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -66,28 +61,36 @@ body {
       .form {
         display: flex;
         width: 100%;
-        max-width: 33rem;
+        max-width: 40rem;
         color: #ffffff;
         gap: 0.4rem;
 
         .keyword-label {
+          gap: 1rem;
           display: flex;
           align-items: center;
+          padding: 0 3rem 0 1rem; // 오른쪽 패딩 추가하여 아이콘과 간격 확보
+          border: 0.0625rem solid #ccc;
+          border-radius: 700px;
+          transition: border-color 0.3s ease;
           width: 100%;
           position: relative; // SVG 아이콘을 절대 위치로 배치하기 위해 필요
 
+          .field {
+            > option {
+              color: #000000;
+            }
+          }
+
+          &:focus-within {
+            //border-color: #e1e1e1;
+            border: 0.125rem solid #e1e1e1;
+          }
+
           .input {
             flex-grow: 1;
+            width: 33rem;
             height: 2.5rem;
-            padding: 0 3rem 0 1rem; // 오른쪽 패딩 추가하여 아이콘과 간격 확보
-            border: 0.0625rem solid #ccc;
-            border-radius: 700px;
-            outline: none;
-            transition: border-color 0.3s ease;
-
-            &:focus {
-              border-color: #e1e1e1;
-            }
           }
 
           .submit-button {
@@ -115,109 +118,105 @@ body {
             }
           }
         }
-
-        > .label {
-          display: flex;
-          align-items: center;
-
-          > .field {
-            > option {
-              color: #e1e1e1;
-            }
-          }
-        }
       }
     }
   }
 
-
-
-
-
-
-
-
-  #notificationContainer {
-    position: relative;
-    display: inline-block;
-  }
-
-  #notificationBell {
-    font-size: 24px;
-  }
-
-  #notificationDropdown {
-    z-index: 1000;
-    background: white;
-    border-radius: 4px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  #alertMessageDiv {
-    align-items: stretch;
+  .user-name {
+    right: 1rem; // 오른쪽에 고정
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
+    justify-content: flex-end;
+    align-items: center;
+    height: 4rem; // 각 요소의 높이를 헤더 높이에 맞춤
+gap: 0.0625rem;
+    .--obj-button {
+      color: #fff;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.325rem 0.225rem 0.325rem 0.225rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
 
-  #alertMessageDiv * {
-    margin: 0;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 1rem;
-  }
+      &:hover {
+        background-color: #584f47;
+      }
+    }
 
-  #alertMessageDiv *:last-child {
-    border-bottom: none;
-
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  .nav {
-    width: 100%;
-    ul {
-      list-style: none;
-      margin: 0;
-      padding: 10px 0;
+    .name {
       display: flex;
-      justify-content: center;
-      gap: 10rem;
-      background-color: white;
-      border-top: 1px solid #ddd;
-      border-bottom: 1px solid #ddd;
+      align-items: center;
+    }
 
-      a {
-        $color: gray;
-        color: $color;
-        text-decoration: none;
+    #notificationContainer {
+      position: relative;
+      display: inline-block;
+
+      #notificationBell {
+        font-size: 24px;
+      }
+
+      #notificationDropdown {
+        z-index: 1000;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      #alertMessageDiv {
+        align-items: stretch;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      #alertMessageDiv * {
+        margin: 0;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
         font-size: 1rem;
-        font-weight: bold;
+      }
 
-        &:hover {
-          color: darken($color, 20%);
-        }
-
-        &:active {
-          color: darken($color, 20%);
-        }
+      #alertMessageDiv *:last-child {
+        border-bottom: none;
       }
     }
   }
 }
+
+.nav {
+  position: relative;
+  top: 3rem; // 헤더 아래에 네비게이션 바를 위치시키기 위해 마진 추가
+  width: 100%;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    gap: 10rem;
+    background-color: white;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+
+    a {
+      color: gray;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: bold;
+
+      &:hover {
+        color: darken(gray, 20%);
+      }
+
+      &:active {
+        color: darken(gray, 20%);
+      }
+    }
+  }
+}
+
 .hidden {
   display: none;
 }
@@ -268,3 +267,6 @@ footer {
   }
 }
 
+.user-name {
+  @include flex(row, space-between, flex-end);
+}
