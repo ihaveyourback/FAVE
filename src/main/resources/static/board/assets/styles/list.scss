@@ -18,6 +18,7 @@
   > .article-table {
     border-spacing: 0;
 
+
     > thead > tr > th {
       background-color: #f5f5ec;
       color: #000000;
@@ -72,6 +73,7 @@
         &.empty > td {
           padding: 2rem;
           text-align: center;
+
         }
 
         > td {

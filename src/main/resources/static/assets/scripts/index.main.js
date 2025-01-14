@@ -229,7 +229,7 @@ $registerForm.onsubmit = (e) => {
         }
         const response = JSON.parse(xhr.responseText);
         const [title, content, onclick] = {
-            failure: ['회원가입', `알 수 없는 이유로 회원가입에 실패아였습니다. 잠시 후 다시 시도해 주세요.`, ($dialog) => Dialog.hide($dialog)],
+            failure: ['회원가입', `알 수 없는 이유로 회원가입에 실패 하였습니다. 잠시 후 다시 시도해 주세요.`, ($dialog) => Dialog.hide($dialog)],
             failure_duplicate_email: ['회원가입', `입력하신 이메일(${$registerForm['email'].value})은 이미 사용 중입니다. 다른 이메일을 사용해 주세요.`, ($dialog) => Dialog.hide($dialog)],
             failure_duplicate_contact: ['회원가입', `입력하신 연락처(${$registerForm['contact'].value})은 이미 사용 중입니다. 다른 연락처를 사용해 주세요.`, ($dialog) => Dialog.hide($dialog)],
             failure_duplicate_nickname: ['회원가입', `입력하신 닉네임(${$registerForm['nickname'].value})은 이미 사용 중입니다. 다른 닉네임을 사용해 주세요.`, ($dialog) => Dialog.hide($dialog)],
