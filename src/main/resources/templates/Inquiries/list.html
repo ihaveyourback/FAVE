@@ -9,9 +9,27 @@
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
     <link rel="stylesheet" type="text/css" href="/inquiries/assets/styles/inquiriesList.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/common_sm.css">
+
+
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
+
+    <script type="text/javascript" src="/assets/scripts/common.js"></script>
+    <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
+
+    <script defer src="/path/to/websocket.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <body>
-<div th:insert="~{common/common.html :: header_copy}"></div>
+<th:block th:replace="~{home/index.main :: header}"></th:block>
+<th:block th:replace="~{home/index.main :: loginMain}"></th:block>
+<th:block th:replace="~{home/index.main :: cover}"></th:block>
+
 <main id="list">
     <h1 class="title" onclick="location.href='/inquiries/list'" style="cursor: pointer">QNA</h1>
     <table class="article-table">
@@ -79,5 +97,13 @@
            th:href="@{'/inquiries/list' (page=${pageVo.movableMaxPage}, filter=${filter}, keyword=${keyword})}">&gt;&gt;</a>
     </div>
 </main>
+<footer>
+    <div class="footer-content">
+        <p>김용현 김창윤 김범수 이석민</p>
+        <p>고객센터: 123-456-7890</p>
+        <p>&copy; 2024 축제잇슈. All Rights Reserved.</p>
+        <p>대구광역시 중구 동성로3가 동성로1길 15</p>
+    </div>
+</footer>
 </body>
 </html>

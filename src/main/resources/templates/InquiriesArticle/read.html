@@ -9,6 +9,20 @@
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
     <link href="/assets/styles/common_sm.css" rel="stylesheet" type="text/css">
     <link href="/inquiries/assets/styles/read_sm.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
+
+    <script type="text/javascript" src="/assets/scripts/common.js"></script>
+    <script defer type="text/javascript" src="/assets/scripts/index.main.js"></script>
+    <script defer src="/path/to/websocket.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script type="text/javascript" th:if="${article == null || article.getIsDeleted() != null}">
         alert('존재하지 않는 게시글입니다. 주소를 다시 확인해 주세요.');
         history.back();
@@ -18,7 +32,9 @@
             th:if="${article != null && article.getIsDeleted() == null}"></script>
 </head>
 <body th:if="${article != null && article.getIsDeleted() == null}">
-<div th:insert="~{common/common.html :: header_copy}"></div>
+<div th:insert="~{home/index.main :: header}"></div>
+<span class="space"></span>
+
 <div id="cover"></div>
 <form id="deleteDialog">
     <span class="message">정말로 삭제하시겠습니까?</span>
@@ -30,7 +46,7 @@
         <button class="--obj-button -button_color" name="cancel" type="button">취소</button>
     </div>
 </form>
-<main id="main">
+<main id="read">
     <div class="container">
         <div class="post">
             <div class="title" th:text="${article.getTitle()}">게시글 제목</div>
@@ -70,5 +86,13 @@
     </div>
 
 </main>
+<footer>
+    <div class="footer-content">
+        <p>김용현 김창윤 김범수 이석민</p>
+        <p>고객센터: 123-456-7890</p>
+        <p>&copy; 2024 축제잇슈. All Rights Reserved.</p>
+        <p>대구광역시 중구 동성로3가 동성로1길 15</p>
+    </div>
+</footer>
 </body>
 </html>
