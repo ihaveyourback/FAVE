@@ -35,7 +35,7 @@
         <div class="post">
             <div class="title" th:text="${article.getTitle()}">게시글 제목</div>
             <a class="meta"
-               th:text="'작성자: ' + ${article.getUserNickname()} + ' | 작성일: ' + ${#temporals.format(article.getCreatedAt, 'yyyy-MM-dd')} + ' | 조회수: ' + ${article.getView()}">>작성자:
+               th:text="'작성자: ' + ${article.getUserNickname()} + ' | 작성일: ' + ${#temporals.format(article.getCreateAt(), 'yyyy-MM-dd')} + ' | 조회수: ' + ${article.getView()}">>작성자:
                 사용자 | 작성일: 2024-12-06 | 조회수: 123</a>
         </div>
         <div class="content">
@@ -49,14 +49,7 @@
                     th:onclick="|location.href='/mail/send?index=${article.getIndex()}'|">
                 답변하기
             </button>
-            <div class="button_list">
-                <a th:href="@{'/inquiries/list'}" target="_self"
-                   class="button_list button back write --obj-button -button_color">목록으로</a>
-            </div>
-            <button name="modify" class="button modify" type="button">수정</button>
-            <button name="delete" class="button delete" type="button">삭제</button>
-        </div>
-    </div>
+
             <!-- 목록으로 버튼 -->
             <div class="button_list">
                 <a th:href="@{'/inquiries/list'}" target="_self" class="button back write --obj-button -button_color">
@@ -65,21 +58,17 @@
             </div>
 
             <!-- 수정 버튼 -->
-            <div>
-                <button name="modify" class="button modify" type="button"
-                        th:if="${#authentication.principal.email == article.getUserEmail() || isAdmin}">
-                    수정
-                </button>
+            <div th:if="${email != null and email.equalsIgnoreCase(article.getUserEmail())}">
+                <button name="modify" class="button modify" type="button">수정</button>
             </div>
-
             <!-- 삭제 버튼 -->
-            <div>
-                <button name="delete" class="button delete" type="button"
-                        th:if="${#authentication.principal.email == article.getUserEmail() || isAdmin}">
-                    삭제
-                </button>
+            <div th:if="${email != null and email.equalsIgnoreCase(article.getUserEmail())}">
+                <button name="delete" class="button delete" type="button">삭제</button>
             </div>
         </div>
+
+    </div>
+
 </main>
 </body>
 </html>

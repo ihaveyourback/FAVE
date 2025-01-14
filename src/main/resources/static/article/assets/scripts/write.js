@@ -292,6 +292,7 @@ ClassicEditor.create($main['content'], editorConfig).then((editor) => {
                 return;
             }
             const response = JSON.parse(xhr.responseText);
+            console.log(response)
             if (response['result'] === 'success') {
                 location.href = `./read?index=${response['index']}`;
             } else {
