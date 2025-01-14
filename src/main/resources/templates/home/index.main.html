@@ -26,31 +26,30 @@
 <header class="header" th:fragment="header">
     <input type="hidden" id="currentUserNickname" th:value="${nickname}">
     <input type="hidden" id="currentUserEmail" th:value="${email}">
-    <ul class="logo-ul">
+    <ul class="menu">
         <!-- 로고 -->
         <li class="item">
             <a th:href="@{/}">
                 <img alt="Fave" src="/assets/images/header-logo.png">
             </a>
         </li>
-    </ul>
-    <ul class="menu">
         <!-- 검색 폼 -->
         <li class="stretch">
             <form class="form" action="/fave/search" method="get">
-                <label class="keyword-label">
+                <label class="label">
                     <select class="field" name="filter">
                         <option selected value="all" th:selected="${filter != null && filter.equals('all')}">제목 + 내용
                         </option>
                         <option value="title" th:selected="${filter != null && filter.equals('title')}">제목</option>
                     </select>
+                </label>
+                <label class="keyword-label">
                     <input autocomplete="off"
                            class="input"
                            name="keyword"
                            placeholder="새로운 잇슈 검색!"
                            spellcheck="false"
-                           type="text" th:value="${keyword}"
-                    >
+                           type="text" th:value="${keyword}">
                     <button class="submit-button" type="submit">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g opacity="0.9">
@@ -64,8 +63,8 @@
                 </label>
             </form>
         </li>
-    </ul>
-    <ul class="user-name">
+
+
         <li id="UserLinkWrapper" sec:authorize="isAuthenticated() and !hasAuthority('ROLE_ADMIN')">
             <a class="--obj-button -color-primary" th:href="@{/user/profile}">마이 페이지</a> <!-- 사용자 -->
         </li>
@@ -107,8 +106,6 @@
         </ul>
     </nav>
 </header>
-
-
 <!-- Cover Screen -->
 <div class="cover" id="cover" th:fragment="cover"></div>
 <div class="space"></div>
