@@ -5,7 +5,6 @@ body {
   @include flex(column, stretch, flex-start);
   width: 100%;
 }
-
 #main {
   top: 0;
   left: 0;
@@ -18,6 +17,7 @@ body {
   position: relative;
 
 
+
   > .content {
     @include flex(row, center, center, 5rem);
     display: contents;
@@ -28,9 +28,9 @@ body {
     backdrop-filter: brightness(200%) blur(2.5rem);
     position: absolute;
 
-    #loginForm,
-    #registerForm,
-    #recoverForm {
+     #loginForm,
+     #registerForm,
+     #recoverForm {
       @extend .modal;
     }
   }
@@ -41,7 +41,7 @@ body {
   margin-top: 10px;
 
   .sns-login-title {
-    font-size: 1rem;
+    font-size:1rem;
     color: #333;
   }
 
@@ -60,7 +60,6 @@ body {
     color: #fff;
     text-decoration: none;
     transition: background-color 0.3s;
-
     img {
       vertical-align: middle;
       height: 28px;
@@ -69,49 +68,37 @@ body {
   }
 }
 
-.main-section {
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden; // 슬라이드 바깥의 이미지가 보이지 않게 함
 
-  .image-slider {
-    position: relative;
-    width: 70rem;
-    height: 20rem; /* 슬라이더 높이 조정 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 1s ease-in-out; // 애니메이션을 부드럽게 하기 위한 트랜지션 설정
-  }
 
-  .main-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 70rem;
-    height: 20rem; /* 슬라이더 높이 조정 */
-    opacity: 0; /* 기본적으로 모든 이미지는 보이지 않음 */
-    transition: opacity 1s ease-in-out, box-shadow 0.3s ease-in-out; /* 그림자 부드럽게 전환 */
-    border-radius: 3rem;
-  }
-
-  .main-image.active {
-    opacity: 1; // 활성화된 이미지만 표시
-  }
-
-  .image-slider img:first-child {
-    /* 첫 번째 이미지는 초기 로드 시 바로 보이게 설정 */
-    opacity: 1;
-  }
-
-  /* 활성화된 이미지 스타일 */
-  .image-slider img.active {
-    opacity: 1; /* 활성화된 이미지만 표시 */
-  }
+/* 기본 슬라이더 스타일 */
+.image-slider {
+  position: relative;
+  width: 100%;
+  height: 85%; /* 슬라이더 높이 조정 */
 }
 
+
+/* 이미지 스타일 */
+.image-slider img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0; /* 기본적으로 모든 이미지는 보이지 않음 */
+  transition: opacity 1s ease-in-out; /* 부드러운 전환 */
+}
+
+.image-slider img:first-child {
+  /* 첫 번째 이미지는 초기 로드 시 바로 보이게 설정 */
+  opacity: 1;
+}
+
+/* 활성화된 이미지 스타일 */
+.image-slider img.active {
+  opacity: 1; /* 활성화된 이미지만 표시 */
+}
 
 #cover {
   top: 0;
@@ -221,6 +208,6 @@ body {
   }
 }
 
-.space {
-  margin: 4rem;
+.gongback {
+  margin: 2.475rem;
 }
