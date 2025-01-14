@@ -12,7 +12,7 @@
   display: block;
 }
 
-#main {
+#read {
   display: flex;
   justify-content: center;
   margin-top: 3rem;
@@ -21,7 +21,7 @@
 
 .container {
   width: 80%;
-  height: 25rem;
+  height: 20rem;
   background: #ffffff;
   box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
@@ -36,6 +36,7 @@
   font-weight: 500;
   font-size: 1.5rem;
   margin-bottom: 10px;
+  color: black;
 }
 .container > .post > .meta {
   font-size: 0.9rem;
@@ -114,6 +115,7 @@
   margin-top: 0.9rem;
   line-height: 1.6rem;
   font-size: 1rem;
+  color: black;
   border-bottom: 0.0625rem solid #ddd;
 }
 .container > .comments {
@@ -160,7 +162,7 @@
   color: #000000;
 }
 .comment_write > .form > .label textarea {
-  width: 97%;
+  width: 10%;
   height: 4rem;
   padding: 0.75rem;
   font-size: 0.9rem;

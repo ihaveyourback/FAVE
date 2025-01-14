@@ -25,6 +25,7 @@ body {
   align-items: center;
   z-index: 1000;
   height: 4rem;
+  white-space: nowrap;
 }
 .header > .-spring {
   flex-grow: 1;
@@ -236,18 +237,6 @@ footer {
 footer p {
   margin: 5px;
   color: black;
-}
-
-.user-name {
-  align-items: space-between;
-  display: flex;
-  flex-direction: row;
-  gap: 0;
-  justify-content: flex-end;
-}
-.user-name > .-spring {
-  flex-grow: 1;
-  flex-shrink: 1;
 }
 
 /*# sourceMappingURL=header.css.map */
