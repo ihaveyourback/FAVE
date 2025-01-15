@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const $main = document.getElementById('main');
+    const $main = document.getElementById('mainRead');
     const $cover = document.getElementById('cover');
     let $deleteDialog = document.getElementById('deleteDialog');
     const $buttonModify = $main.querySelector('button[name="modify"]');
