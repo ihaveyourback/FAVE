@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>축제 잇슈</title>
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
-    <link href="/assets/styles/common_cy.css" rel="stylesheet" type="text/css">
     <link href="/article/assets/styles/read.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" th:if="${article == null || article.getDeletedAt() != null}">
         alert('존재하지 않는 게시글입니다. 주소를 다시 확인해 주세요.');
@@ -17,6 +16,7 @@
     <script defer src="/article/assets/scripts/read.js" type="text/javascript"
             th:if="${article != null && article.getDeletedAt() == null}"></script>
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <link rel="stylesheet" type="text/css" href="/board/styles/common_cy.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">

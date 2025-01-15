@@ -73,6 +73,7 @@
   font-size: 0.75rem;
 }
 #list > .move {
+  margin-top: 1rem;
   align-items: stretch;
   display: flex;
   flex-direction: row;
@@ -136,6 +137,7 @@
   gap: 1rem; /* 검색창과 버튼 사이 간격 */
 }
 #list .search-form {
+  margin-top: 1rem;
   display: flex;
   align-items: center; /* 수직 가운데 정렬 */
   justify-content: center; /* 검색창 가운데 정렬 */
@@ -181,6 +183,7 @@
   text-decoration: none;
   text-align: left;
   transition: background-color 0.3s;
+  margin-top: 1rem;
 }
 #list .button.write:hover {
   background-color: rgb(182.7337662338, 168.7467532468, 147.7662337662);

@@ -31,8 +31,6 @@ public interface ArticleMapper {
 
 
 
-    // 오늘 올라온 게시글 중 인기 게시글
-    ArticleVo[] selectPopularArticlesToday();
 
     // 한 달 사이에 올라온 게시글 중 인기 게시글
     ArticleVo[] selectPopularArticlesMonth();

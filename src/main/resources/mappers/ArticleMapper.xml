@@ -8,38 +8,41 @@
             keyColumn="index"
             keyProperty="index"
             parameterType="com.yhkim.fave.entities.ArticleEntity">
-        INSERT INTO `fave`.`board_posts` (`title`, `content`, `user_email`, `user_nickname`, `create_at`, `update_at`, `deleted_at`, `view`)
+        INSERT INTO `fave`.`board_posts` (`title`, `content`, `user_email`, `user_nickname`, `create_at`, `update_at`,
+                                          `deleted_at`, `view`)
         VALUES (#{title}, #{content}, #{userEmail}, #{userNickname}, #{createdAt}, #{updatedAt}, #{deletedAt}, #{view})
     </insert>
 
     <select id="selectArticleByIndex" resultType="com.yhkim.fave.entities.ArticleEntity">
-        SELECT `index` AS `index`,
-               `title` AS `title`,
-               `content` AS `content`,
-               `user_email` AS `userEmail`,
+        SELECT `index`         AS `index`,
+               `title`         AS `title`,
+               `content`       AS `content`,
+               `user_email`    AS `userEmail`,
                `user_nickname` AS `userNickname`,
-               `create_at` AS `createdAt`,
-               `update_at` AS `updatedAt`,
-               `deleted_at` AS `deletedAt`,
-               `view` AS `view`,
-               `like_count` AS `likesCount`
+               `create_at`     AS `createdAt`,
+               `update_at`     AS `updatedAt`,
+               `deleted_at`    AS `deletedAt`,
+               `view`          AS `view`,
+               `like_count`    AS `likesCount`
         FROM `fave`.`board_posts`
         WHERE `index` = #{index}
         LIMIT 1
     </select>
 
     <select id="selectArticles" resultType="com.yhkim.fave.entities.ArticleEntity">
-        SELECT `index` AS `index`,
-               `title` AS `title`,
-               `content` AS `content`,
-               `user_email` AS `userEmail`,
-               `user_nickname` AS `userNickname`,
-               `create_at` AS `createdAt`,
-               `update_at` AS `updatedAt`,
-               `deleted_at` AS `deletedAt`,
-               `view` AS `view`,
-               `like_count` AS `likesCount`,
-               (SELECT COUNT(*) FROM `fave`.`board_comments` WHERE `post_id` = `fave`.`board_posts`.`index` AND `is_deleted` IS NULL) AS `comment_count`
+        SELECT `index`                                                                   AS `index`,
+               `title`                                                                   AS `title`,
+               `content`                                                                 AS `content`,
+               `user_email`                                                              AS `userEmail`,
+               `user_nickname`                                                           AS `userNickname`,
+               `create_at`                                                               AS `createdAt`,
+               `update_at`                                                               AS `updatedAt`,
+               `deleted_at`                                                              AS `deletedAt`,
+               `view`                                                                    AS `view`,
+               `like_count`                                                              AS `likesCount`,
+               (SELECT COUNT(*)
+                FROM `fave`.`board_comments`
+                WHERE `post_id` = `fave`.`board_posts`.`index` AND `is_deleted` IS NULL) AS `comment_count`
         FROM `fave`.`board_posts`
         WHERE `deleted_at` IS NULL
         ORDER BY `index` DESC
@@ -47,17 +50,19 @@
 
     <!-- selectArticlesByPaging 쿼리 수정 -->
     <select id="selectArticlesByPaging" resultType="com.yhkim.fave.vos.ArticleVo">
-        SELECT `index` AS `index`,
-               `title` AS `title`,
-               `content` AS `content`,
-               `user_email` AS `userEmail`,
-               `user_nickname` AS `userNickname`,
-               `create_at` AS `createdAt`,
-               `update_at` AS `updatedAt`,
-               `deleted_at` AS `deletedAt`,
-               `view` AS `view`,
-               `like_count` AS `likesCount`,
-               (SELECT COUNT(*) FROM `fave`.`board_comments` WHERE `post_id` = `fave`.`board_posts`.`index` AND `is_deleted` IS NULL) AS `commentCount`
+        SELECT `index`                                                                   AS `index`,
+               `title`                                                                   AS `title`,
+               `content`                                                                 AS `content`,
+               `user_email`                                                              AS `userEmail`,
+               `user_nickname`                                                           AS `userNickname`,
+               `create_at`                                                               AS `createdAt`,
+               `update_at`                                                               AS `updatedAt`,
+               `deleted_at`                                                              AS `deletedAt`,
+               `view`                                                                    AS `view`,
+               `like_count`                                                              AS `likesCount`,
+               (SELECT COUNT(*)
+                FROM `fave`.`board_comments`
+                WHERE `post_id` = `fave`.`board_posts`.`index` AND `is_deleted` IS NULL) AS `commentCount`
         FROM `fave`.`board_posts`
         WHERE `deleted_at` IS NULL
         ORDER BY `index` DESC
@@ -120,14 +125,14 @@
     <update id="updateArticle"
             parameterType="com.yhkim.fave.entities.ArticleEntity">
         UPDATE `fave`.`board_posts`
-        SET `user_email` = #{userEmail},
+        SET `user_email`    = #{userEmail},
             `user_nickname` = #{userNickname},
-            `title` = #{title},
-            `content` = #{content},
-            `create_at` = #{createdAt},
-            `update_at` = #{updatedAt},
-            `deleted_at` = #{deletedAt},
-            `view` = #{view}
+            `title`         = #{title},
+            `content`       = #{content},
+            `create_at`     = #{createdAt},
+            `update_at`     = #{updatedAt},
+            `deleted_at`    = #{deletedAt},
+            `view`          = #{view}
         WHERE `index` = #{index}
         LIMIT 1
     </update>
@@ -135,54 +140,25 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-<!--    &lt;!&ndash; 인기 게시글: 오늘 올라온 게시글 중 좋아요 수가 높은 순으로 가져오기 &ndash;&gt;-->
-<!--    <select id="selectPopularArticlesToday" resultType="com.yhkim.fave.vos.ArticleVo">-->
-<!--        SELECT-->
-<!--        `index` AS `index`,-->
-<!--        title AS title,-->
-<!--        content AS content,-->
-<!--        user_email AS userEmail,-->
-<!--        user_nickname AS userNickname,-->
-<!--        create_at AS createdAt,-->
-<!--        update_at AS updatedAt,-->
-<!--        deleted_at AS deletedAt,-->
-<!--        view AS view,-->
-<!--        like_count AS likesCount-->
-<!--        FROM fave.board_posts-->
-<!--        WHERE deleted_at IS NULL-->
-<!--        AND create_at >= CURDATE()  &lt;!&ndash; 오늘 날짜 기준 &ndash;&gt;-->
-<!--        ORDER BY like_count DESC-->
-<!--        LIMIT 3-->
-<!--    </select>-->
-
-    <!-- 인기 게시글: 한 달 사이에 올라온 게시글 중 좋아요 수가 높은 순으로 가져오기 -->
     <select id="selectPopularArticlesMonth" resultType="com.yhkim.fave.vos.ArticleVo">
         SELECT
-            `index` AS `index`,
-        title AS title,
-        content AS content,
-        user_email AS userEmail,
-        user_nickname AS userNickname,
-        create_at AS createdAt,
-        update_at AS updatedAt,
-        deleted_at AS deletedAt,
-        view AS view,
-        like_count AS likesCount
-        FROM fave.board_posts
-        WHERE deleted_at IS NULL
-        AND create_at >= NOW() - INTERVAL 1 WEEK  <!-- 지난 한 달 동안 -->
-        ORDER BY like_count DESC
+        `index` AS `index`,
+        `title` AS `title`,
+        `content` AS `content`,
+        `user_email` AS `userEmail`,
+        `user_nickname` AS `userNickname`,
+        `create_at` AS `createdAt`,
+        `update_at` AS `updatedAt`,
+        `deleted_at` AS `deletedAt`,
+        `view` AS `view`,
+        `like_count` AS `likesCount`,
+        (SELECT COUNT(*)
+        FROM `fave`.`board_comments`
+        WHERE `post_id` = `fave`.`board_posts`.`index` AND `is_deleted` IS NULL) AS `commentCount`
+        FROM `fave`.`board_posts`
+        WHERE `deleted_at` IS NULL
+        AND `create_at` >= NOW() - INTERVAL 1 MONTH  <!-- 지난 한 달 동안 -->
+        ORDER BY `like_count` DESC
         LIMIT 3
     </select>
 
