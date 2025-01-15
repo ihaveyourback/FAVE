@@ -10,11 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentIndex = 0; // 현재 표시 중인 이미지 인덱스
 
     // 슬라이더 자동 전환 함수
-    function slideImages() {
-        images[currentIndex].classList.remove("active"); // 현재 이미지 비활성화
-        currentIndex = (currentIndex + 1) % images.length; // 다음 이미지
-        images[currentIndex].classList.add("active"); // 다음 이미지 활성화
-    }
+    // function slideImages() {
+    //     images[currentIndex].classList.remove("active"); // 현재 이미지 비활성화
+    //     currentIndex = (currentIndex + 1) % images.length; // 다음 이미지
+    //     images[currentIndex].classList.add("active"); // 다음 이미지 활성화
+    // }
 
     // 일정 시간마다 자동 실행 (3초 간격)
     setInterval(slideImages, 3000);

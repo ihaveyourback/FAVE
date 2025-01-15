@@ -22,47 +22,40 @@ body {
   background-color: #c1b5a3;
   color: #fff;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  align-items: center;
   z-index: 1000;
+  height: 4rem;
+  white-space: nowrap;
 }
 .header > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
 }
-.header .menu {
-  align-items: space-between;
+.header .logo-ul,
+.header .menu,
+.header .user-name {
+  position: absolute;
+  top: 0;
   display: flex;
-  flex-direction: row;
-  gap: 0;
-  justify-content: center;
-  padding: 0 1rem 0 1rem;
   align-items: center;
-  width: 100%;
   height: 4rem;
 }
-.header .menu > .-spring {
-  flex-grow: 1;
-  flex-shrink: 1;
+.header .logo-ul {
+  left: 1rem;
+  width: 10rem;
 }
-.header .menu .item:first-child img {
+.header .logo-ul .item:first-child img {
   height: 4rem;
   cursor: pointer;
 }
-.header .menu .item:last-child button {
-  height: 2.5rem;
-  background-color: #776969;
-  color: #fff;
-  border: none;
-  border-radius: 0.25rem;
-  padding: 0 1rem;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-.header .menu .item:last-child button:hover {
-  background-color: #584f47;
+.header .menu {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rem;
+  justify-content: center;
+  align-items: center;
 }
 .header .menu .stretch {
-  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -70,27 +63,31 @@ body {
 .header .menu .stretch .form {
   display: flex;
   width: 100%;
-  max-width: 33rem;
+  max-width: 40rem;
   color: #ffffff;
   gap: 0.4rem;
 }
 .header .menu .stretch .form .keyword-label {
+  gap: 1rem;
   display: flex;
   align-items: center;
-  width: 100%;
-  position: relative;
-}
-.header .menu .stretch .form .keyword-label .input {
-  flex-grow: 1;
-  height: 2.5rem;
   padding: 0 3rem 0 1rem;
   border: 0.0625rem solid #ccc;
   border-radius: 700px;
-  outline: none;
   transition: border-color 0.3s ease;
+  width: 100%;
+  position: relative;
 }
-.header .menu .stretch .form .keyword-label .input:focus {
-  border-color: #e1e1e1;
+.header .menu .stretch .form .keyword-label .field > option {
+  color: #000000;
+}
+.header .menu .stretch .form .keyword-label:focus-within {
+  border: 0.125rem solid #e1e1e1;
+}
+.header .menu .stretch .form .keyword-label .input {
+  flex-grow: 1;
+  width: 33rem;
+  height: 2.5rem;
 }
 .header .menu .stretch .form .keyword-label .submit-button {
   position: absolute;
@@ -114,45 +111,65 @@ body {
   fill: #955c5c;
   scale: 105%;
 }
-.header .menu .stretch .form > .label {
+.header .user-name {
+  right: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 4rem;
+  gap: 0.0625rem;
+}
+.header .user-name .--obj-button {
+  color: #fff;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.325rem 0.225rem 0.325rem 0.225rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+.header .user-name .--obj-button:hover {
+  background-color: #584f47;
+}
+.header .user-name .name {
   display: flex;
   align-items: center;
 }
-.header .menu .stretch .form > .label > .field > option {
-  color: #e1e1e1;
-}
-.header #notificationContainer {
+.header .user-name #notificationContainer {
   position: relative;
   display: inline-block;
 }
-.header #notificationBell {
+.header .user-name #notificationContainer #notificationBell {
   font-size: 24px;
 }
-.header #notificationDropdown {
+.header .user-name #notificationContainer #notificationDropdown {
   z-index: 1000;
   background: white;
   border-radius: 4px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
-.header #alertMessageDiv {
+.header .user-name #notificationContainer #alertMessageDiv {
   align-items: stretch;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 }
-.header #alertMessageDiv * {
+.header .user-name #notificationContainer #alertMessageDiv * {
   margin: 0;
   padding: 10px;
   border-bottom: 1px solid #eee;
   font-size: 1rem;
 }
-.header #alertMessageDiv *:last-child {
+.header .user-name #notificationContainer #alertMessageDiv *:last-child {
   border-bottom: none;
 }
-.header .nav {
+
+.nav {
+  position: relative;
+  top: 3rem;
   width: 100%;
 }
-.header .nav ul {
+.nav ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
@@ -163,16 +180,16 @@ body {
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 }
-.header .nav ul a {
+.nav ul a {
   color: gray;
   text-decoration: none;
   font-size: 1rem;
   font-weight: bold;
 }
-.header .nav ul a:hover {
+.nav ul a:hover {
   color: #4d4d4d;
 }
-.header .nav ul a:active {
+.nav ul a:active {
   color: #4d4d4d;
 }
 
