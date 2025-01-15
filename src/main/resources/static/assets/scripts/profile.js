@@ -34,8 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("lastSelectedSection", index);
         });
     });
-
-    // 회원탈퇴 폼 제출 이벤트 리스너 추가
+// 회원탈퇴 폼 제출 이벤트 리스너 추가
     deactivateForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const formData = new FormData(deactivateForm);
@@ -68,6 +67,37 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("회원탈퇴 처리 중 오류가 발생하였습니다. 다시 시도해 주세요.");
         });
     });
+
+// 폼 요소를 선택
+    const socialDeactivateForm = document.getElementById("socialDeactivateForm");
+
+    if (socialDeactivateForm) {
+        socialDeactivateForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            // 소셜 로그인 사용자는 비밀번호 없이 회원탈퇴를 요청할 수 있으므로 빈 객체를 전달
+            fetch("/user/secession", {
+                method: "POST",
+                body: JSON.stringify({}), // 비밀번호 확인 없이 빈 객체 전달
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(response => {
+                if (response.ok) {
+                    alert("회원탈퇴가 완료되었습니다.");
+                    window.location.href = "/logout"; // 탈퇴 후 로그아웃 페이지로 이동
+                } else {
+                    response.json().then(data => {
+                        alert(data.message || "회원탈퇴 처리 중 오류가 발생하였습니다. 다시 시도해 주세요.");
+                    });
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("회원탈퇴 처리 중 오류가 발생하였습니다. 다시 시도해 주세요.");
+            });
+        });
+    }
+
 
     // 사용자 정보 업데이트 폼 제출 이벤트 리스너 추가
     updateForm.addEventListener("submit", (e) => {

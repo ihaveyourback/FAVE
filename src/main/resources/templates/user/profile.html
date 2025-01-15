@@ -5,7 +5,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Page - Profile</title>
+    <title>마이페이지</title>
+    <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
     <link rel="stylesheet" type="text/css" href="/assets/styles/profile.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
@@ -146,13 +147,13 @@
                 </thead>
                 <tbody>
                 <tr th:if="${#lists.isEmpty(reports)}">
-                    <td colspan="4">신고 내역이 없습니다.</td>
+                    <td colspan="5">신고 내역이 없습니다.</td>
                 </tr>
                 <tr th:each="report : ${reports}">
                     <!-- 상대방의 닉네임을 표시 -->
                     <td th:text="${report.reportedUser.nickname}">상대 닉네임</td>
                     <td th:text="${report.reason}">사유</td>
-                    <td th:text="${report.reportedAt}">일자</td>
+                    <td th:text="${#temporals.format(report.getReportedAt(), 'yyyy-MM-dd HH:mm')}">일자</td>
                     <td>
                         <a th:href="@{'/article/read?index=' + ${report.reportedPostId}}" th:text="${report.reportedPostId}">게시글 번호</a>
                     </td>
@@ -204,13 +205,25 @@
         <div id="deactivate-account" class="content__section">
             <h2>회원탈퇴</h2>
             <p>계정을 탈퇴하시겠습니까? 탈퇴 시 모든 정보가 삭제되며, 복구할 수 없습니다.</p>
-            <form id="deactivateForm" class="deactivate-form">
+            <p> <b>소셜 계정은 비밀번호 인증을 거치지 않습니다.</b> </p>
+
+            <!-- 일반 로그인 사용자용 폼 -->
+            <form id="deactivateForm" class="deactivate-form" method="post" action="/secession" th:if="${!isSocialLogin}">
                 <label class="deactivate-form__label">
-                    <input type="password" class="deactivate-form__input" name="currentPassword" placeholder="현재 비밀번호">
+                    <input type="password" class="deactivate-form__input" name="currentPassword" placeholder="현재 비밀번호" required>
                 </label>
                 <button type="submit" class="button button--submit">회원탈퇴</button>
             </form>
+
+            <!-- 소셜 로그인 사용자용 폼 -->
+            <form id="socialDeactivateForm" class="deactivate-form" method="post" action="/secession" th:if="${isSocialLogin}">
+                <button type="submit" class="button button--submit">회원탈퇴</button>
+            </form>
+
         </div>
+
+
+
     </section>
 </main>
 
