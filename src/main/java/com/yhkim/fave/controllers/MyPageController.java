@@ -6,6 +6,7 @@ import com.yhkim.fave.services.ReportService;
 import com.yhkim.fave.services.UserService;
 import com.yhkim.fave.vos.PageVo;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 import java.security.Principal;
 import java.util.List;
@@ -40,7 +42,6 @@ public class MyPageController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // 프로필 페이지를 표시하는 메서드
     @GetMapping("/profile")
     public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal,
                                     @RequestParam(defaultValue = "1") int page,
@@ -63,11 +64,18 @@ public class MyPageController {
 
         ModelAndView modelAndView = new ModelAndView(); // 뷰와 모델을 함께 설정 가능
 
+        // 로그인된 사용자의 소셜 로그인 여부 확인
+        boolean isSocialLogin = false;
         if (userDetails instanceof UserEntity user) {
             modelAndView.addObject("email", user.getEmail()); // 사용자 이메일
             modelAndView.addObject("nickname", user.getNickname()); // 사용자 닉네임
+            isSocialLogin = user.isSocialLogin(); // 소셜 로그인 여부
         }
 
+        // 탈퇴 관련 정보 추가
+        modelAndView.addObject("isSocialLogin", isSocialLogin); // 소셜 로그인 여부
+
+        // 모델에 게시물, 신고 내역, 찜 목록 등의 정보 추가
         modelAndView.addObject("favoritePosts", favoritePosts);
         modelAndView.addObject("favoritePageVo", favoritePageVo);
         modelAndView.addObject("reports", reports);
@@ -76,63 +84,113 @@ public class MyPageController {
         modelAndView.addObject("postPageVo", postPageVo); // 게시글 페이지 정보 추가
 
         modelAndView.addObject("username", principal.getName()); // 사용자 이름
-        modelAndView.setViewName("user/profile");
+        modelAndView.setViewName("user/profile"); // 프로필 페이지를 렌더링
         return modelAndView;
     }
 
 
-//회원탈퇴 메서드
+
     @PostMapping("/secession")
-    public ResponseEntity<?> secession(@AuthenticationPrincipal Object principal, @RequestBody Map<String, String> payload) {
+    public ResponseEntity<?> secession(@AuthenticationPrincipal Object principal,
+                                       @RequestBody(required = false) Map<String, String> payload,
+                                       HttpServletRequest request, HttpServletResponse response) {
+        // 인증된 사용자인지 확인
         if (principal == null) {
-            System.out.println("Principal is null");  // principal이 null인 경우
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "사용자 정보를 가져오는 데 실패했습니다."));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "로그인이 필요합니다."));
         }
 
-        // 디버깅을 위한 로깅 - principal 객체의 실제 타입 출력
-        System.out.println("Principal type: " + principal.getClass().getName());
+        // principal이 CustomOAuth2User인지, UserDetails인지 구분
+        if (principal instanceof CustomOAuth2User) {
+            // 소셜 로그인 처리
+            CustomOAuth2User customOAuth2User = (CustomOAuth2User) principal;
 
-        PrincipalDetails principalDetails = null;
+            // 소셜 로그인 사용자의 이메일로 계정 처리
+            boolean isDeleted = userService.deactivateAccount(customOAuth2User.getEmail());
+            if (isDeleted) {
+                // 소셜 로그인 세션 무효화
+                SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+                logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
 
-        // principal이 PrincipalDetails의 인스턴스인 경우
-        if (principal instanceof PrincipalDetails) {
-            principalDetails = (PrincipalDetails) principal;
-        }
-        // principal이 UsernamePasswordAuthenticationToken인 경우
-        else if (principal instanceof UsernamePasswordAuthenticationToken) {
-            Object authPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-            if (authPrincipal instanceof PrincipalDetails) {
-                principalDetails = (PrincipalDetails) authPrincipal;
+                return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("message", "회원탈퇴 처리 중 오류가 발생했습니다. 다시 시도해 주세요."));
             }
-            // authPrincipal이 UserEntity의 인스턴스인 경우
-            else if (authPrincipal instanceof UserEntity) {
-                UserEntity userEntity = (UserEntity) authPrincipal;
-                principalDetails = new PrincipalDetails(userEntity, userEntity.getAttributes());
+        } else if (principal instanceof UserDetails) {
+            // 일반 로그인 처리
+            UserDetails userDetails = (UserDetails) principal;
+
+            // UserDetails에서 사용자 정보 추출
+            UserEntity userEntity = extractUserEntity(userDetails);
+            if (userEntity == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "사용자 정보를 찾을 수 없습니다."));
+            }
+
+            // 소셜 로그인 여부 확인 (isSocialLogin() 사용)
+            boolean isSocialLogin = userEntity.isSocialLogin();
+
+            if (isSocialLogin) {
+                // 소셜 로그인 사용자는 비밀번호 확인 없이 탈퇴 가능
+                boolean isDeleted = userService.deactivateAccount(userEntity.getEmail());
+                if (isDeleted) {
+                    // 소셜 로그인 세션 무효화
+                    SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+                    logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+
+                    return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(Map.of("message", "회원탈퇴 처리 중 오류가 발생했습니다. 다시 시도해 주세요."));
+                }
+            } else {
+                // 비밀번호 확인이 필요한 경우
+                if (payload == null || !payload.containsKey("currentPassword")) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(Map.of("message", "현재 비밀번호를 입력해야 합니다."));
+                }
+
+                String currentPassword = payload.get("currentPassword");
+                if (!passwordEncoder.matches(currentPassword, userEntity.getPassword())) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                            .body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
+                }
+
+                // 비밀번호가 맞다면 탈퇴 처리
+                boolean isDeleted = userService.deactivateAccount(userEntity.getEmail());
+                if (isDeleted) {
+                    return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(Map.of("message", "회원탈퇴 처리 중 오류가 발생했습니다. 다시 시도해 주세요."));
+                }
             }
         }
-   
-            CustomOAuth2User oauthUser = (CustomOAuth2User) principal;
-            UserEntity user = new UserEntity();
-            user.setEmail(oauthUser.getEmail());
-            user.setNickname(oauthUser.getNickname());
-            user.setOauth2Provider(oauthUser.getProvider());
-            principalDetails = new PrincipalDetails(user, oauthUser.getAttributes());
 
-        if (!user.isSocialLogin()) {
-            String currentPassword = payload.get("currentPassword");
-            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "현재 비밀번호가 일치하지 않습니다."));
-            }
-        }
-
-        String email = user.getEmail();  // 사용자 이메일 가져오기
-        boolean isDeleted = userService.deactivateAccount(email);  // 계정 비활성화
-        if (isDeleted) {
-            return ResponseEntity.ok(Map.of("message", "회원탈퇴가 완료되었습니다."));  // 회원탈퇴 성공 메시지 반환
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "회원탈퇴 처리 중 오류가 발생했습니다. 다시 시도해 주세요."));  // 오류 메시지 반환
-        }
+        // 위의 조건문을 빠져나왔다면 예외 상황
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "지원하지 않는 로그인 유형입니다."));
     }
+
+
+    private UserEntity extractUserEntity(Object principal) {
+        if (principal instanceof UserEntity) {
+            return (UserEntity) principal;
+        } else if (principal instanceof PrincipalDetails) {
+            return ((PrincipalDetails) principal).getUser();
+        } else if (principal instanceof UsernamePasswordAuthenticationToken) {
+            Object authPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+            if (authPrincipal instanceof UserEntity) {
+                return (UserEntity) authPrincipal;
+            } else if (authPrincipal instanceof PrincipalDetails) {
+                return ((PrincipalDetails) authPrincipal).getUser();
+            }
+        }
+        return null;
+    }
+
+
 
     // 사용자 정보를 업데이트하는 메서드
     @PostMapping("/update-profile")
@@ -142,7 +200,7 @@ public class MyPageController {
             HttpServletRequest request) { // 사용자 정보 업데이트
         if (!(userDetails instanceof UserEntity user)) { // 사용자 정보가 없으면
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
-                    "message", "사용자 정보가 없습니다. 소셜 로그인은 사용불가능합니다."
+                    "message", "소셜 계정은 해당 소셜 페이지에서 수정 해야합니다."
             ));
         }
 
@@ -170,4 +228,6 @@ public class MyPageController {
 
         return ResponseEntity.ok(Map.of("message", "사용자 정보가 성공적으로 업데이트되었습니다. 로그아웃 후 변경된 비밀번호로 다시 로그인 해주세요."));
     }
+
+
 }

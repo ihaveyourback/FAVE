@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String email = authentication.getName(); // 사용자가 입력한 이메일
         String password = authentication.getCredentials().toString(); // 사용자가 입력한 비밀번호
 
-        UserDetails user = userDetailsService.loadUserByUsername(email); // 사용자 정보를 가져옴
+        UserDetails user;
+        try {
+            user = userDetailsService.loadUserByUsername(email); // 사용자 정보를 가져옴
+        } catch (UsernameNotFoundException ex) {
+            logger.warn("User not found for email: {}", email);
+            throw new BadCredentialsException("아이디 또는 비밀번호가 일치하지 않습니다"); // 이메일이 틀렸을 때 예외 발생
+        }
 
         if (user instanceof UserEntity userEntity) {
             logger.info("Checking if account is deleted for user: {}", email);
@@ -53,14 +60,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 throw new UserSuspendedException("계정이 잠겼습니다");
             }
 
+            logger.info("Input email: {}", email);
             logger.info("Input password: {}", password);
             logger.info("Stored password: {}", user.getPassword());
+            logger.info("Stored username: {}", user.getUsername());
 
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 logger.warn("Password mismatch for user: {}", email);
-                throw new BadCredentialsException("아이디 또는 비밀번호가 일치하지 않습니다");
+                throw new BadCredentialsException("아이디 또는 비밀번호가 일치하지 않습니다"); // 비밀번호가 틀렸을 때 예외 발생
             }
-
         }
 
         return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());

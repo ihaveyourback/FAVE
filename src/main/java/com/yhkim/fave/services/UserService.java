@@ -188,6 +188,7 @@ public class UserService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         UserEntity user = this.userMapper.selectUserByEmail(emailToken.getUserEmail());
         user.setPassword(encoder.encode(password));
+        user.setVerified(true);
         if (this.userMapper.updateUser(user) == 0) {
             throw new TransactionalException();
         }
@@ -257,18 +258,28 @@ public class UserService {
     }
 
 
-    // 회원탈퇴 메서드
     public boolean deactivateAccount(String email) {
         Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
             UserEntity user = optionalUser.get();
+
+            // 소셜 로그인 사용자는 비밀번호를 검증할 필요 없이 탈퇴 가능
+            if (user.isSocialLogin()) {
+                user.setDeletedAt(LocalDateTime.now());
+                userRepository.save(user);
+                return true;
+            }
+
+            // 비밀번호 확인 등 다른 검증 절차 필요
+            // 예: 비밀번호가 일치하는지 확인
+
             user.setDeletedAt(LocalDateTime.now());
-            // 탈퇴 처리
             userRepository.save(user);
             return true;
         }
         return false;
     }
+
 
     public void handleUserNotVerified(UserEntity user, String validationLink) throws MessagingException {
         // 사용자가 이메일 인증을 하지 않은 경우

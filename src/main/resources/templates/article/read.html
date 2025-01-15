@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>축제 잇슈</title>
+    <title th:text="${article.getTitle()}">축제 잇슈</title>
     <link rel="shortcut icon" th:href="@{'/images/favicon.png'}">
     <link href="/article/assets/styles/read.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" th:if="${article == null || article.getDeletedAt() != null}">

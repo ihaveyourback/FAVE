@@ -42,36 +42,42 @@ public class ReportService {
                                  @AuthenticationPrincipal Object principal) {
         String status = report.getStatus();
         String userEmail = null;
-        if (principal instanceof CustomOAuth2User customOAuth2User) {
+
+        // principal의 타입을 확인하여 처리
+        if (principal instanceof UserDetails userDetails) {
+            userEmail = userDetails.getUsername(); // 기본적으로 이메일은 username으로 저장됨
+            System.out.println("--------------------" + userEmail);
+        } else if (principal instanceof CustomOAuth2User customOAuth2User) {
             userEmail = customOAuth2User.getEmail();
-
-            if ("게시글".equals(status)) {
-                Optional<ReportEntity> existingReport = reportRepository.findFirstByUserEmailAndReportedPostId(
-                        userEmail, report.getReportedPostId());
-
-                if (existingReport.isPresent() && existingReport.get().getReportedPostId() != null) {
-
-                    throw new IllegalStateException("이미 신고했습니다.");
-                }
-            } else if ("댓글".equals(status)) {
-                Optional<ReportEntity> existingComment = reportRepository.findFirstByUserEmailAndReportedCommentId(
-                        userEmail, report.getReportedCommentId());
-
-                if (existingComment.isPresent() && existingComment.get().getReportedCommentId() != null) {
-
-                    throw new IllegalStateException("이미 신고했습니다.");
-                }
-            } else {
-                throw new IllegalArgumentException("잘못된 신고 상태입니다: " + status);
-            }
-
-            // 신고 처리
-            report.setReportedAt(LocalDateTime.now());
-            reportRepository.save(report);
-            return CommonResult.SUCCESS;
+        } else {
+            throw new IllegalStateException("사용자 인증 정보를 찾을 수 없습니다.");
         }
+
+        if ("게시글".equals(status)) {
+            Optional<ReportEntity> existingReport = reportRepository.findFirstByUserEmailAndReportedPostId(
+                    userEmail, report.getReportedPostId());
+
+            if (existingReport.isPresent() && existingReport.get().getReportedPostId() != null) {
+                throw new IllegalStateException("이미 신고했습니다.");
+            }
+        } else if ("댓글".equals(status)) {
+            Optional<ReportEntity> existingComment = reportRepository.findFirstByUserEmailAndReportedCommentId(
+                    userEmail, report.getReportedCommentId());
+
+            if (existingComment.isPresent() && existingComment.get().getReportedCommentId() != null) {
+                throw new IllegalStateException("이미 신고했습니다.");
+            }
+        } else {
+            throw new IllegalArgumentException("잘못된 신고 상태입니다: " + status);
+        }
+
+        // 신고 처리
+        report.setUserEmail(userEmail); // 신고한 사용자의 이메일 저장
+        report.setReportedAt(LocalDateTime.now());
+        reportRepository.save(report);
         return CommonResult.SUCCESS;
     }
+
 
 
     //warning카운트

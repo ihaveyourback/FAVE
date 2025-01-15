@@ -1,5 +1,7 @@
 package com.yhkim.fave.configuration;
 
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.web.cors.CorsConfigurationSource;
 import com.yhkim.fave.exceptions.OAuth2IdNotFoundException;
 import com.yhkim.fave.services.OAuth2MemberService;
 import com.yhkim.fave.services.SecurityUserDetailsService;
@@ -43,11 +45,10 @@ public class SecurityConfig {
     private boolean csrfEnabled;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        if (csrfEnabled) {
-            http.csrf(); // CSRF 활성화
-        } else {
-            http.csrf().disable(); // CSRF 비활성화
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
+        if (!csrfEnabled) {
+//            http.csrf().disable(); // CSRF 비활성화
+            http.csrf(AbstractHttpConfigurer::disable);
         }
 
         http
@@ -106,9 +107,11 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/")
-                        .userInfoEndpoint()
-                        .userService(oAuth2MemberService)
-                        .and()
+                        .userInfoEndpoint((config) -> {
+                            config.userService(oAuth2MemberService);
+                        })
+//                        .userService(oAuth2MemberService)
+//                        .and()
                         .failureHandler(new ExceptionMappingAuthenticationFailureHandler() {
                             @Override
                             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
