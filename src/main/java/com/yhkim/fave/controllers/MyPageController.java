@@ -178,6 +178,7 @@ public class MyPageController {
     }
 
 
+
     private UserEntity extractUserEntity(Object principal) {
         if (principal instanceof UserEntity) {
             return (UserEntity) principal;

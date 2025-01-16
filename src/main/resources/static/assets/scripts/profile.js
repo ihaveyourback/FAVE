@@ -34,39 +34,59 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("lastSelectedSection", index);
         });
     });
-// 회원탈퇴 폼 제출 이벤트 리스너 추가
+
+
+
     deactivateForm.addEventListener("submit", (e) => {
         e.preventDefault();
+
         const formData = new FormData(deactivateForm);
         const currentPassword = formData.get("currentPassword");
 
-        if (!currentPassword) {
-            alert("현재 비밀번호를 입력해 주세요.");
-            return;
+        // 소셜 로그인 여부 확인: oauth2Provider가 null이면 일반 로그인, 아니면 소셜 로그인
+        const isSocialLogin = document.body.dataset.oauth2Provider != null;
+
+        // 소셜 로그인인 경우 currentPassword를 제외
+        const data = isSocialLogin ? {} : { currentPassword: currentPassword };
+
+        // 비밀번호가 필요하지 않은 경우에는 currentPassword를 비워서 전송
+        if (isSocialLogin) {
+            data.currentPassword = "";  // 소셜 로그인 시 비밀번호 제외
         }
 
-        fetch("/user/secession", {
+        console.log("서버로 전송할 데이터:", data);
+
+        // 서버로 폼 데이터 전송
+        fetch(deactivateForm.action, {
             method: "POST",
-            body: JSON.stringify({
-                currentPassword: currentPassword
-            }),
             headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(response => {
-            if (response.ok) {
-                alert("회원탈퇴가 완료되었습니다.");
-                window.location.href = "/logout";
-            } else {
-                response.json().then(data => {
-                    alert(data.message || "회원탈퇴 처리 중 오류가 발생하였습니다. 다시 시도해 주세요.");
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => {
+                console.log("응답 상태:", response.status);
+                return response.json().then(data => {
+                    console.log("서버 응답 데이터:", data);
+                    if (response.status === 200) {
+                        // 회원 탈퇴가 성공적으로 완료되었을 때
+                        alert("회원 탈퇴가 완료되었습니다.");
+                        window.location.href = "/logout";  // 메인 페이지로 리디렉션
+                    } else if (response.status === 401) {
+                        // 비밀번호가 일치하지 않을 때
+                        alert("현재 비밀번호가 일치하지 않습니다.");
+                    } else {
+                        // 기타 실패 시 메시지 표시
+                        alert("회원 탈퇴에 실패하였습니다. 다시 시도해 주세요.");
+                    }
                 });
-            }
-        }).catch(error => {
-            console.error("Error:", error);
-            alert("회원탈퇴 처리 중 오류가 발생하였습니다. 다시 시도해 주세요.");
-        });
+            })
+            .catch(error => {
+                console.error("오류:", error);
+                alert("회원 탈퇴 중 오류가 발생했습니다.");
+            });
     });
+
 
 // 폼 요소를 선택
     const socialDeactivateForm = document.getElementById("socialDeactivateForm");

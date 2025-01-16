@@ -68,7 +68,7 @@ body {
 /* 신고 폼 스타일 */
 .report-container {
   background: white;
-  border-radius: 0.3rem;
+  border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 500px;
