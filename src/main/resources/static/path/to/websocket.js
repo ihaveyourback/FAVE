@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         stompClient.subscribe('/topic/alerts', function (message) {
             const notification = JSON.parse(message.body);
             if (notification['userEmail'] !== currentUserEmail.value) {
+
                 return;  // 본인에게 온 알림만 처리
             }
             createNotificationAnchor(notification);  // 새 알림을 실시간으로 추가
@@ -131,6 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         })
         .catch(error => console.error('알림을 가져오는 데 실패:', error));
+
 
     // 알림 클릭 시 읽음 처리
     alertMessageDiv.addEventListener('click', function (event) {

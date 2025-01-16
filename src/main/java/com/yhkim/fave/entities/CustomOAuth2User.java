@@ -13,7 +13,6 @@ import java.util.Map;
 public class CustomOAuth2User implements OAuth2User { // OAuth2User 인터페이스를 구현하는 사용자 클래스
 
     private final OAuth2User oAuth2User; // OAuth2User 객체
-    @Getter
     private final String provider; // 제공자 이름
     private final String principalName; // 제공자 이름
     private final String nickname; // 닉네임

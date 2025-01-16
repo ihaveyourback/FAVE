@@ -63,43 +63,43 @@ public class FaveBoardController {
         return modelAndView;
     }
 
-@RequestMapping(value = "/read/", method = RequestMethod.GET)
-@ResponseBody
-public ModelAndView getReadBoard(
-        @RequestParam(value = "index") int index,
-        @AuthenticationPrincipal UserDetails userDetails,
-        @AuthenticationPrincipal Object principal) {
+    @RequestMapping(value = "/read/", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getReadBoard(
+            @RequestParam(value = "index") int index,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal Object principal) {
 
-    ModelAndView modelAndView = new ModelAndView("board/faveRead");
-    String userEmail = extractUserEmail(userDetails, principal);
-    boolean isLoggedIn = (userEmail != null);
+        ModelAndView modelAndView = new ModelAndView("board/faveRead");
+        String userEmail = extractUserEmail(userDetails, principal);
+        boolean isLoggedIn = (userEmail != null);
 
-    // 사용자 정보 추가 (웹소켓 활용 가능)
-    if (userDetails instanceof UserEntity user) {
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("isAdmin", user.isAdmin());
-        modelAndView.addObject("email", user.getEmail());
-        modelAndView.addObject("nickname", user.getNickname());
-    } else if (principal instanceof CustomOAuth2User oAuthUser) {
-        modelAndView.addObject("email", oAuthUser.getEmail());
+        // 사용자 정보 추가 (웹소켓 활용 가능)
+        if (userDetails instanceof UserEntity user) {
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("isAdmin", user.isAdmin());
+            modelAndView.addObject("email", user.getEmail());
+            modelAndView.addObject("nickname", user.getNickname());
+        } else if (principal instanceof CustomOAuth2User oAuthUser) {
+            modelAndView.addObject("email", oAuthUser.getEmail());
+        }
+
+        // 찜 상태 확인
+        boolean isLiked = isLoggedIn && favoriteRepository
+                .findByUserEmailAndFestivalId(userEmail, index)
+                .isPresent();
+
+        // 축제 정보 조회 및 업데이트
+        FaveInfoEntity fave = faveService.selectFaveInfoById(index);
+        faveService.updateFaveInfo(fave);
+
+        // 모델에 데이터 추가
+        modelAndView.addObject("fave", fave);
+        modelAndView.addObject("isLiked", isLiked);
+        modelAndView.addObject("userEmail", userEmail);
+
+        return modelAndView;
     }
-
-    // 찜 상태 확인
-    boolean isLiked = isLoggedIn && favoriteRepository
-            .findByUserEmailAndFestivalId(userEmail, index)
-            .isPresent();
-
-    // 축제 정보 조회 및 업데이트
-    FaveInfoEntity fave = faveService.selectFaveInfoById(index);
-    faveService.updateFaveInfo(fave);
-
-    // 모델에 데이터 추가
-    modelAndView.addObject("fave", fave);
-    modelAndView.addObject("isLiked", isLiked);
-    modelAndView.addObject("userEmail", userEmail);
-
-    return modelAndView;
-}
 
     /**
      * 사용자 이메일 추출 메서드 (일반 로그인 및 소셜 로그인 대응)
@@ -140,7 +140,7 @@ public ModelAndView getReadBoard(
         System.out.println("Received userEmail: " + favoritesDto.getUserEmail());
         System.out.println("Received festivalId: " + favoritesDto.getFestivalId());
         Map<String, String> response = new HashMap<>();
-        response.put("message", "찜 상태가 변경되었습니다.");
+        response.put("message", "찜이 완료되었습니다.");
         return ResponseEntity.ok(response);
     }
 
@@ -181,9 +181,20 @@ public ModelAndView getReadBoard(
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public ModelAndView searchBoard(@RequestParam(value = "keyword", required = false) String keyword,
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                    @RequestParam(value = "filter", required = false, defaultValue = "all") String filter) {
+                                    @RequestParam(value = "filter", required = false, defaultValue = "all") String filter,
+                                    @AuthenticationPrincipal Object principal,
+                                    @AuthenticationPrincipal UserDetails userDetails) {
         ModelAndView modelAndView = new ModelAndView();
         Pair<FaveBoardVo, FaveInfoEntity[]> pair = this.faveService.searchFaveInfo(page, filter, keyword);
+        // 사용자 정보 추가 (웹소켓 활용 가능)
+        if (userDetails instanceof UserEntity user) {
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("isAdmin", user.isAdmin());
+            modelAndView.addObject("email", user.getEmail());
+            modelAndView.addObject("nickname", user.getNickname());
+        } else if (principal instanceof CustomOAuth2User oAuthUser) {
+            modelAndView.addObject("email", oAuthUser.getEmail());
+        }
         modelAndView.addObject("page", pair.getLeft());
         modelAndView.addObject("fave", pair.getRight());
         modelAndView.setViewName("board/faveBoard");

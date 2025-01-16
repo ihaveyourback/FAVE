@@ -13,13 +13,13 @@
     <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index/header.css">
 
-    <script defer type="text/javascript" src="/assets/scripts/common.js"></script>
-    <script defer type="text/javascript" src="/assets/scripts/profile.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-
     <script defer src="/path/to/websocket.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+    <script defer type="text/javascript" src="/assets/scripts/common.js"></script>
+    <script defer type="text/javascript" src="/assets/scripts/profile.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <body>
 <div th:insert="~{home/index.main :: header}"></div>
@@ -209,9 +209,10 @@
         <div id="deactivate-account" class="content__section">
             <h2>회원탈퇴</h2>
             <p>계정을 탈퇴하시겠습니까? 탈퇴 시 모든 정보가 삭제되며, 복구할 수 없습니다.</p>
+            <p> <b>소셜 계정은 비밀번호 인증을 거치지 않습니다.</b> </p>
 
             <!-- 일반 로그인 사용자용 폼 -->
-            <form id="deactivateForm" class="deactivate-form" method="post" action="/secession" th:if="${nickname != null}">
+            <form id="deactivateForm" class="deactivate-form" method="post" action="/secession" th:if="${!isSocialLogin}">
                 <label class="deactivate-form__label">
                     <input type="password" class="deactivate-form__input" name="currentPassword" placeholder="현재 비밀번호" required>
                 </label>
@@ -219,13 +220,11 @@
             </form>
 
             <!-- 소셜 로그인 사용자용 폼 -->
-            <form id="socialDeactivateForm" class="deactivate-form" method="post" action="/secession" th:if="${nickname == null}">
-                <span>소셜 로그인으로 가입한 계정입니다. 탈퇴하시겠습니까?</span>
+            <form id="socialDeactivateForm" class="deactivate-form" method="post" action="/secession" th:if="${isSocialLogin}">
                 <button type="submit" class="button button--submit">회원탈퇴</button>
             </form>
 
         </div>
-
 
 
 

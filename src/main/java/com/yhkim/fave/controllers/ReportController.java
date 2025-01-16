@@ -69,11 +69,13 @@ public class ReportController {
             modelAndView.addObject("isAdmin", user.isAdmin());
             modelAndView.addObject("nickname", user.getNickname());
             modelAndView.addObject("email", userEmail);
+
 //            System.out.println("나오나요:"+user.isAdmin());
         } else if (principal instanceof CustomOAuth2User customOAuth2User) {
             userEmail = customOAuth2User.getEmail();
             modelAndView.addObject("email", userEmail); // 소셜 로그인 이메일 추가
             modelAndView.addObject("nickname", customOAuth2User.getNickname());
+
         }
 // 로그인되지 않은 경우 이메일을 null로 전달
         modelAndView.addObject("email", userEmail);

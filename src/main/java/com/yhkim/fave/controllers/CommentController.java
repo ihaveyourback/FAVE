@@ -95,6 +95,9 @@ public class CommentController {
                 e.printStackTrace();
                 System.out.println("알림 전송 실패");
             }
+            if(userEmail.equals(comment.getUserEmail())){
+                return "{\"result\":\"SUCCESS\"}";
+            }
 
             // 게시글 정보 가져오기
             BoardPostEntity boardPost = this.boardPostService.getPostById(postId);
@@ -145,8 +148,8 @@ public class CommentController {
             @RequestParam String content,
             @RequestParam(value = "commentAuthor", required = false) String commentAuthor,
             @AuthenticationPrincipal Object principal,
-            @RequestParam(value = "index", required = false) Integer index,
-            @RequestParam(value = "postId", required = false) Integer postId) throws JsonProcessingException {
+            @RequestParam(value = "index", required = false) Integer index
+            ) throws JsonProcessingException {
 
         Map<String, Object> response = new HashMap<>();
 
@@ -195,14 +198,18 @@ public class CommentController {
 
             // 부모 댓글 작성자 정보 가져오기
             CommentEntity commentPost = this.commentService.getSelectCommentsByParentId(parentCommentId);
+            int postId= commentPost.getPostId();
 
             String replyComment = commentPost.getComment();
+            if (userEmail.equals(commentPost.getUserEmail())) {
+                return ResponseEntity.ok(response);
+            }
 
             // 알림 생성 및 저장
             NotificationEntity n = NotificationEntity.builder()
                     .userEmail(commentPost.getUserEmail()) // 부모 댓글 작성자에게 알림
                     .message(String.format("%s님이 %s에 대댓글을 달았습니다.", userNickname,replyComment))
-                    .url(postId != null ? String.format("/article/read?index=%d", postId) : "/")
+                    .url(String.format("/article/read?index=%d", postId))
                     .isRead(false)
                     .createdAt(LocalDateTime.now())
                     .build();

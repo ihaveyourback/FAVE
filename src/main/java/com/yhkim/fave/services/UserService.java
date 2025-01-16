@@ -264,15 +264,14 @@ public class UserService {
             UserEntity user = optionalUser.get();
 
             // 소셜 로그인 사용자는 비밀번호를 검증할 필요 없이 탈퇴 가능
-            if (user.isSocialLogin()) {  // 또는 user.getOauth2Provider() != null && !user.getOauth2Provider().trim().isEmpty()
+            if (user.isSocialLogin()) {
                 user.setDeletedAt(LocalDateTime.now());
                 userRepository.save(user);
                 return true;
             }
 
-            // 비밀번호 확인 등 다른 검증 절차 필요 (일반 로그인 처리)
-            // 비밀번호가 일치하는지 확인
-            // 예를 들어, 비밀번호 확인이 필요한 로직 추가
+            // 비밀번호 확인 등 다른 검증 절차 필요
+            // 예: 비밀번호가 일치하는지 확인
 
             user.setDeletedAt(LocalDateTime.now());
             userRepository.save(user);
@@ -280,13 +279,6 @@ public class UserService {
         }
         return false;
     }
-
-
-    // 이메일로 사용자 조회하는 메서드 추가
-    public UserEntity getUserByEmail(String email) {
-        return userMapper.selectUserByEmail(email); // 이메일로 사용자를 조회하는 로직
-    }
-
 
 
     public void handleUserNotVerified(UserEntity user, String validationLink) throws MessagingException {

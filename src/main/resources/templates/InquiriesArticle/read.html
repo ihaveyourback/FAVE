@@ -74,11 +74,11 @@
             </div>
 
             <!-- 수정 버튼 -->
-            <div th:if="${email != null and email.equalsIgnoreCase(article.getUserEmail())}">
+            <div th:if="${email != null and email.equalsIgnoreCase(article.getUserEmail()) || {isAdmin}}">
                 <button name="modify" class="button modify" type="button">수정</button>
             </div>
             <!-- 삭제 버튼 -->
-            <div th:if="${email != null and email.equalsIgnoreCase(article.getUserEmail())}">
+            <div th:if="${email != null and email.equalsIgnoreCase(article.getUserEmail()) ||{isAdmin}}">
                 <button name="delete" class="button delete" type="button">삭제</button>
             </div>
         </div>

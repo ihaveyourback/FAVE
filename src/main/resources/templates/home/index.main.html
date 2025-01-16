@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Fave</title>
+    <title>축제잇슈</title>
     <link rel="stylesheet" type="text/css" href="/assets/styles/main.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" type="text/css" href="/assets/styles/index.css">
@@ -69,7 +69,7 @@
         <li id="UserLinkWrapper" sec:authorize="isAuthenticated() and !hasAuthority('ROLE_ADMIN')">
             <a class="--obj-button -color-primary" th:href="@{/user/profile}">마이 페이지</a> <!-- 사용자 -->
         </li>
-        <li id="adminLinkWrapper" th:if="${isAdmin}">  <!-- 관리자 -->
+        <li id="adminLinkWrapper" sec:authorize="hasAuthority('ROLE_ADMIN')">  <!-- 관리자 -->
             <a class="--obj-button -color-primary" th:href="@{/admin/}">관리자 페이지</a> <!-- 관리자 -->
         </li>
         <li id="loginBtnWrapper" sec:authorize="!isAuthenticated()"> <!-- 비로그인 사용자 -->

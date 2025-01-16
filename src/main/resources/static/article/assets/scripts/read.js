@@ -187,10 +187,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 클릭 시 동작
         $reportButton.addEventListener('click', () => {
+            if (comment.userEmail === loggedInUserEmail) {
+                alert('내가 작성한 댓글은 신고할 수 없습니다.');
+                return;
+            }
             if (comment) {
                 // 댓글 신고 URL로 이동, comment.index와 article.index를 사용
                 location.href = `/report/page?index=${comment.postId}&commentIndex=${comment.index}`;
             }
+
             // } else {
             //     // 게시글 신고 URL로 이동, article.index만 사용
             //     location.href = `/report/article?index=${article.index}`;

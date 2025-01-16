@@ -138,6 +138,8 @@ body {
 .header .user-name #notificationContainer {
   position: relative;
   display: inline-block;
+  width: 55%;
+  height: 55%;
 }
 .header .user-name #notificationContainer #notificationBell {
   font-size: 24px;
@@ -153,12 +155,13 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  width: 25rem;
 }
 .header .user-name #notificationContainer #alertMessageDiv * {
   margin: 0;
   padding: 10px;
   border-bottom: 1px solid #eee;
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 .header .user-name #notificationContainer #alertMessageDiv *:last-child {
   border-bottom: none;

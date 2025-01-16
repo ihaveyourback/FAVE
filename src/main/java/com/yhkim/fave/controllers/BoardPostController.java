@@ -60,8 +60,15 @@ public class BoardPostController {
 
         boolean result = boardPostService.addLike(postId);
         if (result) {
-            // 알림 처리 로직 추가
+            // 게시글 작성자 정보 가져오기
             BoardPostEntity boardPost = this.boardPostService.getPostById(postId);
+
+            // 좋아요를 누른 사용자가 게시글 작성자와 같은지 확인
+            if (userEmail.equals(boardPost.getUserEmail())) {
+                // 본인이 본인의 게시글에 좋아요를 눌렀을 때 알림을 보내지 않음
+                return ResponseEntity.ok(LikedResult.SUCCESS);
+            }
+
             String postTitle = boardPost.getTitle();
             NotificationEntity notification = NotificationEntity.builder()
                     .userEmail(boardPost.getUserEmail()) // 게시글 작성자의 이메일
@@ -83,6 +90,7 @@ public class BoardPostController {
 
         return ResponseEntity.ok(LikedResult.ALREADY_LIKED);
     }
+
 
 
 

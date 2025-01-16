@@ -58,14 +58,14 @@ public class ReportService {
                     userEmail, report.getReportedPostId());
 
             if (existingReport.isPresent() && existingReport.get().getReportedPostId() != null) {
-                throw new IllegalStateException("이미 신고했습니다.");
+                throw new IllegalStateException("이미 신고한 게시글입니다.");
             }
         } else if ("댓글".equals(status)) {
             Optional<ReportEntity> existingComment = reportRepository.findFirstByUserEmailAndReportedCommentId(
                     userEmail, report.getReportedCommentId());
 
             if (existingComment.isPresent() && existingComment.get().getReportedCommentId() != null) {
-                throw new IllegalStateException("이미 신고했습니다.");
+                throw new IllegalStateException("이미 신고한 댓글 입니다.");
             }
         } else {
             throw new IllegalArgumentException("잘못된 신고 상태입니다: " + status);

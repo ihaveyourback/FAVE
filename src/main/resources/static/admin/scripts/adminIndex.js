@@ -44,6 +44,12 @@ const $boards = document.querySelectorAll('.grid-container > .gird:nth-of-type(2
 const $inquiries = document.querySelectorAll('.grid-container > .gird:nth-of-type(3) .main');
 const $reports = document.querySelectorAll('.grid-container > .gird:nth-of-type(4) .main');
 
+const removeHTMLTags = (htmlContent) => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlContent;
+    return tempDiv.textContent || tempDiv.innerText || "";
+};
+
 function updateModalPosition(grid) {
     const gridRect = grid.getBoundingClientRect(); // 해당 grid 위치
     const containerRect = $modalContainer.getBoundingClientRect(); // 부모 컨테이너 위치
@@ -145,12 +151,14 @@ $boards.forEach(($board) => {
         const $content = $board.dataset.content;
         const $userEmail = $board.dataset.useremail;
         const $userNickName = $board.dataset.usernickname;
-        const $createAt2 = $board.dataset.createat
+        const $createAt2 = $board.dataset.createat;
         const $view = $board.dataset.view;
+
+        const cleanContent = removeHTMLTags($content); // HTML 태그 제거
 
         $modalIndex.textContent = '번호 : ' + $index;
         $modalTitle.textContent = '제목 : ' + $title;
-        $modalContent.textContent = '내용 : ' + $content;
+        $modalContent.textContent = '내용 : ' + cleanContent; // 정리된 텍스트만 출력
         $modalUserEmail.textContent = '작성자 이메일 : ' + $userEmail;
         $modalUserNickName.textContent = '작성자 닉네임 : ' + $userNickName;
         $modalCreateAt2.textContent = "작성일 : " + $createAt2;
@@ -179,9 +187,12 @@ $inquiries.forEach(($inquiries) => {
         const $isResolved = $inquiries.dataset.isresolved
         const $view = $inquiries.dataset.view;
 
+        const cleanContent = removeHTMLTags($content); // HTML 태그 제거
+
+
         $inquiriesIndex.textContent = "번호 : " + $index;
         $inquiriesTitle.textContent = "제목 : " + $title;
-        $inquiriesContent.textContent = "문의내용 : " + $content;
+        $inquiriesContent.textContent = "문의내용 : " + cleanContent;
         $inquiriesUserEmail.textContent = "문의자 이메일 : " + $userEmail;
         $inquiriesUserNickName.textContent = "문의자 닉네임 : " + $userNickName;
         $inquiriesCreateAt.textContent = "문의일 : " + $createAt;

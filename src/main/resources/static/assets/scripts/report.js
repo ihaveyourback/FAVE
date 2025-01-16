@@ -28,18 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
         else if(searchParams.has('index')){
             return { "reported_post_id": searchParams.get('index'), "status": "게시글" }
         }
-        // searchParams.get('index')
-        // const params = location.search.replace("?", "").split('&');
-        // for(const param of params){
-        //     const [key, value] = param.split('=');
-        //     switch (key){
-        //         case "index":
-        //             return { "reported_post_index": value, "status": "게시글" };
-        //         case "commentIndex":
-        //             return { "reported_post_index": value, "status": "댓글" };
-        //     }
-        //     return null;
-        // }
     }
 
     // 폼 제출 시 처리
@@ -54,16 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("기타 사유를 입력해주세요.");
             return;
         }
-
-        // 상태에 따라 ID 설정
-        // if (status.value === "게시글") {
-        //     // reportedUserEmail.value =
-        //     reportedPostId.value = ""; // 게시글 ID 설정
-        //     reportedCommentId.value = ""; // 댓글 ID 초기화
-        // } else if (status.value === "댓글") {
-        //     reportedPostId.value = ""; // 게시글 ID 설정
-        //     reportedCommentId.value = ""; // 댓글 ID 설정
-        // }
 
         const requestBodyData = get_reported_post_index();
         if(requestBodyData == null){
