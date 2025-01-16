@@ -7,6 +7,7 @@ import com.yhkim.fave.services.UserService;
 import com.yhkim.fave.vos.PageVo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +44,10 @@ public class MyPageController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // 프로필 페이지를 표시하는 메서드
     @GetMapping("/profile")
-    public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model, Principal principal,
+    public ModelAndView profilePage(@AuthenticationPrincipal UserDetails userDetails, Model model,                   Principal principal,
+                                    @AuthenticationPrincipal Object principal2,
                                     @RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "1") int reportPage,
                                     @RequestParam(defaultValue = "1") int favoritePage) { // 페이지 번호 (기본값: 1)
@@ -62,20 +66,18 @@ public class MyPageController {
         PageVo favoritePageVo = favoritePair.getLeft();
         List<FaveInfoEntity> favoritePosts = favoritePair.getRight();
 
-        ModelAndView modelAndView = new ModelAndView(); // 뷰와 모델을 함께 설정 가능
+        ModelAndView modelAndView = new ModelAndView();// 뷰 객체 생성
+        if (userDetails instanceof UserEntity user) {// 사용자 정보가 UserEntity 객체인 경우
+            modelAndView.addObject("user", user); // user 객체 생성
+            modelAndView.addObject("isAdmin", user.isAdmin()); // 관리자 여부를 가져옴
+            modelAndView.addObject("email", user.getEmail());
+            modelAndView.addObject("nickname", user.getNickname());
 
-        // 로그인된 사용자의 소셜 로그인 여부 확인
-        boolean isSocialLogin = false;
-        if (userDetails instanceof UserEntity user) {
-            modelAndView.addObject("email", user.getEmail()); // 사용자 이메일
-            modelAndView.addObject("nickname", user.getNickname()); // 사용자 닉네임
-            isSocialLogin = user.isSocialLogin(); // 소셜 로그인 여부
+        }else if (principal2 instanceof CustomOAuth2User){ // 소셜 이메일 가져오기
+            String email = ((CustomOAuth2User) principal2).getEmail();
+            modelAndView.addObject("email", email);
         }
-
-        // 탈퇴 관련 정보 추가
-        modelAndView.addObject("isSocialLogin", isSocialLogin); // 소셜 로그인 여부
-
-        // 모델에 게시물, 신고 내역, 찜 목록 등의 정보 추가
+        // 기타 데이터 추가
         modelAndView.addObject("favoritePosts", favoritePosts);
         modelAndView.addObject("favoritePageVo", favoritePageVo);
         modelAndView.addObject("reports", reports);
@@ -84,9 +86,11 @@ public class MyPageController {
         modelAndView.addObject("postPageVo", postPageVo); // 게시글 페이지 정보 추가
 
         modelAndView.addObject("username", principal.getName()); // 사용자 이름
-        modelAndView.setViewName("user/profile"); // 프로필 페이지를 렌더링
+        modelAndView.setViewName("user/profile");
         return modelAndView;
     }
+
+
 
 
 
@@ -189,7 +193,6 @@ public class MyPageController {
         }
         return null;
     }
-
 
 
     // 사용자 정보를 업데이트하는 메서드

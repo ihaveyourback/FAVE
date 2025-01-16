@@ -30,6 +30,11 @@ public class PrincipalDetails implements OAuth2User, UserDetails { // OAuth2User
         return user.getEmail();
     }
 
+    public String getProvider() {
+        return attributes != null ? (String) attributes.get("provider") : user.getOauth2Provider();
+    }
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { // 사용자 권한을 가져오는 메서드
         return user.getAuthorities();
