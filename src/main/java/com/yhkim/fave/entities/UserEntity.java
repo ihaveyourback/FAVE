@@ -19,7 +19,7 @@ import java.util.*;
 @Table(schema = "fave", name = "users")
 @ToString
 @EqualsAndHashCode
-public class UserEntity implements UserDetails, OAuth2User {
+public class UserEntity implements UserDetails, OAuth2User{
 
     @Id
     @Column(name = "`email`", nullable = false, length = 50)
@@ -59,9 +59,10 @@ public class UserEntity implements UserDetails, OAuth2User {
     @Column(name = "oauth2_provider", length = 50)
     private String oauth2Provider;
 
-    public boolean isSocialLogin() { // 소셜 로그인 여부 확인하는 메서드
-        return oauth2Provider != null && !oauth2Provider.isEmpty(); // 소셜 로그인 여부 확인
+    public boolean isSocialLogin() {
+        return oauth2Provider != null && !oauth2Provider.trim().isEmpty();
     }
+
 
     @Column(name = "oauth2_id", length = 50)
     private String oauth2Id;
@@ -134,8 +135,6 @@ public class UserEntity implements UserDetails, OAuth2User {
     public String getName() {
         return email;
     }
-
-
 
     public boolean isSuspended() {
         return suspended;
