@@ -1,18 +1,14 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
-
-.logo-container {
-  .header {
-    background-color: #c1b5a3;
-    padding: 0.1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .logo {
-      width: 10rem;
-      height: auto;
-    }
-  }
+.logo-container .header {
+  background-color: #c1b5a3;
+  padding: 0.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo-container .header .logo {
+  width: 10rem;
+  height: auto;
 }
 
 body {

@@ -210,17 +210,10 @@
             <h2>회원탈퇴</h2>
             <p>계정을 탈퇴하시겠습니까? 탈퇴 시 모든 정보가 삭제되며, 복구할 수 없습니다.</p>
 
-            <!-- 일반 로그인 사용자용 폼 -->
-            <form id="deactivateForm" class="deactivate-form" method="post" action="/secession" th:if="${nickname != null}">
+            <form id="deactivateForm" class="deactivate-form" method="post" action="/user/secession">
                 <label class="deactivate-form__label">
-                    <input type="password" class="deactivate-form__input" name="currentPassword" placeholder="현재 비밀번호" required>
+                    <input type="password" class="deactivate-form__input" name="currentPassword" placeholder="현재 비밀번호" required th:if="${nickname != null}">
                 </label>
-                <button type="submit" class="button button--submit">회원탈퇴</button>
-            </form>
-
-            <!-- 소셜 로그인 사용자용 폼 -->
-            <form id="socialDeactivateForm" class="deactivate-form" method="post" action="/secession" th:if="${nickname == null}">
-                <span>소셜 로그인으로 가입한 계정입니다. 탈퇴하시겠습니까?</span>
                 <button type="submit" class="button button--submit">회원탈퇴</button>
             </form>
 

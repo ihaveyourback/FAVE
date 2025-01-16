@@ -1,4 +1,4 @@
-//package com.yhkim.fave.mappers;
+package com.yhkim.fave.mappers;//package com.yhkim.fave.mappers;
 //
 //import com.yhkim.fave.entities.InquiriesEntity;
 //import org.apache.ibatis.annotations.Mapper;
